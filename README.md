@@ -1,5 +1,4 @@
 ## Installation
-
 First of all, create the .env file at the root of the project
 
 ```bash
@@ -24,5 +23,5 @@ Then u need to create the database from the backend container :
 
 Finally, u can start the frontend by enter in the frontend folder :
 ```bash
-	npm install &&
+	npm install && npm run dev
 ```
