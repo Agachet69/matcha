@@ -1,6 +1,6 @@
 ## Installation
 
-First of all, $${\color{red}Red}$$ create the .env file at the root of the project
+First of all, <span style="color:blue">.</span> create the .env file at the root of the project
 
 ```bash
 	- docker-compose.yml
