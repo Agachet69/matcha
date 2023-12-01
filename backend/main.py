@@ -8,8 +8,11 @@ from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy import create_engine, Column, Integer, String, Sequence
 from sqlalchemy.orm import sessionmaker
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 
 from Router import api_router
+
+load_dotenv()
 
 app = FastAPI()
 

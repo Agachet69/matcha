@@ -1,4 +1,4 @@
-# il est nesséaire d'importer toute les table voulans etre cree en DB 
+# il est nesséaire d'importer touts les table voulant etre cree en DB 
 from Model import User
 
 from Utils import Base

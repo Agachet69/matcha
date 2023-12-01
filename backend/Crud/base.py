@@ -23,6 +23,13 @@ class CRUDBase(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
             )
         ).scalar()
 
+    def get_from_key(self, db: Session, key: str, key_value: Any, **kwargs) -> Optional[ModelType]:
+        return db.execute(
+            select(self.model).where(
+                getattr(self.model, key) == key_value,
+            )
+        ).scalar()
+
     def get_all(self, db: Session, **kwargs) -> List[ModelType]:
         stmt = select(self.model)
         return db.execute(stmt).scalars().all()

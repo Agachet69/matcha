@@ -1,9 +1,9 @@
-from typing import Optional, List
+from typing import Any, Optional, List
+from Schemas.token import TokenSchema
 
 from pydantic import BaseModel, EmailStr, constr, validator
 
-from Validators.user import user_name_validator
-
+from Validators.user import user_name_validator, password_validator
 
 
 
@@ -16,11 +16,15 @@ class UserBase(BaseModel):
 
 class UserCreate(UserBase):
     username: constr(min_length=1)
-
+    password: constr(min_length=1)
+    
+    # _validate_password = validator("password", allow_reuse=True)(password_validator('CREATE'))
 
 
 class UserUpdate(UserBase):
-	pass
+    password: Optional[constr(min_length=1)]
+    
+    # _validate_password = validator("password", allow_reuse=True)(password_validator('EDIT'))
 
 class UserInDBBase(UserBase):
     id: int
@@ -30,4 +34,5 @@ class UserInDBBase(UserBase):
 
 
 class UserSchema(UserInDBBase):
-    pass
+    notifs: List[Any]
+    
