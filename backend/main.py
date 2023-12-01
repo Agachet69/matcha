@@ -2,7 +2,6 @@
 
 from typing import Any
 
-from Model import User
 from Utils import Base, get_db
 
 from fastapi import FastAPI, Depends, HTTPException
@@ -25,10 +24,6 @@ app.add_middleware(
 
 app.include_router(api_router)
 
-engine = create_engine("mysql+mysqlconnector://admin:admin@mysql-db/matcha")
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-Base.metadata.create_all(bind=engine)
 # # Dependency to get the database session
 
 # Your FastAPI routes go here
