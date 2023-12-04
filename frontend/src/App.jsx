@@ -5,6 +5,8 @@ import { router } from './utils/Router'
 import {
   RouterProvider,
 } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { selectAuth } from './store/slices/authSlice';
 
 
 function App() {
@@ -16,8 +18,13 @@ function App() {
 
   const [error, setError] = useState(false)
 
+  const auth = useSelector(selectAuth);
+
+
+
   return (
     // <RouterProvider router={router}/>
+    auth &&
       <div> aha </div>
     // <>
     //   <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>

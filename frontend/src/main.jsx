@@ -6,11 +6,24 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import App from './App.jsx'
-
+import { persistor, store } from './store/store.js';
+import {Provider, useDispatch, useSelector} from "react-redux";
+import { PersistGate } from 'redux-persist/integration/react';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
-    <App />
+    <Provider store={store}>
+      <PersistGate loading={<div style={{
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        fontSize: "35px",
+      }}> MATCHA </div>} persistor={persistor}>
+        <RouterProvider router={router} />
+        <App />
+      </PersistGate>
+    </Provider>
   </React.StrictMode>
 )
