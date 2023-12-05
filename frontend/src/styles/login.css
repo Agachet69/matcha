@@ -1,23 +1,94 @@
-@import url('https://fonts.googleapis.com/css2?family=Alkatra:wght@500&family=Dancing+Script&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Alkatra:wght@500&family=Dancing+Script&family=Montserrat&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Alkatra:wght@500&family=Dancing+Script&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+
 .loginContainer {
-    width: 100%;
-    height: 100vh;
-    background-color: #F4CAE0;
-    font-family: Montserrat;
-    /* position: relative; */
-    display: flex;
-    flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  /* background-color: #F4CAE0; */
+  font-family: Montserrat;
+  /* position: relative; */
+  padding: 10px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.loginContainer h2 {
-    position: absolute;
-    left: 20px;
-    top: 20px;
-    font-family: Alkatra;
+.loginContainer header {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  font-family: Alkatra;
 }
 
-.loginContainer form {
-    display: flex;
-    flex-direction: column;
+.loginContainer main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginContainer main h3 {
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.loginContainer main p {
+  color: #7d6b75;
+}
+
+.loginContainer main form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.loginInput {
+  display: flex;
+  align-items: center;
+  position: relative;
+  background-color: #663d6111;
+  /* border-radius: 10px;
+  border: 1px solid #7d6b75ae; */
+}
+
+.loginInput img {
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+  height: 20px;
+  z-index: 0;
+}
+
+.loginInput label {
+  position: absolute;
+  color: #7d6b75;
+}
+
+.loginInput input {
+  padding: 15px 20px;
+  width: 100%;
+  background-color: transparent;
+  position: relative;
+  z-index: 1;
+  border-radius: 10px;
+  border: 1px solid #7d6b75ae;
+}
+
+.loginInput input:focus {
+  outline: none;
+  border: 1px solid red;
+}
+
+
+.loginInput input:hover {
+  border: 1px solid red;
+}
+
+.loginInput input:focus ~ label {
+  color: red;
+}
+
+.loginInput:hover label {
+  color: red;
 }

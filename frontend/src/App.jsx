@@ -25,7 +25,7 @@ function App() {
   return (
     // <RouterProvider router={router}/>
     auth &&
-      <div> aha </div>
+      <div className='mainContainer'> aha </div>
     // <>
     //   <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
 
