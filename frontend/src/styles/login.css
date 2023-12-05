@@ -2,93 +2,153 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 
 .loginContainer {
-  width: 100%;
-  height: 100vh;
-  /* background-color: #F4CAE0; */
-  font-family: Montserrat;
-  /* position: relative; */
-  padding: 10px 30px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Montserrat;
+    padding: 10px 30px;
 }
 
 .loginContainer header {
-  position: absolute;
-  left: 20px;
-  top: 20px;
-  font-family: Alkatra;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    font-family: Alkatra;
 }
 
 .loginContainer main {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    width: 90%;
 }
 
 .loginContainer main h3 {
-  font-weight: bold;
-  font-size: 22px;
+    font-weight: bold;
+    font-size: 22px;
 }
 
 .loginContainer main p {
-  color: #7d6b75;
+    color: #7d6b75;
+}
+
+.loginContainer main section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
 }
 
 .loginContainer main form {
-  display: flex;
-  flex-direction: column;
-  gap: 30px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 30px;
 }
 
 .loginInput {
-  display: flex;
-  align-items: center;
-  position: relative;
-  background-color: #663d6111;
-  /* border-radius: 10px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    /* background-color: #663d6111; */
+    /* border-radius: 10px;
   border: 1px solid #7d6b75ae; */
 }
 
-.loginInput img {
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  position: absolute;
-  height: 20px;
-  z-index: 0;
+.loginInput svg {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 20px;
+    width: 20px;
+    z-index: 0;
+    color: #7d6b75;
+    transition: 0.3s;
 }
 
 .loginInput label {
-  position: absolute;
-  color: #7d6b75;
+    position: absolute;
+    left: 22px;
+    top: 50%;
+    color: #7d6b75;
+    font-size: 16px;
+    transform: translateY(-50%);
+    transition: 0.3s;
 }
 
 .loginInput input {
-  padding: 15px 20px;
-  width: 100%;
-  background-color: transparent;
-  position: relative;
-  z-index: 1;
-  border-radius: 10px;
-  border: 1px solid #7d6b75ae;
+    font-family: Montserrat;
+    font-size: 16px;
+    padding: 15px 20px;
+    width: 100%;
+    background-color: #663d6111;
+    color: #7d6b75;
+    position: relative;
+    z-index: 1;
+    border-radius: 10px;
+    border: 1px solid #7d6b7550;
+    transition: 0.3s;
 }
 
 .loginInput input:focus {
-  outline: none;
-  border: 1px solid red;
+    color: black;
+    border: 1px solid #ff4ca8;
+    background-color: transparent;
+    transition: 0.3s;
 }
-
 
 .loginInput input:hover {
-  border: 1px solid red;
+    border: 1px solid #ff4ca8;
+    transition: 0.3s;
 }
 
+.loginInput input:not(:placeholder-shown) + label{
+    top: -10px;
+    transition: 0.3s;
+}
+
+.loginInput input:focus + label{
+    top: -10px;
+    transition: 0.3s;
+    color: #616161;
+}
+
+.loginInput input:hover ~ label,
+.loginInput input:hover ~ svg,
+.loginInput input:focus ~ svg,
 .loginInput input:focus ~ label {
-  color: red;
+    color: #ff4ca8;
+    transition: 0.3s;
 }
 
-.loginInput:hover label {
-  color: red;
+.bottomForm {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-size: 12px;
+}
+
+.bottomForm p {
+    cursor: pointer;
+}
+
+.bottomForm p:hover {
+    color: #ff4ca8;
+}
+
+.loginButton {
+    width: 100%;
+    padding: 12px 0px;
+    border-radius: 10px;
+    background-color: #ff4ca8;
+    font-family: Montserrat;
+    font-size: 16px;
+    color: white;
 }
