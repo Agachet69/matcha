@@ -1,17 +1,39 @@
 import axios from 'axios'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
+import io from 'socket.io-client';
+
 function App() {
   const [token, setToken] = useState(null)
   const [user, setUser] = useState(null)
+  const [allUsers, setAllUsers] = useState(null)
   const [name, setName] = useState("")
   const [password, setPassword] = useState("")
   const [id, setId] = useState(0)
 
   const [error, setError] = useState(false)
 
+  const [socket, setSocket] = useState(null)
+
+  useEffect(() => setSocket(io("http://localhost:8000", { path: "/ws/socket.io/", transports: ['websocket', 'polling'] })), [])
+  
+  // socket.on("connect", () => { console.log("Connected", socket.id) }); 
   return (
-    <>
+    <div style={{ display: 'flex', justifyContent: "space-around", width: "100vw" }}>
+      <button onClick={() => {
+        socket.emit('hello', "world")
+      }}>Socket emit</button>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem", maxHeight: "50vh", overflow: "scroll" }}>
+        <div>My notifs</div>
+        {user && user.notifs.map((notif, index) => (
+          <div style={{ padding: "0.5rem 0.25rem" }}>
+            <ul key={index}>
+              <li>{notif.type}</li>
+              <li>{notif.data}</li>
+            </ul>
+          </div>
+        ))}
+      </div>
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
 
 
@@ -102,24 +124,34 @@ function App() {
         }}>Get ME</button>
         <div style={{ display: "flex", justifyContent: "space-around" }}>
           <button onClick={() => {
-            axios.get(`http://localhost:8000/users/add_notif`, {
+            axios.get(`http://localhost:8000/users/`, {
               headers: {
                 'Authorization': "Bearer " + (token ? token.access_token : "")
               }
             })
               .then(({ data }) => {
-                setUser(data)
+                setAllUsers(data)
               }).catch(({ response }) => {
                 setError(true)
                 setTimeout(() => {
                   setError(false)
                 }, 2000)
               })
-          }}>Get One</button>
-        <input type="number" placeholder='id' onChange={e => setId(e.currentTarget.value)} value={id} />
+          }}>Get All</button>
         </div>
       </div>
-    </>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem", maxHeight: "50vh", overflow: "scroll" }}>
+        <div>All Users</div>
+        {allUsers && allUsers.map((user, index) => (
+          <div style={{ padding: "0.5rem 0.25rem" }}>
+            <ul key={index}>
+              <li>{user.id}</li>
+              <li>{user.username}</li>
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
 

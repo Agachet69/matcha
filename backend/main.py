@@ -9,14 +9,26 @@ from sqlalchemy import create_engine, Column, Integer, String, Sequence
 from sqlalchemy.orm import sessionmaker
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
-
+from fastapi_socketio import SocketManager
 from Router import api_router
+import logging
+
+logger = logging.getLogger(__name__)
+
+logger.setLevel(logging.DEBUG)
+
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+formatter = logging.Formatter('%(levelname)s:     %(message)s')
+ch.setFormatter(formatter)
+
+logger.addHandler(ch)
 
 load_dotenv()
 
 app = FastAPI()
 
-# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # You can replace "*" with a list of allowed origins
@@ -27,30 +39,19 @@ app.add_middleware(
 
 app.include_router(api_router)
 
-# # Dependency to get the database session
+socket_manager = SocketManager(app=app)
 
-# Your FastAPI routes go here
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
 
-@app.post("/create")
-def create(data: dict, db = Depends(get_db)):
-    # print(data)
-    # item = Item(**{"name": "Oui", "description": ""})
-    # db.add(item)
-    # db.commit()
-    # db.refresh(item)
+@app.sio.event
+async def connect(sid, environ, auth):
+    # await socket_manager.emit('lobby', 'User left')
+    logger.info(f"Client connected {sid}")
     
-    # return item
-    pass
+@app.sio.event
+async def disconnect(sid):
+    # await socket_manager.emit('lobby', 'User left')
+    logger.info(f"Client disconnected {sid}")
 
-@app.get("/edit/{item_id}")
-def edit(db = Depends(get_db)):
-    pass
-    # item = Item(**{"name": "Oui", "description": ""})
-    # db.add(item)
-    # db.commit()
-    # db.refresh(item)
-    # 
-    # return item
+@socket_manager.on('hello')
+async def handle_leave(sid, data):
+    logger.info(f"Hello: {data}")
