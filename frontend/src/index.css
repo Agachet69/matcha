@@ -30,7 +30,15 @@ body {
   min-height: 100vh;
 }
 
-h1 {
+button {
+  cursor: pointer;
+}
+
+input:focus {
+  outline: none;
+}
+
+/* h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
@@ -52,7 +60,7 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
+} */
 
 @media (prefers-color-scheme: light) {
   :root {
