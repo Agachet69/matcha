@@ -7,7 +7,7 @@ import Profil from "../pages/Profil";
 import Chat from "../pages/Chat";
 import OtherProfil from "../pages/OtherProfil";
 import { PrivateRoutes } from "./PrivateRoutes";
-import Login from "../pages/Login";
+import Login from "../pages/Login/Login";
 import Register from "../Pages/Register/Register";
 import Header from "../components/Header";
 

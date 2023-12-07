@@ -193,7 +193,7 @@ const Register = () => {
     </div>
     // <form onSubmit={formik.handleSubmit} className='container'>
     //   <h1>Register</h1>
-    //   <input type="text" name='username' value={formik.values.username} onChange={formik.handleChange} placeholder='Pseudo'/>
+    //   <input type="text" name='username' value={formik.values.username} onChange={formik.handleChange} placeholder='Username'/>
     //   <p>username</p>
     //   <p>mdp</p>
     //   <p>nom</p>

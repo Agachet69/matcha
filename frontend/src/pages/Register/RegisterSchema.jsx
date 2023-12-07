@@ -5,9 +5,9 @@ import SexualityEnum from "../../Enum/SexualityEnum";
 const RegisterSchema = () =>
 	object().shape({
 		username: string()
-			.min(3, "Pseudo must have at least 3 characters.")
-			.max(50, "Pseudo length must be less than 50 long.")
-			.required("Pseudo is required.").test("onlyASCIIAndUnderScore", "The only characters allowed are [aA-zZ] [0-9] and '_'", value => /^[a-zA-Z0-9_]+$/.test(value)),
+			.min(3, "Username must have at least 3 characters.")
+			.max(50, "Username length must be less than 50 long.")
+			.required("Username is required.").test("onlyASCIIAndUnderScore", "The only characters allowed are [aA-zZ] [0-9] and '_'", value => /^[a-zA-Z0-9_]+$/.test(value)),
 		lastName: string()
 			.min(3, "Last Name must have at least 3 characters.")
 			.max(50, "Last Name length must be less than 50 long.")
