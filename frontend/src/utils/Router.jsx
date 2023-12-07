@@ -8,7 +8,7 @@ import Chat from "../pages/Chat";
 import OtherProfil from "../pages/OtherProfil";
 import { PrivateRoutes } from "./PrivateRoutes";
 import Login from "../pages/Login";
-import Register from "../Pages/Register/Register";
+import Register from "../pages/Register/Register";
 import Header from "../components/Header";
 
 export const router = createBrowserRouter([

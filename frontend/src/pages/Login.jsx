@@ -11,15 +11,9 @@ const Login = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const auth = useSelector(selectAuth);
 
     function tryLog() {
-        console.log(auth);
         dispatch(isAuth(true));
-        console.log(auth);
-
-        console.log(name);
-        console.log(password);
         navigate("/profil");
     }
 
