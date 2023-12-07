@@ -61,7 +61,7 @@
   border: 1px solid #7d6b75ae; */
 }
 
-.loginInput svg {
+.loginInput .icon {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -121,8 +121,8 @@
 }
 
 .loginInput input:hover ~ label,
-.loginInput input:hover ~ svg,
-.loginInput input:focus ~ svg,
+.loginInput input:hover ~ .icon,
+.loginInput input:focus ~ .icon,
 .loginInput input:focus ~ label {
     color: #ff4ca8;
     transition: 0.3s;
@@ -152,3 +152,4 @@
     font-size: 16px;
     color: white;
 }
+

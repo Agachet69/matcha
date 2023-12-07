@@ -1,5 +1,7 @@
 from typing import Any, Optional, List
 from Schemas.token import TokenSchema
+from Schemas.notif import NotifSchema
+from Schemas.like import LikeSchema
 
 from pydantic import BaseModel, EmailStr, constr, validator
 
@@ -18,7 +20,7 @@ class UserCreate(UserBase):
     username: constr(min_length=1)
     password: constr(min_length=1)
     
-    # _validate_password = validator("password", allow_reuse=True)(password_validator('CREATE'))
+    _validate_password = validator("password", allow_reuse=True)(password_validator('CREATE'))
 
 
 class UserUpdate(UserBase):
@@ -34,5 +36,7 @@ class UserInDBBase(UserBase):
 
 
 class UserSchema(UserInDBBase):
-    notifs: List[Any]
+    notifs: List[NotifSchema]
+    likes: List[LikeSchema]
+    liked_by: List[LikeSchema]
     
