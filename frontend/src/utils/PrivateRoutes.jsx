@@ -15,6 +15,11 @@ export const PrivateRoutes = ({ children }) => {
     if (token)
     axios.get("http://localhost:8000/users/me", {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.access_token}` }
+    }).then(({data}) => {
+      // TODO: stock this user in a persitant reducer, to avoid non-necesary call to the back 
+      const my_user = data
+
+
     }).catch((error) => {
       // console.log(error)
       navigate("/login")
