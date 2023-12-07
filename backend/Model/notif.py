@@ -1,6 +1,6 @@
 # models.py
 from typing import List
-from Enum.NotifType import NotifType
+from Enum.NotifTypeEnum import NotifTypeEnum
 from sqlalchemy import Column, Integer, String, Sequence, ForeignKey, Enum
 from sqlalchemy.orm import relationship
 from Utils import Base
@@ -14,4 +14,4 @@ class Notif(Base):
     user = relationship("User", back_populates="notifs")
     
     data = Column(String(256))
-    type = Column(Enum(NotifType))
+    type = Column(Enum(NotifTypeEnum))

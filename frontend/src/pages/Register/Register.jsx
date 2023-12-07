@@ -5,23 +5,50 @@ import printVarsHook from '../../components/printVarsHook';
 import RegisterSchema from './RegisterSchema';
 import { useNavigate } from "react-router-dom";
 import "../../styles/register.scss";
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import axios from "axios"
 import Carousel from '../../components/Carousel';
+import { KeyIcon } from '../../components/icons/Icons';
 
 
 
 const Register = () => {
+
+  const [onRegisterErrorMessage, setOnRegisterErrorMessage] = useState("")
+
+
   const navigate = useNavigate();
 
+  const onRegister = (values) => {
+    alert('oui')
 
-  useEffect(() => window.scrollTo(0, 0), [
+    const obj = {
+      username: values.username,
+      lastName: values.lastName,
+      firstName: values.firstName,
+      email: values.email,
+      gender: values.gender,
+      sexuality: values.sexuality,
+      age: values.age,
+      bio: values.bio,
+      password: values.password,
+    }
 
-  ])
+    console.log(obj)
+
+
+
+    axios.post('http://localhost:8000/users/register', { ...obj })
+    .then(() => alert('connected')).catch(({response}) => setOnRegisterErrorMessage(response.data.detail))
+  }
+
+
+  useEffect(() => window.scrollTo(0, 0), [])
 
   const formik = useFormik({
     validationSchema: RegisterSchema(),
     initialValues: {
-      pseudo: '',
+      username: '',
       lastName: '',
       firstName: '',
       gender: null,
@@ -31,10 +58,9 @@ const Register = () => {
       email: '',
       photos: [],
       password: '',
+      age: 18,
     },
-    onSubmit: values => {
-      console.log("submit", values)
-    },
+    onSubmit: (values) => { onRegister(values) },
   });
 
   const fileInputRef = useRef(null);
@@ -59,13 +85,13 @@ const Register = () => {
                 <input
                   type="text"
                   placeholder=" "
-                  name="pseudo"
+                  name="username"
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                 />
                 <label>Username</label>
               </div>
-              {!!formik.errors.pseudo && formik.touched.pseudo && <div className='error'>{formik.errors.pseudo}</div>}
+              {!!formik.errors.username && formik.touched.username && <div className='error'>{formik.errors.username}</div>}
             </div>
             <div className='dosLoginInput'>
               <div className='dosInput'>
@@ -131,7 +157,7 @@ const Register = () => {
                   accept="image/*"
                   onChange={e => {
                     if (e.target.files[0])
-                    formik.setFieldValue("photos", [...formik.values.photos, e.target.files[0]])
+                      formik.setFieldValue("photos", [...formik.values.photos, e.target.files[0]])
                   }}
                   ref={fileInputRef}
                   style={{ display: 'none' }}
@@ -140,14 +166,25 @@ const Register = () => {
                 <div className='photoContainer' onClick={() => fileInputRef.current.click()}>
                   <Carousel
                     images={formik.values.photos.map(photo => URL.createObjectURL(photo))}
-                    onDeleteImage={indexToDelete => formik.setFieldValue("photos",  formik.values.photos.filter((_, index) => index != indexToDelete))}
+                    onDeleteImage={indexToDelete => formik.setFieldValue("photos", formik.values.photos.filter((_, index) => index != indexToDelete))}
                   />
-
                 </div>
-
-                {/* <KeyIcon /> */}
               </div>
-              {!!formik.errors.password && formik.touched.password && <div className='error'>{formik.errors.password}</div>}
+              {!!formik.errors.photos && formik.touched.photos && <div className='error'>{formik.errors.photos}</div>}
+            </div>
+
+            <div>
+              <div className="loginInput">
+                <input
+                  type="email"
+                  placeholder=" "
+                  name="email"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                <label>Email</label>
+              </div>
+              {!!formik.errors.email && formik.touched.email && <div className='error'>{formik.errors.email}</div>}
             </div>
 
             <div>
@@ -159,11 +196,14 @@ const Register = () => {
                   onChange={formik.handleChange}
                 />
                 <label>Password</label>
-                {/* <KeyIcon /> */}
+                <div className="icon">
+                  <KeyIcon />
+                </div>
               </div>
               {!!formik.errors.password && formik.touched.password && <div className='error'>{formik.errors.password}</div>}
             </div>
             <button className="loginButton" type='submit'> Log in </button>
+            {!!onRegisterErrorMessage && <div className='error'>{onRegisterErrorMessage}</div>}
           </form>
           <div className="bottomForm">
             {/* <p> Forgot password? </p> */}
@@ -174,8 +214,8 @@ const Register = () => {
     </div>
     // <form onSubmit={formik.handleSubmit} className='container'>
     //   <h1>Register</h1>
-    //   <input type="text" name='pseudo' value={formik.values.pseudo} onChange={formik.handleChange} placeholder='Pseudo'/>
-    //   <p>pseudo</p>
+    //   <input type="text" name='username' value={formik.values.username} onChange={formik.handleChange} placeholder='Pseudo'/>
+    //   <p>username</p>
     //   <p>mdp</p>
     //   <p>nom</p>
     //   <p>prénom</p>

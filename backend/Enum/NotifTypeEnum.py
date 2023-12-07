@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class NotifType(Enum):
+class NotifTypeEnum(Enum):
 	"""Docstring for NotifType."""
 	ERROR = "ERROR"
 	MESSAGE = "MESSAGE"

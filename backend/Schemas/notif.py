@@ -1,6 +1,6 @@
 from typing import Any, Optional, List
 from Schemas.token import TokenSchema
-from Enum.NotifType import NotifType
+from Enum.NotifTypeEnum import NotifTypeEnum
 
 from pydantic import BaseModel, EmailStr, constr, validator
 
@@ -11,7 +11,7 @@ from Validators.user import user_name_validator, password_validator
 
 class NotifBase(BaseModel):
     data: str
-    type: NotifType
+    type: NotifTypeEnum
 
 class NotifCreate(NotifBase):
 	pass
