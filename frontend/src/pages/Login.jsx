@@ -25,39 +25,40 @@ const Login = () => {
 
     return (
         <div className="loginContainer">
-            <header>
-                <h2>Matcha ❤</h2>
-            </header>
             <main>
                 <h3> Welcome to login! </h3>
                 <p> Please enter your details </p>
                 <section>
-                <form>
-                    <div className="loginInput">
-                        <input
-                            type="text"
-                            placeholder=" "
-                            onChange={(e) => setUsername(e.currentTarget.value)}
-                            value={username}
+                    <form>
+                        <div className="loginInput">
+                            <input
+                                type="text"
+                                placeholder=" "
+                                onChange={(e) => setUsername(e.currentTarget.value)}
+                                value={username}
                             />
-                        <label> Username </label>
-                        <UserIcon />
-                    </div>
-                    <div className="loginInput">
-                        <input
-                            type="password"
-                            placeholder=" "
-                            onChange={(e) => setPassword(e.currentTarget.value)}
-                            value={password}
+                            <label> Username </label>
+                            <div className="icon">
+                                <UserIcon />
+                            </div>
+                        </div>
+                        <div className="loginInput">
+                            <input
+                                type="password"
+                                placeholder=" "
+                                onChange={(e) => setPassword(e.currentTarget.value)}
+                                value={password}
                             />
                             <label> Password</label>
-                            <KeyIcon />
+                            <div className="icon">
+                                <KeyIcon />
+                            </div>
+                        </div>
+                    </form>
+                    <div className="bottomForm">
+                        <p> Forgot password? </p>
+                        <p onClick={() => navigate('/register')}> Sign-up </p>
                     </div>
-                </form>
-                <div className="bottomForm">
-                    <p> Forgot password? </p>
-                    <p onClick={() => navigate('/register')}> Sign-up </p>
-                </div>
                 </section>
                 <button className="loginButton" onClick={tryLog}> Log in </button>
             </main>

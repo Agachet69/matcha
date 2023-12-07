@@ -26,12 +26,9 @@ const RegisterSchema = () =>
 			// .test("atLeastOneNumber", "Password must contain at least one number.", value => /[0-9]/.test(value))
 			// .test("atLeastOneSpecial", "Password must contain at least one special characters.", value => /[!@#$%^&*()_\-+=\{\}\[\]|\\:;'"<>,.?\/]/.test(value))
 		,
-		photos: array()
-			.of(
-				object()
-			),
+		age: number().min(18, 'Wait for ur majority!').required('Age is required.'),
 		email: string().email('Invalid email format.').required('Email is required.'),
-		// position: ,
+
 	})
 
 export default RegisterSchema;

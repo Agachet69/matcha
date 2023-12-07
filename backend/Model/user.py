@@ -5,6 +5,7 @@ from Enum.SexualityEnum import SexualityEnum
 from sqlalchemy import Column, Integer, String, Sequence, Enum
 from sqlalchemy.orm import relationship
 from Utils import Base
+from Model.photo import Photo
 from Model.like import Like
 from Model.notif import Notif
 
@@ -34,6 +35,7 @@ class User(Base):
     
     password = Column(String(256))
     
+    photos: List[Photo] = relationship("Photo", back_populates="user")
     
     notifs: List[Notif] = relationship("Notif", back_populates="user")
     

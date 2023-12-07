@@ -9,6 +9,8 @@ import { useEffect, useRef, useState } from 'react';
 import axios from "axios"
 import Carousel from '../../components/Carousel';
 import { KeyIcon } from '../../components/icons/Icons';
+import { useDispatch } from 'react-redux';
+import { setToken } from '../../store/slices/authSlice';
 
 
 
@@ -16,31 +18,20 @@ const Register = () => {
 
   const [onRegisterErrorMessage, setOnRegisterErrorMessage] = useState("")
 
-
+  const dispatch = useDispatch()
   const navigate = useNavigate();
 
   const onRegister = (values) => {
-    alert('oui')
-
-    const obj = {
-      username: values.username,
-      lastName: values.lastName,
-      firstName: values.firstName,
-      email: values.email,
-      gender: values.gender,
-      sexuality: values.sexuality,
-      age: values.age,
-      bio: values.bio,
-      password: values.password,
+    axios.post('http://localhost:8000/users/register', values)
+      .then(({data}) => {
+        dispatch(setToken(data))
+        navigate('/profil')
+      })
+      .catch((error) => {
+        console.log(error.response.data.detail)
+        setOnRegisterErrorMessage(error.response.data.detail)
+      });
     }
-
-    console.log(obj)
-
-
-
-    axios.post('http://localhost:8000/users/register', { ...obj })
-    .then(() => alert('connected')).catch(({response}) => setOnRegisterErrorMessage(response.data.detail))
-  }
 
 
   useEffect(() => window.scrollTo(0, 0), [])
@@ -56,9 +47,8 @@ const Register = () => {
       bio: '',
       position: '',
       email: '',
-      photos: [],
       password: '',
-      age: 18,
+      age: null,
     },
     onSubmit: (values) => { onRegister(values) },
   });
@@ -72,9 +62,6 @@ const Register = () => {
 
   return (
     <div className="loginContainer">
-      <header>
-        <h2>Matcha ❤</h2>
-      </header>
       <main>
         <h3> Register </h3>
         <p> Please enter your details </p>
@@ -92,6 +79,21 @@ const Register = () => {
                 <label>Username</label>
               </div>
               {!!formik.errors.username && formik.touched.username && <div className='error'>{formik.errors.username}</div>}
+            </div>
+            <div>
+              <div className="loginInput">
+                <input
+                  type="number"
+                  placeholder=" "
+                  min={0}
+                  step={1}
+                  name="age"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                />
+                <label>Age</label>
+              </div>
+              {!!formik.errors.age && formik.touched.age && <div className='error'>{formik.errors.age}</div>}
             </div>
             <div className='dosLoginInput'>
               <div className='dosInput'>
@@ -148,29 +150,6 @@ const Register = () => {
                 <label>Biography</label>
               </div>
               {!!formik.errors.bio && formik.touched.bio && <div className='error'>{formik.errors.bio}</div>}
-            </div>
-
-            <div>
-              <div className="loginInput">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={e => {
-                    if (e.target.files[0])
-                      formik.setFieldValue("photos", [...formik.values.photos, e.target.files[0]])
-                  }}
-                  ref={fileInputRef}
-                  style={{ display: 'none' }}
-                />
-                <label>Photos</label>
-                <div className='photoContainer' onClick={() => fileInputRef.current.click()}>
-                  <Carousel
-                    images={formik.values.photos.map(photo => URL.createObjectURL(photo))}
-                    onDeleteImage={indexToDelete => formik.setFieldValue("photos", formik.values.photos.filter((_, index) => index != indexToDelete))}
-                  />
-                </div>
-              </div>
-              {!!formik.errors.photos && formik.touched.photos && <div className='error'>{formik.errors.photos}</div>}
             </div>
 
             <div>

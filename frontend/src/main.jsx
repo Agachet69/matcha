@@ -22,7 +22,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         fontSize: "35px",
       }}> MATCHA </div>} persistor={persistor}>
         <RouterProvider router={router} />
-        <App />
       </PersistGate>
     </Provider>
   </React.StrictMode>

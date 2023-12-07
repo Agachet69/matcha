@@ -21,6 +21,7 @@ class UserBase(BaseModel):
     sexuality: Optional[SexualityEnum]
     age: Optional[int]
     bio: Optional[str]
+    # photos: Optional[List[str]]
 
     _validate_name_not_none = validator("username", allow_reuse=True)(user_name_validator)
 
@@ -34,6 +35,7 @@ class UserCreate(UserBase):
     sexuality: SexualityEnum
     age: int
     bio: str
+    # photos: Optional[List[str]]
     
     password: constr(min_length=1)
     
@@ -65,4 +67,5 @@ class UserSchema(UserInDBBase):
     notifs: List[NotifSchema]
     likes: List[LikeSchema]
     liked_by: List[LikeSchema]
+    photos: List[str]
     
