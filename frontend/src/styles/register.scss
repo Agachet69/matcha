@@ -1,0 +1,274 @@
+.loginContainer {
+  width: 100%;
+  margin-top: 20px;
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  //   justify-content: center;
+  //   align-items: center;
+  font-family: Montserrat;
+  padding: 10px 30px;
+  //   background-color: red;
+}
+
+.loginContainer header {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  font-family: Alkatra;
+}
+
+.loginContainer main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  // gap: 40px;
+  width: 90%;
+}
+
+.loginContainer main h3 {
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.loginContainer main p {
+  color: #7d6b75;
+}
+
+.loginContainer main section {
+  display: flex;
+  flex-direction: column;
+  // gap: 10px;
+  width: 100%;
+}
+
+.loginContainer main form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  // gap: 30px;
+}
+
+.loginInput {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+  /* background-color: #663d6111; */
+  /* border-radius: 10px;
+  border: 1px solid #7d6b75ae; */
+}
+
+.loginInput .icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 20px;
+  width: 20px;
+  z-index: 0;
+  color: #7d6b75;
+  transition: 0.3s;
+}
+
+.loginInput label {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  color: #7d6b75;
+  font-size: 16px;
+  transform: translateY(-50%);
+  transition: 0.3s;
+}
+
+.error {
+  font-family: monospace;
+  margin-left: 10px;
+  color: red;
+  margin-top: 0.2rem;
+  // position: absolute;
+  // left: 10px;
+  // bottom: 0;
+  // top: 50%;
+  // color: #7d6b75;
+  // font-size: 16px;
+  // transform: translateY(-50%);
+  // transition: 0.3s;
+}
+
+.loginInput input {
+  font-family: Montserrat;
+  font-size: 16px;
+  padding: 15px 20px;
+  width: 100%;
+  background-color: #663d6111;
+  color: #7d6b75;
+  position: relative;
+  z-index: 1;
+  border-radius: 10px;
+  border: 1px solid #7d6b7550;
+  transition: 0.3s;
+}
+
+.loginInput input:focus {
+  outline: 0;
+  color: black;
+  border: 1px solid #ff4ca8;
+  background-color: transparent;
+  transition: 0.3s;
+}
+
+.loginInput input:hover {
+  border: 1px solid #ff4ca8;
+  transition: 0.3s;
+}
+
+.loginInput input:not(:placeholder-shown) + label {
+  top: -10px;
+  transition: 0.3s;
+}
+
+.loginInput input:focus + label {
+  top: -10px;
+  transition: 0.3s;
+  color: #616161;
+}
+
+.loginInput input:hover ~ label,
+.loginInput input:hover ~ .icon
+.loginInput input:focus ~ .icon
+.loginInput input:focus ~ label {
+  color: #ff4ca8;
+  transition: 0.3s;
+}
+
+.bottomForm {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 12px;
+}
+
+.bottomForm p {
+  cursor: pointer;
+}
+
+.bottomForm p:hover {
+  color: #ff4ca8;
+}
+
+.loginButton {
+  width: 100%;
+  padding: 12px 0px;
+  border-radius: 10px;
+  background-color: #ff4ca8;
+  font-family: Montserrat;
+  font-size: 16px;
+  color: white;
+}
+
+.dosLoginInput {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  .dosInput {
+    width: 45%;
+
+    .Input {
+      display: flex;
+    }
+  }
+}
+
+.selector {
+  //   background-color: red;
+  display: flex;
+  justify-content: space-around;
+  position: relative;
+  margin-top: 1rem;
+
+  label {
+    position: absolute;
+    left: 10px;
+    top: -50%;
+    color: #7d6b75;
+    font-size: 16px;
+  }
+
+  .selectorItem {
+    font-family: Montserrat;
+    font-size: 16px;
+    padding: 15px 20px;
+    // width: 100%;
+    background-color: #663d6111;
+    color: #7d6b75;
+    position: relative;
+    z-index: 1;
+    border-radius: 10px;
+    border: 1px solid #7d6b7550;
+    transition: 0.3s;
+    cursor: pointer;
+
+    &.selected {
+      border: 2px solid #ff4ca8;
+    }
+
+    &:hover {
+      border-color: #ff4ca8;
+      color: #ff4ca8;
+    }
+  }
+}
+
+.loginInput textarea {
+  font-family: Montserrat;
+  font-size: 16px;
+  padding: 15px 20px;
+  width: 100%;
+  background-color: #663d6111;
+  color: #7d6b75;
+  position: relative;
+  z-index: 1;
+  border-radius: 10px;
+  border: 1px solid #7d6b7550;
+  transition: 0.3s;
+
+  &:focus {
+    outline: 0;
+    color: black;
+    border: 1px solid #ff4ca8;
+    background-color: transparent;
+    transition: 0.3s;
+  }
+  &:hover {
+    border: 1px solid #ff4ca8;
+    transition: 0.3s;
+  }
+  &:not(:placeholder-shown) + label {
+    top: -10px;
+    transition: 0.3s;
+  }
+}
+
+
+.photoContainer {
+    // background-color: red;
+    margin-inline: auto;
+    width: 50%;
+    aspect-ratio: 1/1;
+    cursor: pointer;
+
+    background-image: radial-gradient(50% 50%,#202020 80%,#0000 81%);
+    background-size: 5% 5%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+
+
+}

@@ -1,0 +1,61 @@
+/* App.css */
+
+.carousel {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+
+  .button {
+    position: absolute;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	backdrop-filter: blur(3px);
+	background-color: #FFFFFF11;
+	width: 10%;
+    height: 10%;
+    aspect-ratio: 1/1;
+	z-index: 99999999;
+	border-radius: 50%;
+	// padding: 1px;
+	svg {
+		z-index: 99999999;
+		color: black;
+		width: 50%;
+		height: auto;
+	}
+
+
+
+	&.delete {
+		top: 1rem;
+		right: 1rem;
+	}
+
+    &.prev {
+      top: 45%;
+      left: 1rem;
+    }
+    &.next {
+      top: 45%;
+      right: 1rem;
+    }
+  }
+}
+
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity .2s ease-in-out;
+}
+
+.active {
+	opacity: 1;
+//   transform: translateX(0);
+}
+
+/* Adjust the transition property according to your preference */

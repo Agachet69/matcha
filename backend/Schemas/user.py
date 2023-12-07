@@ -20,7 +20,7 @@ class UserCreate(UserBase):
     username: constr(min_length=1)
     password: constr(min_length=1)
     
-    # _validate_password = validator("password", allow_reuse=True)(password_validator('CREATE'))
+    _validate_password = validator("password", allow_reuse=True)(password_validator('CREATE'))
 
 
 class UserUpdate(UserBase):
