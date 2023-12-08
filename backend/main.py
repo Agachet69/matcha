@@ -41,17 +41,26 @@ app.include_router(api_router)
 
 socket_manager = SocketManager(app=app)
 
+connected_clients = []
 
 @app.sio.event
 async def connect(sid, environ, auth):
-    # await socket_manager.emit('lobby', 'User left')
+    connected_clients.append({
+        'sid': sid,
+        'auth': auth,
+    })
     logger.info(f"Client connected {sid}")
-    
+    logger.info(connected_clients)
+
 @app.sio.event
 async def disconnect(sid):
-    # await socket_manager.emit('lobby', 'User left')
+    for client in connected_clients:
+        if client['sid'] == sid:
+            connected_clients.remove(client)
+            break
     logger.info(f"Client disconnected {sid}")
+    logger.info(connected_clients)
 
-@socket_manager.on('hello')
+@socket_manager.on('register')
 async def handle_leave(sid, data):
     logger.info(f"Hello: {data}")

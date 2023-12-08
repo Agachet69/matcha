@@ -54,6 +54,18 @@ def get_me(current_user: UserSchema = Depends(get_current_user)):
     return current_user
 
 
+@router.post("/like/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
+def get_me(
+    current_user: UserSchema = Depends(get_current_user), user_to_like=Depends(get_user)
+):
+    
+    
+    
+    print(user_to_like)
+    
+    # return current_user
+
+
 # @router.get("/add_notif", status_code=status.HTTP_200_OK, response_model=UserSchema)
 # def get_me(current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
 #     notif = NotifCreate(type=NotifTypeEnum.ERROR, data="Error")
