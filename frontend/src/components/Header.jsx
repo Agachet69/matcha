@@ -34,15 +34,18 @@ const Header = ({children, connected = true}) => {
                     }}><Logout/></div>
                 </div>}
             </div>
-            <div className="wave-container">
-                <div className="wave"/>
-                <div className="wave"/>
-                <div className="wave"/>
-            </div>
-            {/* <BlobAnimation/> */}
             <div className="content">
             {children}
             </div>
+            <div className="wave-container">
+                <div className="sticky">
+
+                <div className="wave"/>
+                <div className="wave"/>
+            <div className="wave"/>
+            </div>
+            </div>
+            {/* <BlobAnimation/> */}
         </div>
     )
 }
