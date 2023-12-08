@@ -13,11 +13,11 @@ const Header = ({children, connected = true}) => {
     return (
         <div className="container">
             <div className="header">
-                <div className="logo">Matcha ❤</div>
+                <div className="logo" onClick={() => navigate('/')}>Matcha ❤</div>
                 
                 {connected && <div className="other">
 
-                    <div className="me">
+                    <div className="me" onClick={() => navigate('/profil')}>
                         <div className="image">
                             <UserIcon/>
                         </div>
@@ -34,6 +34,12 @@ const Header = ({children, connected = true}) => {
                     }}><Logout/></div>
                 </div>}
             </div>
+            <div className="wave-container">
+                <div className="wave"/>
+                <div className="wave"/>
+                <div className="wave"/>
+            </div>
+            {/* <BlobAnimation/> */}
             <div className="content">
             {children}
             </div>

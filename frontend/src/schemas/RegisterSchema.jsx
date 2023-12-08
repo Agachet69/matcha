@@ -1,6 +1,6 @@
 import { object, string, number, array, lazy, mixed } from "yup";
-import GenderEnum from "../../Enum/GenderEnum";
-import SexualityEnum from "../../Enum/SexualityEnum";
+import GenderEnum from "../Enum/GenderEnum";
+import SexualityEnum from "../Enum/SexualityEnum";
 
 const RegisterSchema = () =>
 	object().shape({

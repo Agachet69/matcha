@@ -1,6 +1,12 @@
+import '../styles/home.scss'
+
+
+
 const Home = () => {
     return (
-        <div> Home </div>
+        <div className="main">
+            <div className="search">SREACH</div>
+        </div>
     )
 }
 

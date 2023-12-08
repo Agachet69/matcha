@@ -1,16 +1,16 @@
 import { useFormik } from 'formik';
-import GenderEnum from '../../Enum/GenderEnum';
-import SexualityEnum from '../../Enum/SexualityEnum';
-import printVarsHook from '../../components/printVarsHook';
-import RegisterSchema from './RegisterSchema';
+import GenderEnum from '../Enum/GenderEnum';
+import SexualityEnum from '../Enum/SexualityEnum';
+import printVarsHook from '../components/printVarsHook';
+import RegisterSchema from '../schemas/RegisterSchema';
 import { useNavigate } from "react-router-dom";
-import "../../styles/register.scss";
+import "../styles/register.scss";
 import { useEffect, useRef, useState } from 'react';
 import axios from "axios"
-import Carousel from '../../components/Carousel';
-import { KeyIcon } from '../../components/icons/Icons';
+import Carousel from '../components/Carousel';
+import { KeyIcon } from '../components/icons/Icons';
 import { useDispatch } from 'react-redux';
-import { setToken } from '../../store/slices/authSlice';
+import { setToken } from '../store/slices/authSlice';
 
 
 

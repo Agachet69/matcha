@@ -7,8 +7,8 @@ import Profil from "../pages/Profil";
 import Chat from "../pages/Chat";
 import OtherProfil from "../pages/OtherProfil";
 import { PrivateRoutes } from "./PrivateRoutes";
-import Login from "../pages/Login/Login";
-import Register from "../Pages/Register/Register";
+import Login from "../pages/Login";
+import Register from "../Pages/Register";
 import Header from "../components/Header";
 
 export const router = createBrowserRouter([
@@ -18,6 +18,15 @@ export const router = createBrowserRouter([
             <PrivateRoutes>
                 <Header>
                     <Profil />
+                </Header>
+            </PrivateRoutes>
+    },
+    {
+        path: '/home',
+        element:
+            <PrivateRoutes>
+                <Header>
+                    <Home />
                 </Header>
             </PrivateRoutes>
     },
@@ -54,6 +63,6 @@ export const router = createBrowserRouter([
     },
     {
         path: '/*',
-        element: <Navigate to='/404' />,
+        element: <Navigate to='/home' />,
     }
 ])

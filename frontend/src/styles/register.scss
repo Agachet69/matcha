@@ -33,7 +33,7 @@
 }
 
 .loginContainer main p {
-  color: #7d6b75;
+  color: #BBBBBB;
 }
 
 .loginContainer main section {
@@ -55,9 +55,7 @@
   align-items: center;
   position: relative;
   width: 100%;
-  /* background-color: #663d6111; */
-  /* border-radius: 10px;
-  border: 1px solid #7d6b75ae; */
+  backdrop-filter: blur(10px);
 }
 
 .loginInput .icon {
@@ -68,7 +66,7 @@
   height: 20px;
   width: 20px;
   z-index: 0;
-  color: #7d6b75;
+  color: #BBBBBB;
   transition: 0.3s;
 }
 
@@ -76,7 +74,7 @@
   position: absolute;
   left: 10px;
   top: 50%;
-  color: #7d6b75;
+  color: #BBBBBB;
   font-size: 16px;
   transform: translateY(-50%);
   transition: 0.3s;
@@ -91,7 +89,7 @@
   // left: 10px;
   // bottom: 0;
   // top: 50%;
-  // color: #7d6b75;
+  // color: #BBBBBB;
   // font-size: 16px;
   // transform: translateY(-50%);
   // transition: 0.3s;
@@ -103,17 +101,16 @@
   padding: 15px 20px;
   width: 100%;
   background-color: #663d6111;
-  color: #7d6b75;
+  color: #BBBBBB;
   position: relative;
   z-index: 1;
   border-radius: 10px;
-  border: 1px solid #7d6b7550;
+  border: 1px solid #FFFFFF50;
   transition: 0.3s;
 }
 
 .loginInput input:focus {
   outline: 0;
-  color: black;
   border: 1px solid #ff4ca8;
   background-color: transparent;
   transition: 0.3s;
@@ -132,7 +129,7 @@
 .loginInput input:focus + label {
   top: -10px;
   transition: 0.3s;
-  color: #616161;
+  // color: #616161;
 }
 
 .loginInput input:hover ~ label,
@@ -192,7 +189,7 @@
     position: absolute;
     left: 10px;
     top: -50%;
-    color: #7d6b75;
+    color: #BBBBBB;
     font-size: 16px;
   }
 
@@ -202,13 +199,14 @@
     padding: 15px 20px;
     // width: 100%;
     background-color: #663d6111;
-    color: #7d6b75;
+    color: #BBBBBB;
     position: relative;
     z-index: 1;
     border-radius: 10px;
-    border: 1px solid #7d6b7550;
+    border: 1px solid #FFFFFF50;
     transition: 0.3s;
     cursor: pointer;
+    backdrop-filter: blur(10px);
 
     &.selected {
       border: 2px solid #ff4ca8;
@@ -227,16 +225,15 @@
   padding: 15px 20px;
   width: 100%;
   background-color: #663d6111;
-  color: #7d6b75;
+  color: #BBBBBB;
   position: relative;
   z-index: 1;
   border-radius: 10px;
-  border: 1px solid #7d6b7550;
+  border: 1px solid #FFFFFF50;
   transition: 0.3s;
 
   &:focus {
     outline: 0;
-    color: black;
     border: 1px solid #ff4ca8;
     background-color: transparent;
     transition: 0.3s;

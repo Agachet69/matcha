@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { isAuth, selectAuth, setToken } from "../../store/slices/authSlice";
+import { isAuth, selectAuth, setToken } from "../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
-import "../../styles/login.css";
-import { KeyIcon, UserIcon } from "../../components/icons/Icons";
+import "../styles/login.css";
+import { KeyIcon, UserIcon } from "../components/icons/Icons";
 import { useFormik } from "formik";
-import LoginSchema from "./LoginSchema";
+import LoginSchema from "../schemas/LoginSchema";
 import axios from "axios"
 
 const Login = () => {
@@ -14,7 +14,7 @@ const Login = () => {
     const navigate = useNavigate();
     const auth = useSelector(selectAuth);
 
-    
+  const [onLoginErrorMessage, setOnLoginErrorMessage] = useState("")
 
     const formik = useFormik({
         validationSchema: LoginSchema(),
@@ -30,11 +30,11 @@ const Login = () => {
         axios.post('http://localhost:8000/users/login', values)
         .then(({ data }) => {
                 dispatch(setToken(data))
-                navigate('/profil')
+                navigate('/')
             })
             .catch((error) => {
                 console.log(error.response.data.detail)
-                setOnRegisterErrorMessage(error.response.data.detail)
+                setOnLoginErrorMessage(error.response.data.detail)
             });
     }
 
@@ -76,6 +76,7 @@ const Login = () => {
                             {!!formik.errors.password && formik.touched.password && <div className='error'>{formik.errors.password}</div>}
                         </div>
                         <button type="submit" className="loginButton"> Log in </button>
+                        {!!onLoginErrorMessage && <div className='error'>{onLoginErrorMessage}</div>}
                     </form>
                     <div className="bottomForm">
                         <p> Forgot password? </p>
