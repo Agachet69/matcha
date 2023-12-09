@@ -7,8 +7,7 @@ import { useSelector } from 'react-redux';
 import printVarsHook from '../components/printVarsHook';
 import { UserIcon, Age, MaleIcon, FemaleIcon, HeartIcon } from "../components/icons/Icons";
 import GenderEnum from '../Enum/GenderEnum';
-import SexualityEnum from '../Enum/SexualityEnum';
-
+import updateStatus from '../components/updateStatus';
 
 const user_image_list = [
     "https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHdvbWVufGVufDB8fDB8fHww",
@@ -17,8 +16,6 @@ const user_image_list = [
     "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bWFufGVufDB8fDB8fHww",
     "https://images.unsplash.com/photo-1560087637-bf797bc7796a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjZ8fHdvbWVufGVufDB8fDB8fHww",
 ]
-
-
 
 const Home = () => {
 
@@ -31,31 +28,51 @@ const Home = () => {
         axios.get("http://localhost:8000/users/me", {
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.access_token}` }
         }).then(({ data }) => {
+            const my_user = data
             setMe(data)
+            axios.get("http://localhost:8000/users/", {
+                headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.access_token}` }
+            }).then(({ data }) => {
+                setAllUsers(data.filter(user => user.id != my_user.id))
+            }).catch((error) => {
+                console.log(error)
+            })
         }).catch((error) => {
             console.log(error)
         })
 
-        axios.get("http://localhost:8000/users/", {
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.access_token}` }
-        }).then(({ data }) => {
-            setAllUsers(data)
-        }).catch((error) => {
-            console.log(error)
-        })
+
 
 
     }, [])
+
 
 
     const onLikeUser = (user_id) => {
         const headers = { "Content-Type": "application/json", Authorization: `Bearer ${token.access_token}` }
         axios.post(`http://localhost:8000/users/like/${user_id}`, {}, {
             headers: headers
-        }).then(({data}) => {
+        }).then(({ data }) => {
             console.log(data)
         })
     }
+
+    updateStatus(({user_id, status}) => {
+        if (allUsers) {
+            const index = allUsers.findIndex(user => user.id == user_id)
+            if (index >= 0) {
+
+                const temp = [...allUsers]
+                
+                temp[index].status = status
+
+                setAllUsers(temp)
+            }
+
+        }
+
+    })
+
 
     printVarsHook(allUsers, 'allUsers')
 
@@ -64,7 +81,7 @@ const Home = () => {
         <div className="main">
             <div className="search-container">
                 <div className="title">All Users</div>
-                {allUsers.filter(user => me != null && user.id != me.id).map((user, index) =>
+                {allUsers.map((user, index) =>
                     <div className="item" key={user.username}>
                         <img src={user_image_list[index % user_image_list.length]} className='background' alt="" />
 
@@ -100,6 +117,12 @@ const Home = () => {
                             <div className="info">
                                 <div className="icon">
                                     {user.gender == GenderEnum.MALE ? <MaleIcon /> : <FemaleIcon />}
+                                </div>
+                            </div>
+                            <div className="limiter" />
+                            <div className="info">
+                                <div className="text">
+                                    {user.status}
                                 </div>
                             </div>
                             <div className="actions">

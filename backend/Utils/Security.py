@@ -25,7 +25,6 @@ class Security:
         expire = datetime.utcnow() + timedelta(minutes=int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")))
         to_encode.update({"exp": expire})
         encoded_jwt = jwt.encode(to_encode, os.getenv("SUPER_SECRET_KEY"), algorithm=os.getenv("ACCESS_TOKEN_ALGORITHM"))
-        print(encoded_jwt)
         return encoded_jwt
 
     def verify_token(self, token: str = Depends(oauth2_scheme)):

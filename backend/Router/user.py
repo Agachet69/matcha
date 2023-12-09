@@ -1,6 +1,7 @@
 from typing import List
 from Utils import get_db
 from Schemas.token import TokenSchema
+from Enum.StatusEnum import StatusEnum
 from Schemas.notif import NotifCreate
 from Enum.NotifTypeEnum import NotifTypeEnum
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -8,6 +9,8 @@ from Schemas.user import UserLogin, UserSchema, UserCreate, UserUpdate
 import Crud
 from Deps.user import get_user, get_current_user
 from Utils import security
+from Socket import connected_clients
+
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -55,16 +58,22 @@ def get_me(current_user: UserSchema = Depends(get_current_user)):
 
 
 @router.post("/like/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
-def get_me(
+async def get_me(
     current_user: UserSchema = Depends(get_current_user), user_to_like=Depends(get_user)
 ):
+    from Socket.socket import socket_manager
+    from Utils.App import app
     
+    # await socket_manager.emit('update-status', {'data': 'foobar'}, room=connected_clients[0]["sid"])
+
     
+    print(connected_clients)
+    # socket_manager
+
     
     print(user_to_like)
     
     # return current_user
-
 
 # @router.get("/add_notif", status_code=status.HTTP_200_OK, response_model=UserSchema)
 # def get_me(current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):

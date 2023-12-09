@@ -10,3 +10,4 @@ PyJWT
 python-dotenv
 fastapi-socketio
 python-multipart
+asyncio

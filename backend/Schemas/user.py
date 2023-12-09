@@ -4,6 +4,7 @@ from Schemas.notif import NotifSchema
 from Schemas.like import LikeSchema
 from Enum.GenderEnum import GenderEnum
 from Enum.SexualityEnum import SexualityEnum
+from Enum.StatusEnum import StatusEnum
 
 from pydantic import BaseModel, EmailStr, constr, validator
 
@@ -53,6 +54,7 @@ class UserLogin(UserBase):
 
 class UserUpdate(UserBase):
     password: Optional[constr(min_length=1)]
+    status: Optional[StatusEnum]
     
     # _validate_password = validator("password", allow_reuse=True)(password_validator('EDIT'))
 
@@ -68,4 +70,6 @@ class UserSchema(UserInDBBase):
     likes: List[LikeSchema]
     liked_by: List[LikeSchema]
     photos: List[str]
+    status: Optional[StatusEnum]
+    
     

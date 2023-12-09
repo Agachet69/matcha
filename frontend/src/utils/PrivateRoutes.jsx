@@ -27,7 +27,6 @@ export const PrivateRoutes = ({ children }) => {
       const newSocket = io("http://localhost:8000", { path: "/ws/socket.io/", transports: ['websocket', 'polling'], auth: { user_id: myUser.id } })
       setSocket(newSocket);
 
-      // Cleanup when the component unmounts
       return () => {
         newSocket.disconnect();
       };
