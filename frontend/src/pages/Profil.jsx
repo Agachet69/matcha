@@ -8,19 +8,59 @@ const Profil = () => {
   const token = useSelector(getToken);
   const user = useSelector(selectUser);
   const [formUser, setFormUser] = useState(user);
+  const [edit, setEdit] = useState(false);
 
-  function genderChange(event) {
-    setFormUser((prevState) => ({
-      ...prevState,
-      gender: event.target.value,
-    }));
-  }
+  function formUserChange(event, inputName) {
 
-  function prefersChange(event) {
-    setFormUser((prevState) => ({
-      ...prevState,
-      sexuality: event.target.value,
-    }));
+    switch (inputName) {
+      case "username":
+        setFormUser(prevState => ({
+          ...prevState,
+          username: event.target.value,
+        }))
+        break
+
+      case "lastname":
+        setFormUser(prevState => ({
+          ...prevState,
+          lastName: event.target.value,
+        }))
+        break
+      case "firstname":
+        setFormUser(prevState => ({
+          ...prevState,
+          firstName: event.target.value,
+        }))
+        break
+      case "email":
+        setFormUser(prevState => ({
+          ...prevState,
+          email: event.target.value,
+        }))
+        break
+      case "gender":
+        setFormUser((prevState) => ({
+          ...prevState,
+          gender: event.target.value,
+        }));
+        break
+      case "orientation":
+        setFormUser((prevState) => ({
+          ...prevState,
+          sexuality: event.target.value,
+        }));
+        break
+      case "bio":
+        setFormUser((prevState) => ({
+          ...prevState,
+          bio: event.target.value,
+        }));
+        break
+
+
+      default:
+        console.log('bad name');
+    }
   }
 
   useEffect(() => {
@@ -29,15 +69,19 @@ const Profil = () => {
 
   return (
     <div className="ProfilContainer">
-      {/* <button onClick={() => {
-                console.log(token)
-            }}>Get Me</button>
-            
-            <button onClick={() => console.log(user)}> getUser </button> */}
+      <h1>Profil</h1>
 
       {!user && <div> Loader </div>}
       {user && (
         <form>
+          <h4> Username</h4>
+          <input type="text" onChange={(e) => formUserChange(e, "username")} defaultValue={formUser.username} disabled={!edit} />
+          <h4> Lastname </h4>
+          <input type="text" onChange={(e) => formUserChange(e, "lastname")} defaultValue={formUser.lastName} disabled={!edit} />
+          <h4> Firstname </h4>
+          <input type="text" onChange={(e) => formUserChange(e, "firstname")} defaultValue={formUser.firstName} disabled={!edit} />
+          <h4> Email </h4>
+          <input type="text" onChange={(e) => formUserChange(e, "email")} defaultValue={formUser.email} disabled={!edit} />
           <h4> Genre </h4>
           <label htmlFor="homme"> Homme </label>
           <input
@@ -46,7 +90,8 @@ const Profil = () => {
             id="homme"
             value="MALE"
             checked={formUser.gender === "MALE"}
-            onChange={genderChange}
+            onChange={(e) => formUserChange(e, "gender")}
+            disabled={!edit}
           />
           <label htmlFor="femme"> Femme </label>
           <input
@@ -55,10 +100,11 @@ const Profil = () => {
             id="femme"
             value="FEMALE"
             checked={formUser.gender === "FEMALE"}
-            onChange={genderChange}
+            onChange={(e) => formUserChange(e, "gender")}
+            disabled={!edit}
           />
 
-          <h4> Préférences </h4>
+          <h4> Orientation </h4>
           <label htmlFor="hetero"> Hétérosexuel </label>
           <input
             type="radio"
@@ -66,7 +112,8 @@ const Profil = () => {
             id="hetero"
             value="HETEROSEXUAL"
             checked={formUser.sexuality === "HETEROSEXUAL"}
-            onChange={prefersChange}
+            onChange={(e) => formUserChange(e, "orientation")}
+            disabled={!edit}
           />
           <label htmlFor="homo"> Homosexuel </label>
           <input
@@ -75,7 +122,8 @@ const Profil = () => {
             id="homo"
             value="HOMOSEXUAL"
             checked={formUser.sexuality === "HOMOSEXUAL"}
-            onChange={prefersChange}
+            onChange={(e) => formUserChange(e, "orientation")}
+            disabled={!edit}
           />
           <label htmlFor="bi"> Bisexuel </label>
           <input
@@ -84,21 +132,49 @@ const Profil = () => {
             id="bi"
             value="BISEXUAL"
             checked={formUser.sexuality === "BISEXUAL"}
-            onChange={prefersChange}
+            onChange={(e) => formUserChange(e, "orientation")}
+            disabled={!edit}
           />
+
+
+          <h4> Intérêts </h4>
+          <input type="radio" id="musique" />
+          <label htmlFor="musique"> Musique</label>
+
+          <input type="radio" id="sport" />
+          <label htmlFor="sport"> Sport</label>
+
+          <input type="radio" id="jeuxVideos" />
+          <label htmlFor="jeuxVideos"> Jeux vidéos </label>
+
+          <input type="radio" id="voyage" />
+          <label htmlFor="voyage"> Voyages </label>
+
+          <input type="radio" id="cinema" />
+          <label htmlFor="cinema"> Cinéma </label>
+
+          <h4> Biographie </h4>
+          <textarea value={formUser.bio} onChange={(e) => formUserChange(e, "bio")} disabled={!edit}> </textarea>
         </form>
       )}
-
-      <h1>Profil</h1>
-      <p> Genre </p>
+      {
+        !edit &&
+        <button onClick={() => setEdit(true)}> Modifier le Profil</button>
+      }
+      {
+        edit &&
+        <div>
+          <button> Mettre à jour </button>
+          <button onClick={() => setEdit(false)}> Annuler </button>
+        </div>
+      }
       <p> pictures + Photo de profil </p>
       <p>
         {" "}
         A list of interests with tags (e.g. #vegan, #geek, #piercing, etc.),
         which mustbe reusable{" "}
       </p>
-      <p> Sexual preferences </p>
-      <p> A biography </p>
+
       <p> Qui à vue ton profil </p>
       <p> Qui à like ton profil </p>
       <p> fame rating </p>
