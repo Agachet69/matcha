@@ -25,7 +25,7 @@ async def background_task():
         for client in disconnect_clients:
             now = time.time()
             
-            if now - client['time'] >= 5:
+            if now - client['time'] >= 1:
                 user = Crud.user.get(db, client["user_id"])
                 user_update = UserUpdate(status=StatusEnum.OFFLINE)
                 user = Crud.user.update(db, db_obj=user, obj_in=user_update)
@@ -41,7 +41,7 @@ async def connect(sid, environ, auth):
         return
     connected_clients.append({
         'sid': sid,
-        'auth': auth,
+        'auth': auth, # {user_id: int}
     })
     
     db = SessionLocal()
@@ -67,3 +67,5 @@ async def disconnect(sid):
             connected_clients.remove(client)
             break
     logger.info(f"Client disconnected {sid}")
+
+

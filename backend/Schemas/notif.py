@@ -10,8 +10,9 @@ from Validators.user import user_name_validator, password_validator
 
 
 class NotifBase(BaseModel):
-    data: str
     type: NotifTypeEnum
+    data: str
+    data_user_id: Optional[int]
 
 class NotifCreate(NotifBase):
 	pass
@@ -24,5 +25,4 @@ class NotifInDBBase(NotifBase):
 
 
 class NotifSchema(NotifInDBBase):
-    # type: Any
-    pass
+    data_user: Optional[Any]

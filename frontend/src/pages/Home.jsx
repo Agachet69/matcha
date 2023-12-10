@@ -135,6 +135,72 @@ const Home = () => {
                     </div>
                 )}
             </div>
+
+            <div className="search-container">
+                <div className="title">My Notifs</div>
+
+                {me!=null && me.notifs.map(notif => 
+                    <div className="notif-item">
+                        <div className="icon"></div>
+                        <div className="type">{notif.type}</div>
+                    </div>
+                )}
+
+
+                {/* {allUsers.map((user, index) =>
+                    <div className="item" key={user.username}>
+                        <img src={user_image_list[index % user_image_list.length]} className='background' alt="" />
+
+                        <div className="item-content">
+                            <div className="image">
+                                <img src={user_image_list[index % user_image_list.length]} alt="" />
+                            </div>
+                            <div className="name">{user.username}</div>
+
+
+                            <div className="limiter" />
+                            <div className="info">
+                                <div className="icon">
+                                    <UserIcon />
+                                </div>
+                                <div className="text">
+                                    {user.firstName}
+                                </div>
+                                <div className="text">
+                                    {user.lastName}
+                                </div>
+                            </div>
+                            <div className="limiter" />
+                            <div className="info">
+                                <div className="icon">
+                                    <Age />
+                                </div>
+                                <div className="text">
+                                    {user.age}
+                                </div>
+                            </div>
+                            <div className="limiter" />
+                            <div className="info">
+                                <div className="icon">
+                                    {user.gender == GenderEnum.MALE ? <MaleIcon /> : <FemaleIcon />}
+                                </div>
+                            </div>
+                            <div className="limiter" />
+                            <div className="info">
+                                <div className="text">
+                                    {user.status}
+                                </div>
+                            </div>
+                            <div className="actions">
+                                <div className="like" onClick={() => onLikeUser(user.id)}>
+                                    <HeartIcon />
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                )} */}
+            </div>
         </div>
     )
 }

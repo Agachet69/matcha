@@ -4,13 +4,13 @@ from Schemas.token import TokenSchema
 from Enum.StatusEnum import StatusEnum
 from Schemas.notif import NotifCreate
 from Enum.NotifTypeEnum import NotifTypeEnum
+from Schemas.like import LikeSchema
 from fastapi import APIRouter, Depends, HTTPException, status
 from Schemas.user import UserLogin, UserSchema, UserCreate, UserUpdate
 import Crud
 from Deps.user import get_user, get_current_user
 from Utils import security
 from Socket import connected_clients
-
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -57,23 +57,44 @@ def get_me(current_user: UserSchema = Depends(get_current_user)):
     return current_user
 
 
-@router.post("/like/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
+@router.post("/like/{user_id}", status_code=status.HTTP_200_OK, response_model=LikeSchema)
 async def get_me(
-    current_user: UserSchema = Depends(get_current_user), user_to_like=Depends(get_user)
+    current_user: UserSchema = Depends(get_current_user), user_to_like: UserSchema = Depends(get_user), db=Depends(get_db)
 ):
     from Socket.socket import socket_manager
-    from Utils.App import app
     
+    
+    like = next((like for like in current_user.likes if like.user_target_id == user_to_like.id), None)
+    
+    if like != None:
+        raise HTTPException(status_code=400, detail="A like has already been created between those two people.")
+    
+    like_target = next((like for like in user_to_like.likes if like.user_target_id == current_user.id), None)
+    if like_target != None:
+        Crud.like.remove(db, id=like_target.id)
+        print("                              MATCH HAS TO BE CREATED                              ")
+    else:
+        like = Crud.user.like(db, current_user, user_to_like)
+        Crud.user.add_notif(db, user_to_like, NotifCreate(
+            data=f'{current_user.username} has a crush on you.',
+            data_user_id=current_user.id,
+            type=NotifTypeEnum.LIKE
+        ))
+        
     # await socket_manager.emit('update-status', {'data': 'foobar'}, room=connected_clients[0]["sid"])
-
     
+    
+    
+
     print(connected_clients)
+    
+    
     # socket_manager
 
     
     print(user_to_like)
     
-    # return current_user
+    return like
 
 # @router.get("/add_notif", status_code=status.HTTP_200_OK, response_model=UserSchema)
 # def get_me(current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):

@@ -4,7 +4,7 @@ from Schemas.notif import NotifCreate
 from Enum.StatusEnum import StatusEnum
 
 from .base import CRUDBase
-from Model import User, Notif
+from Model import User, Notif, Like
 from Schemas.user import UserCreate, UserUpdate
 
 from fastapi.encoders import jsonable_encoder
@@ -21,10 +21,20 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.commit()
         db.refresh(db_obj)
         return db_obj
+    
+    def like(self, db: Session, user_from: User, user_target: User):
+        like_obj = Like(
+            user_id = user_from.id,
+            user_target_id = user_target.id,
+        )
+        db.add(like_obj)
+        db.commit()
+        db.refresh(like_obj)
+        return like_obj
 
     def add_notif(self, db: Session, db_obj: User, notif: NotifCreate):
         db_obj.notifs.append(
-            Notif(type=notif.type.value, data=notif.data, user_id=db_obj.id)
+            Notif(type=notif.type.value, data=notif.data, data_user_id=notif.data_user_id, user_id=db_obj.id)
         )
         db.add(db_obj)
         db.commit()
