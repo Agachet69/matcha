@@ -12,8 +12,6 @@ import { KeyIcon } from '../components/icons/Icons';
 import { useDispatch } from 'react-redux';
 import { setToken } from '../store/slices/authSlice';
 
-
-
 const Register = () => {
 
   const [onRegisterErrorMessage, setOnRegisterErrorMessage] = useState("")
@@ -23,7 +21,7 @@ const Register = () => {
 
   const onRegister = (values) => {
     axios.post('http://localhost:8000/users/register', values)
-      .then(({data}) => {
+      .then(({ data }) => {
         dispatch(setToken(data))
         navigate('/profil')
       })
@@ -31,8 +29,7 @@ const Register = () => {
         console.log(error.response.data.detail)
         setOnRegisterErrorMessage(error.response.data.detail)
       });
-    }
-
+  }
 
   useEffect(() => window.scrollTo(0, 0), [])
 
@@ -181,7 +178,7 @@ const Register = () => {
               </div>
               {!!formik.errors.password && formik.touched.password && <div className='error'>{formik.errors.password}</div>}
             </div>
-            <button className="loginButton" type='submit'> Log in </button>
+            <button className="loginButton" type='submit'> Register </button>
             {!!onRegisterErrorMessage && <div className='error'>{onRegisterErrorMessage}</div>}
           </form>
           <div className="bottomForm">

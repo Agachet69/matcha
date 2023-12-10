@@ -1,14 +1,15 @@
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import "../styles/header.scss"
 import { Logout, UserIcon } from "./icons/Icons";
 import { setToken } from "../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
+import { selectUser } from "../store/slices/userSlice";
 
 const Header = ({children, connected = true}) => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-
+    const user = useSelector(selectUser);
 
     return (
         <div className="container">
@@ -22,7 +23,7 @@ const Header = ({children, connected = true}) => {
                             <UserIcon/>
                         </div>
                         <div className="name">
-                            My name here
+                            {user.username}
                         </div>
 
                     </div>

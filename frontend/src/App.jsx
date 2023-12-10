@@ -8,11 +8,12 @@ import {
 } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { selectAuth } from './store/slices/authSlice';
+import { selectUser } from './store/slices/userSlice';
 
 
 function App() {
   const [token, setToken] = useState(null)
-  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState(null)
   const [allUsers, setAllUsers] = useState(null)
   const [name, setName] = useState("")
   const [password, setPassword] = useState("")
@@ -24,6 +25,7 @@ function App() {
 
   useEffect(() => setSocket(io("http://localhost:8000", { path: "/ws/socket.io/", transports: ['websocket', 'polling'] })), [])
   
+
   // socket.on("connect", () => { console.log("Connected", socket.id) }); 
   // return (
   //   <div style={{ display: 'flex', justifyContent: "space-around", width: "100vw" }}>

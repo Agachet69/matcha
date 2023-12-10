@@ -12,7 +12,6 @@ const Login = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const auth = useSelector(selectAuth);
 
   const [onLoginErrorMessage, setOnLoginErrorMessage] = useState("")
 

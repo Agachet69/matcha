@@ -11,7 +11,7 @@ import {Provider, useDispatch, useSelector} from "react-redux";
 import { PersistGate } from 'redux-persist/integration/react';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <Provider store={store}>
       <PersistGate loading={<div style={{
         width: "100%",
@@ -24,5 +24,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <RouterProvider router={router} />
       </PersistGate>
     </Provider>
-  </React.StrictMode>
+  // </React.StrictMode>
 )

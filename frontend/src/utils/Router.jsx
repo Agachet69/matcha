@@ -1,7 +1,4 @@
-import {
-    Navigate,
-    createBrowserRouter,
-} from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import Profil from "../pages/Profil";
 import Chat from "../pages/Chat";
