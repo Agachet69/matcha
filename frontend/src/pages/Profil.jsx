@@ -3,6 +3,7 @@ import { getToken } from "../store/slices/authSlice";
 import { selectUser } from "../store/slices/userSlice";
 import "../styles/profil.scss";
 import { useEffect, useState } from "react";
+import { Identity, Letter, UserIcon } from "../components/icons/Icons";
 
 const Profil = () => {
   const token = useSelector(getToken);
@@ -11,55 +12,53 @@ const Profil = () => {
   const [edit, setEdit] = useState(false);
 
   function formUserChange(event, inputName) {
-
     switch (inputName) {
       case "username":
-        setFormUser(prevState => ({
+        setFormUser((prevState) => ({
           ...prevState,
           username: event.target.value,
-        }))
-        break
+        }));
+        break;
 
       case "lastname":
-        setFormUser(prevState => ({
+        setFormUser((prevState) => ({
           ...prevState,
           lastName: event.target.value,
-        }))
-        break
+        }));
+        break;
       case "firstname":
-        setFormUser(prevState => ({
+        setFormUser((prevState) => ({
           ...prevState,
           firstName: event.target.value,
-        }))
-        break
+        }));
+        break;
       case "email":
-        setFormUser(prevState => ({
+        setFormUser((prevState) => ({
           ...prevState,
           email: event.target.value,
-        }))
-        break
+        }));
+        break;
       case "gender":
         setFormUser((prevState) => ({
           ...prevState,
           gender: event.target.value,
         }));
-        break
+        break;
       case "orientation":
         setFormUser((prevState) => ({
           ...prevState,
           sexuality: event.target.value,
         }));
-        break
+        break;
       case "bio":
         setFormUser((prevState) => ({
           ...prevState,
           bio: event.target.value,
         }));
-        break
-
+        break;
 
       default:
-        console.log('bad name');
+        console.log("bad name");
     }
   }
 
@@ -69,105 +68,155 @@ const Profil = () => {
 
   return (
     <div className="ProfilContainer">
-      <h1>Profil</h1>
-
-      {!user && <div> Loader </div>}
-      {user && (
-        <form>
-          <h4> Username</h4>
-          <input type="text" onChange={(e) => formUserChange(e, "username")} defaultValue={formUser.username} disabled={!edit} />
-          <h4> Lastname </h4>
-          <input type="text" onChange={(e) => formUserChange(e, "lastname")} defaultValue={formUser.lastName} disabled={!edit} />
-          <h4> Firstname </h4>
-          <input type="text" onChange={(e) => formUserChange(e, "firstname")} defaultValue={formUser.firstName} disabled={!edit} />
-          <h4> Email </h4>
-          <input type="text" onChange={(e) => formUserChange(e, "email")} defaultValue={formUser.email} disabled={!edit} />
-          <h4> Genre </h4>
-          <label htmlFor="homme"> Homme </label>
-          <input
-            type="radio"
-            name="Genre"
-            id="homme"
-            value="MALE"
-            checked={formUser.gender === "MALE"}
-            onChange={(e) => formUserChange(e, "gender")}
-            disabled={!edit}
-          />
-          <label htmlFor="femme"> Femme </label>
-          <input
-            type="radio"
-            name="Genre"
-            id="femme"
-            value="FEMALE"
-            checked={formUser.gender === "FEMALE"}
-            onChange={(e) => formUserChange(e, "gender")}
-            disabled={!edit}
-          />
-
-          <h4> Orientation </h4>
-          <label htmlFor="hetero"> Hétérosexuel </label>
-          <input
-            type="radio"
-            name="prefers"
-            id="hetero"
-            value="HETEROSEXUAL"
-            checked={formUser.sexuality === "HETEROSEXUAL"}
-            onChange={(e) => formUserChange(e, "orientation")}
-            disabled={!edit}
-          />
-          <label htmlFor="homo"> Homosexuel </label>
-          <input
-            type="radio"
-            name="prefers"
-            id="homo"
-            value="HOMOSEXUAL"
-            checked={formUser.sexuality === "HOMOSEXUAL"}
-            onChange={(e) => formUserChange(e, "orientation")}
-            disabled={!edit}
-          />
-          <label htmlFor="bi"> Bisexuel </label>
-          <input
-            type="radio"
-            name="prefers"
-            id="bi"
-            value="BISEXUAL"
-            checked={formUser.sexuality === "BISEXUAL"}
-            onChange={(e) => formUserChange(e, "orientation")}
-            disabled={!edit}
-          />
-
-
-          <h4> Intérêts </h4>
-          <input type="radio" id="musique" />
-          <label htmlFor="musique"> Musique</label>
-
-          <input type="radio" id="sport" />
-          <label htmlFor="sport"> Sport</label>
-
-          <input type="radio" id="jeuxVideos" />
-          <label htmlFor="jeuxVideos"> Jeux vidéos </label>
-
-          <input type="radio" id="voyage" />
-          <label htmlFor="voyage"> Voyages </label>
-
-          <input type="radio" id="cinema" />
-          <label htmlFor="cinema"> Cinéma </label>
-
-          <h4> Biographie </h4>
-          <textarea value={formUser.bio} onChange={(e) => formUserChange(e, "bio")} disabled={!edit}> </textarea>
-        </form>
-      )}
-      {
-        !edit &&
+      <h1>Votre profil</h1>
+      {!edit && (
         <button onClick={() => setEdit(true)}> Modifier le Profil</button>
-      }
-      {
-        edit &&
+      )}
+      {edit && (
         <div>
           <button> Mettre à jour </button>
           <button onClick={() => setEdit(false)}> Annuler </button>
         </div>
-      }
+      )}
+      {!user && <div> Loader </div>}
+      {user && (
+        <form>
+          <div className="inputContainer">
+            <label> Username</label>
+            <div className={edit ? "myTextInput" : "myTextInput inactive"}>
+              <input
+                type="text"
+                onChange={(e) => formUserChange(e, "username")}
+                defaultValue={formUser.username}
+                disabled={!edit}
+              />
+              <UserIcon />
+            </div>
+          </div>
+          <div className="inputContainer">
+            <label> Lastname </label>
+            <div className={edit ? "myTextInput" : "myTextInput inactive"}>
+              <input
+                type="text"
+                onChange={(e) => formUserChange(e, "lastname")}
+                defaultValue={formUser.lastName}
+                disabled={!edit}
+              />
+              <Identity />
+            </div>
+          </div>
+          <div className="inputContainer">
+            <label> Firstname </label>
+            <div className={edit ? "myTextInput" : "myTextInput inactive"}>
+              <input
+                type="text"
+                onChange={(e) => formUserChange(e, "firstname")}
+                defaultValue={formUser.firstName}
+                disabled={!edit}
+              />
+              <Identity />
+            </div>
+          </div>
+          <div className="inputContainer">
+            <label> Email </label>
+            <div className={edit ? "myTextInput" : "myTextInput inactive"}>
+              <input
+                type="text"
+                onChange={(e) => formUserChange(e, "email")}
+                defaultValue={formUser.email}
+                disabled={!edit}
+              />
+              <Letter />
+            </div>
+          </div>
+          <div>
+            <label> Genre </label>
+            <label htmlFor="homme"> Homme </label>
+            <input
+              type="radio"
+              name="Genre"
+              id="homme"
+              value="MALE"
+              checked={formUser.gender === "MALE"}
+              onChange={(e) => formUserChange(e, "gender")}
+              disabled={!edit}
+            />
+            <label htmlFor="femme"> Femme </label>
+            <input
+              type="radio"
+              name="Genre"
+              id="femme"
+              value="FEMALE"
+              checked={formUser.gender === "FEMALE"}
+              onChange={(e) => formUserChange(e, "gender")}
+              disabled={!edit}
+            />
+          </div>
+          <div>
+            <label> Orientation </label>
+            <label htmlFor="hetero"> Hétérosexuel </label>
+            <input
+              type="radio"
+              name="prefers"
+              id="hetero"
+              value="HETEROSEXUAL"
+              checked={formUser.sexuality === "HETEROSEXUAL"}
+              onChange={(e) => formUserChange(e, "orientation")}
+              disabled={!edit}
+            />
+            <label htmlFor="homo"> Homosexuel </label>
+            <input
+              type="radio"
+              name="prefers"
+              id="homo"
+              value="HOMOSEXUAL"
+              checked={formUser.sexuality === "HOMOSEXUAL"}
+              onChange={(e) => formUserChange(e, "orientation")}
+              disabled={!edit}
+            />
+            <label htmlFor="bi"> Bisexuel </label>
+            <input
+              type="radio"
+              name="prefers"
+              id="bi"
+              value="BISEXUAL"
+              checked={formUser.sexuality === "BISEXUAL"}
+              onChange={(e) => formUserChange(e, "orientation")}
+              disabled={!edit}
+            />
+          </div>
+
+          <div>
+            <label> Intérêts </label>
+            <input type="radio" id="musique" />
+            <label htmlFor="musique"> Musique</label>
+
+            <input type="radio" id="sport" />
+            <label htmlFor="sport"> Sport</label>
+
+            <input type="radio" id="jeuxVideos" />
+            <label htmlFor="jeuxVideos"> Jeux vidéos </label>
+
+            <input type="radio" id="voyage" />
+            <label htmlFor="voyage"> Voyages </label>
+
+            <input type="radio" id="cinema" />
+            <label htmlFor="cinema"> Cinéma </label>
+          </div>
+
+          <div>
+            <label> Biographie </label>
+            <textarea
+              value={formUser.bio}
+              onChange={(e) => formUserChange(e, "bio")}
+              disabled={!edit}
+            >
+              {" "}
+            </textarea>
+          </div>
+        </form>
+      )}
+
       <p> pictures + Photo de profil </p>
       <p>
         {" "}

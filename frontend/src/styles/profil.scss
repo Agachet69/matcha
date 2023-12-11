@@ -1,3 +1,76 @@
-.ProfilContainer form{
-  padding: 25px;
+@import "./var.scss";
+
+.ProfilContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 30px;
+  font-family: Montserrat;
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    background-color: rgba(128, 128, 128, 0.116);
+    width: 90%;
+    padding: 20px 30px;
+    border-radius: 20px;
+
+    label {
+      color: $labelGrey;
+    }
+
+    .inputContainer {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      .myTextInput {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: transparent;
+        background-color: white;
+        border: 1px solid $borderInput;
+
+        input {
+          position: relative;
+          z-index: 1;
+          border: none;
+          padding: 10px 35px 10px 20px;
+          width: 100%;
+          background-color: transparent;
+          font-size: 14px;
+          font-family: Montserrat;
+        }
+
+        svg {
+          position: absolute;
+          right: 10px;
+          z-index: 0;
+          // color: $labelGrey;
+          width: 20px;
+        }
+
+      }
+      
+      .inactive {
+        background-color: transparent;
+        input {
+          color: rgba(168, 168, 168, 0.692);
+        }
+        color: rgba(168, 168, 168, 0.692);
+      }
+    }
+  }
 }
+
+// .ProfilContainer form{
+//   background-color: rgba(128, 128, 128, 0.116);
+//   width: 90%;
+
+//   padding: 20px 30px;
+//   border-radius: 20px;
+
+// }
