@@ -19,6 +19,8 @@ const Profil = () => {
   const [edit, setEdit] = useState(false);
   const [pic, setPic] = useState(null);
 
+  const [testImg, setTestImg] = useState(null);
+
   function formUserChange(event, inputName) {
     switch (inputName) {
       case "username":
@@ -74,6 +76,23 @@ const Profil = () => {
     console.log(formUser);
   }, [formUser]);
 
+  useEffect(() => {
+    console.log(pic);
+    if (pic) {
+      for (let i = 0; i < pic.length; i++) {
+        console.log(pic[i]);
+
+          const reader = new FileReader();
+          
+          reader.onloadend = () => {
+            setTestImg(reader.result);
+          };
+          
+          reader.readAsDataURL(pic[i]);
+      }
+    }
+  }, [pic])
+
   // const handleFileChange = (event) => {
   //   const file = event.target.files[0];
   //   const maxSize = 1024 * 1024; // 1 MB
@@ -93,8 +112,10 @@ const Profil = () => {
         type="file"
         id="pic"
         accept="image/*"
+        multiple
         onChange={(event) => setPic(event.target.files)}
       />
+      <img src={testImg}/>
       {!user && <div> Loader </div>}
       {user && (
         <form>

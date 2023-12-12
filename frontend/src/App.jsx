@@ -1,32 +1,36 @@
-import axios from 'axios'
-import { useEffect, useMemo, useState } from 'react'
-import './App.css'
-import io from 'socket.io-client';
-import { router } from './utils/Router'
-import {
-  RouterProvider,
-} from "react-router-dom";
-import { useSelector } from 'react-redux';
-import { selectAuth } from './store/slices/authSlice';
-import { selectUser } from './store/slices/userSlice';
-
+import axios from "axios";
+import { useEffect, useMemo, useState } from "react";
+import "./App.css";
+import io from "socket.io-client";
+import { router } from "./utils/Router";
+import { RouterProvider } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUser } from "./store/slices/userSlice";
 
 function App() {
-  const [token, setToken] = useState(null)
+  const [token, setToken] = useState(null);
   // const [user, setUser] = useState(null)
-  const [allUsers, setAllUsers] = useState(null)
-  const [name, setName] = useState("")
-  const [password, setPassword] = useState("")
-  const [id, setId] = useState(0)
+  const [allUsers, setAllUsers] = useState(null);
+  const [name, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [id, setId] = useState(0);
 
-  const [error, setError] = useState(false)
+  const [error, setError] = useState(false);
 
-  const [socket, setSocket] = useState(null)
+  const [socket, setSocket] = useState(null);
 
-  useEffect(() => setSocket(io("http://localhost:8000", { path: "/ws/socket.io/", transports: ['websocket', 'polling'] })), [])
-  
+  useEffect(
+    () =>
+      setSocket(
+        io("http://localhost:8000", {
+          path: "/ws/socket.io/",
+          transports: ["websocket", "polling"],
+        })
+      ),
+    []
+  );
 
-  // socket.on("connect", () => { console.log("Connected", socket.id) }); 
+  // socket.on("connect", () => { console.log("Connected", socket.id) });
   // return (
   //   <div style={{ display: 'flex', justifyContent: "space-around", width: "100vw" }}>
   //     <button onClick={() => {
@@ -44,7 +48,6 @@ function App() {
   //       ))}
   //     </div>
   //     <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-
 
   //       <div style={{ display: "flex", justifyContent: "space-around" }}>
 
@@ -67,11 +70,9 @@ function App() {
   //       </div>
   //       {error && <div style={{ fontFamily: "monospace", color: "red" }}>ERROR</div>}
 
-
   //       {/* <button>EDIT</button>
   //     <button>GET</button>
   //     <button>DELETE</button> */}
-
 
   //       <input type="text" placeholder='name' onChange={e => setName(e.currentTarget.value)} value={name} />
   //       <input type="text" placeholder='password' onChange={e => setPassword(e.currentTarget.value)} value={password} />
@@ -161,17 +162,13 @@ function App() {
   //       ))}
   //     </div>
   //   </div>
-  const auth = useSelector(selectAuth);
-
-
+  const auth = useSelector(th);
 
   return (
     // <RouterProvider router={router}/>
-    auth &&
-      <div className='mainContainer'> aha </div>
+    auth && <div className="mainContainer"> aha </div>
     // <>
     //   <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-
 
     //     <div style={{ display: "flex", justifyContent: "space-around" }}>
 
@@ -194,11 +191,9 @@ function App() {
     //     </div>
     //     {error && <div style={{ fontFamily: "monospace", color: "red" }}>ERROR</div>}
 
-
     //     {/* <button>EDIT</button>
     //   <button>GET</button>
     //   <button>DELETE</button> */}
-
 
     //     <input type="text" placeholder='name' onChange={e => setName(e.currentTarget.value)} value={name} />
     //     <input type="text" placeholder='password' onChange={e => setPassword(e.currentTarget.value)} value={password} />
@@ -278,7 +273,7 @@ function App() {
     //     </div>
     //   </div>
     // </>
-  )
+  );
 }
 
-export default App
+export default App;
