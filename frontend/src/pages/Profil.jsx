@@ -3,13 +3,21 @@ import { getToken } from "../store/slices/authSlice";
 import { selectUser } from "../store/slices/userSlice";
 import "../styles/profil.scss";
 import { useEffect, useState } from "react";
-import { Identity, Letter, UserIcon } from "../components/icons/Icons";
+import {
+  Cancel,
+  Confirm,
+  Edit,
+  Identity,
+  Letter,
+  UserIcon,
+} from "../components/icons/Icons";
 
 const Profil = () => {
   const token = useSelector(getToken);
   const user = useSelector(selectUser);
   const [formUser, setFormUser] = useState(user);
   const [edit, setEdit] = useState(false);
+  const [pic, setPic] = useState(null);
 
   function formUserChange(event, inputName) {
     switch (inputName) {
@@ -66,18 +74,27 @@ const Profil = () => {
     console.log(formUser);
   }, [formUser]);
 
+  // const handleFileChange = (event) => {
+  //   const file = event.target.files[0];
+  //   const maxSize = 1024 * 1024; // 1 MB
+  
+  //   if (file && file.size > maxSize) {
+  //     alert('Fichier trop volumineux. La taille maximale autorisée est 1 Mo.');
+  //   } else {
+  //     setSelectedFile(file);
+  //   }
+  // };
+
   return (
     <div className="ProfilContainer">
       <h1>Votre profil</h1>
-      {!edit && (
-        <button onClick={() => setEdit(true)}> Modifier le Profil</button>
-      )}
-      {edit && (
-        <div>
-          <button> Mettre à jour </button>
-          <button onClick={() => setEdit(false)}> Annuler </button>
-        </div>
-      )}
+      <label htmlFor="pic"> Ajouter une image </label>
+      <input
+        type="file"
+        id="pic"
+        accept="image/*"
+        onChange={(event) => setPic(event.target.files)}
+      />
       {!user && <div> Loader </div>}
       {user && (
         <form>
@@ -129,82 +146,88 @@ const Profil = () => {
               <Letter />
             </div>
           </div>
-          <div>
+          <div className="inputContainer">
             <label> Genre </label>
-            <label htmlFor="homme"> Homme </label>
-            <input
-              type="radio"
-              name="Genre"
-              id="homme"
-              value="MALE"
-              checked={formUser.gender === "MALE"}
-              onChange={(e) => formUserChange(e, "gender")}
-              disabled={!edit}
-            />
-            <label htmlFor="femme"> Femme </label>
-            <input
-              type="radio"
-              name="Genre"
-              id="femme"
-              value="FEMALE"
-              checked={formUser.gender === "FEMALE"}
-              onChange={(e) => formUserChange(e, "gender")}
-              disabled={!edit}
-            />
+            <div className="myRadioInput">
+              <input
+                type="radio"
+                name="Genre"
+                id="homme"
+                value="MALE"
+                checked={formUser.gender === "MALE"}
+                onChange={(e) => formUserChange(e, "gender")}
+                disabled={!edit}
+              />
+              <label htmlFor="homme"> Homme </label>
+              <input
+                type="radio"
+                name="Genre"
+                id="femme"
+                value="FEMALE"
+                checked={formUser.gender === "FEMALE"}
+                onChange={(e) => formUserChange(e, "gender")}
+                disabled={!edit}
+              />
+              <label htmlFor="femme"> Femme </label>
+            </div>
           </div>
-          <div>
+          <div className="inputContainer">
             <label> Orientation </label>
-            <label htmlFor="hetero"> Hétérosexuel </label>
-            <input
-              type="radio"
-              name="prefers"
-              id="hetero"
-              value="HETEROSEXUAL"
-              checked={formUser.sexuality === "HETEROSEXUAL"}
-              onChange={(e) => formUserChange(e, "orientation")}
-              disabled={!edit}
-            />
-            <label htmlFor="homo"> Homosexuel </label>
-            <input
-              type="radio"
-              name="prefers"
-              id="homo"
-              value="HOMOSEXUAL"
-              checked={formUser.sexuality === "HOMOSEXUAL"}
-              onChange={(e) => formUserChange(e, "orientation")}
-              disabled={!edit}
-            />
-            <label htmlFor="bi"> Bisexuel </label>
-            <input
-              type="radio"
-              name="prefers"
-              id="bi"
-              value="BISEXUAL"
-              checked={formUser.sexuality === "BISEXUAL"}
-              onChange={(e) => formUserChange(e, "orientation")}
-              disabled={!edit}
-            />
+            <div className="myRadioInput">
+              <input
+                type="radio"
+                name="prefers"
+                id="hetero"
+                value="HETEROSEXUAL"
+                checked={formUser.sexuality === "HETEROSEXUAL"}
+                onChange={(e) => formUserChange(e, "orientation")}
+                disabled={!edit}
+              />
+              <label htmlFor="hetero"> Hétérosexuel </label>
+              <input
+                type="radio"
+                name="prefers"
+                id="homo"
+                value="HOMOSEXUAL"
+                checked={formUser.sexuality === "HOMOSEXUAL"}
+                onChange={(e) => formUserChange(e, "orientation")}
+                disabled={!edit}
+              />
+              <label htmlFor="homo"> Homosexuel </label>
+              <input
+                type="radio"
+                name="prefers"
+                id="bi"
+                value="BISEXUAL"
+                checked={formUser.sexuality === "BISEXUAL"}
+                onChange={(e) => formUserChange(e, "orientation")}
+                disabled={!edit}
+              />
+              <label htmlFor="bi"> Bisexuel </label>
+            </div>
           </div>
 
-          <div>
+          <div className="inputContainer">
             <label> Intérêts </label>
-            <input type="radio" id="musique" />
-            <label htmlFor="musique"> Musique</label>
+            <div className="myRadioInput">
+              <input type="radio" id="musique" />
+              <label htmlFor="musique"> Musique</label>
 
-            <input type="radio" id="sport" />
-            <label htmlFor="sport"> Sport</label>
+              <input type="radio" id="sport" />
+              <label htmlFor="sport"> Sport</label>
 
-            <input type="radio" id="jeuxVideos" />
-            <label htmlFor="jeuxVideos"> Jeux vidéos </label>
+              <input type="radio" id="jeuxVideos" />
+              <label htmlFor="jeuxVideos"> Jeux vidéos </label>
 
-            <input type="radio" id="voyage" />
-            <label htmlFor="voyage"> Voyages </label>
+              <input type="radio" id="voyage" />
+              <label htmlFor="voyage"> Voyages </label>
 
-            <input type="radio" id="cinema" />
-            <label htmlFor="cinema"> Cinéma </label>
+              <input type="radio" id="cinema" />
+              <label htmlFor="cinema"> Cinéma </label>
+            </div>
           </div>
 
-          <div>
+          <div className="inputContainer">
             <label> Biographie </label>
             <textarea
               value={formUser.bio}
@@ -215,6 +238,22 @@ const Profil = () => {
             </textarea>
           </div>
         </form>
+      )}
+      {!edit && (
+        <div onClick={() => setEdit(true)} className="editIcon">
+          <Edit />
+        </div>
+      )}
+
+      {edit && (
+        <div className="editContainer">
+          <div className="confirmIcon">
+            <Confirm />
+          </div>
+          <div className="cancelIcon" onClick={() => setEdit(false)}>
+            <Cancel />
+          </div>
+        </div>
       )}
 
       <p> pictures + Photo de profil </p>
