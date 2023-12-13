@@ -11,14 +11,15 @@ import {
   Letter,
   UserIcon,
 } from "../components/icons/Icons";
+import axios from "axios";
 
 const Profil = () => {
   const token = useSelector(getToken);
   const user = useSelector(selectUser);
   const [formUser, setFormUser] = useState(user);
   const [edit, setEdit] = useState(false);
-  const [pic, setPic] = useState(null);
 
+  const [pic, setPic] = useState(null);
   const [testImg, setTestImg] = useState(null);
 
   function formUserChange(event, inputName) {
@@ -73,30 +74,44 @@ const Profil = () => {
   }
 
   useEffect(() => {
-    console.log(formUser);
-  }, [formUser]);
-
-  useEffect(() => {
-    console.log(pic);
+    // console.log(testImg);
     if (pic) {
-      for (let i = 0; i < pic.length; i++) {
-        console.log(pic[i]);
+      // const myImageList = [...pic]
+      // setTestImg(myImageList);
 
-          const reader = new FileReader();
-          
-          reader.onloadend = () => {
-            setTestImg(reader.result);
-          };
-          
-          reader.readAsDataURL(pic[i]);
-      }
+      setTestImg(pic[0]);
+
+      // console.log(pic[i]);
+      // const reader = new FileReader();
+      // reader.onloadend = () => {
+      //   setTestImg(reader.result);
+      // };
+      // reader.readAsDataURL(pic[i]);
     }
-  }, [pic])
+  }, [pic]);
+
+  async function sendImages() {
+    const formData = new FormData();
+    // testImg.forEach((image, index) => {
+    // console.log(pic[0]);
+    formData.append("image", testImg);
+    // });
+    // try {
+    const res = await axios.post("http://localhost:8000/users/pic", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    console.log(res);
+    // } catch (err) {
+    // console.log(err);
+    // }
+  }
 
   // const handleFileChange = (event) => {
   //   const file = event.target.files[0];
   //   const maxSize = 1024 * 1024; // 1 MB
-  
+
   //   if (file && file.size > maxSize) {
   //     alert('Fichier trop volumineux. La taille maximale autorisée est 1 Mo.');
   //   } else {
@@ -112,10 +127,23 @@ const Profil = () => {
         type="file"
         id="pic"
         accept="image/*"
-        multiple
-        onChange={(event) => setPic(event.target.files)}
+        onChange={(event) => {
+          setPic(event.target.files);
+        }}
       />
-      <img src={testImg}/>
+
+      {testImg && (
+        <div>
+          Infos : 
+          <p> {testImg.name} </p>
+          <p> {testImg.type}</p>
+        </div>
+      )}
+
+      {testImg/*.length > 0*/ && (
+        <button onClick={sendImages}> send images </button>
+      )}
+      <img src={testImg} />
       {!user && <div> Loader </div>}
       {user && (
         <form>

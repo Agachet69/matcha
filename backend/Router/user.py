@@ -3,7 +3,7 @@ from Utils import get_db
 from Schemas.token import TokenSchema
 from Schemas.notif import NotifCreate
 from Enum.NotifTypeEnum import NotifTypeEnum
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile
 from Schemas.user import UserLogin, UserSchema, UserCreate, UserUpdate
 import Crud
 from Deps.user import get_user, get_current_user
@@ -52,6 +52,23 @@ def get_all_users(
 @router.get("/me", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def get_me(current_user: UserSchema = Depends(get_current_user)):
     return current_user
+
+@router.post("/pic")
+async def upload_image(image: UploadFile = File(...), test : str="default value"):
+    print(test)
+    # db = SessionLocal()
+    
+    # try:
+    #     content = await image.read()
+    #     file_path = os.path.join("uploaded_images", image.filename)
+    #     save_file(content, file_path)
+
+    #     # Enregistrez l'image en base de données
+    #     image_id = save_image_to_db(db, name, content)
+
+    #     return {"message": "Image uploaded successfully", "image_id": image_id}
+    # finally:
+    #     db.close()
 
 
 # @router.get("/add_notif", status_code=status.HTTP_200_OK, response_model=UserSchema)
