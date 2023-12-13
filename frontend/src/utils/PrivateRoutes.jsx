@@ -5,6 +5,7 @@ import axios from 'axios';
 import { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { initialiseUser, selectUser } from '../store/slices/userSlice';
+import Snackbar from '@mui/material/Snackbar';
 
 const SocketContext = createContext();
 
@@ -20,12 +21,36 @@ export const PrivateRoutes = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const dispatch = useDispatch()
   const user = useSelector(selectUser);
-
+  const [snackbars, setSnackbar] = useState([])
 
   useEffect(() => {
     if (user) {
       const newSocket = io("http://localhost:8000", { path: "/ws/socket.io/", transports: ['websocket', 'polling'], auth: { user_id: user.id } })
       setSocket(newSocket);
+
+      const handleClose = (event, reason, o) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        console.log('event', event);
+        console.log('reason', reason);
+        console.log('o', o);
+      };
+
+      newSocket.on('add-notification', ({type, data, data_user_id}) => {
+
+
+        setSnackbar(prev => [...prev, <Snackbar
+          open={true}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          message="Note archived"
+          // action={action}
+        />])
+      }
+      )
+
 
       return () => {
         newSocket.disconnect();
@@ -33,15 +58,12 @@ export const PrivateRoutes = ({ children }) => {
     }
   }, [user]);
 
-  
-
   useEffect(() => {
     if (token)
     axios.get("http://localhost:8000/users/me", {
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.access_token}` }
     }).then(({data}) => {
       dispatch(initialiseUser(data));
-      // TODO: stock this user in a persitant reducer, to avoid non-necesary call to the back 
     }).catch((error) => {
       navigate("/login")
     })
@@ -53,6 +75,7 @@ export const PrivateRoutes = ({ children }) => {
 
   return token
     ? <SocketContext.Provider value={socket}>
+      {snackbars}
       {children}
     </SocketContext.Provider>
     : <Navigate to="/login" replace state={{ from: location }} />;

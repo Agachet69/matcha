@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 
 from Schemas.notif import NotifCreate
 from Enum.StatusEnum import StatusEnum
@@ -10,10 +10,14 @@ from Schemas.user import UserCreate, UserUpdate
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy import select
-from sqlalchemy.orm import Session, noload
-
+from sqlalchemy.orm import Session, noload, selectinload
 
 class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
+    def get_all(self, db: Session, **kwargs) -> List[ModelType]:
+        stmt = select(self.model)
+        stmt = stmt.options(selectinload('*'))
+        return db.execute(stmt).scalars().all()
+
     def create(self, db: Session, obj_in: UserCreate, **kwargs) -> User:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data, status=StatusEnum.OFFLINE)

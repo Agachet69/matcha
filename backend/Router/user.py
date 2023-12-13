@@ -11,6 +11,7 @@ import Crud
 from Deps.user import get_user, get_current_user
 from Utils import security
 from Socket import connected_clients
+from fastapi.encoders import jsonable_encoder
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -75,13 +76,23 @@ async def get_me(
         print("                              MATCH HAS TO BE CREATED                              ")
     else:
         like = Crud.user.like(db, current_user, user_to_like)
-        Crud.user.add_notif(db, user_to_like, NotifCreate(
+        notif_to_create = NotifCreate(
             data=f'{current_user.username} has a crush on you.',
             data_user_id=current_user.id,
             type=NotifTypeEnum.LIKE
-        ))
+        )
+        user = Crud.user.add_notif(db, user_to_like, notif_to_create)
+        if client := next((client for client in connected_clients if client['auth']['user_id'] == user_to_like.id), None):
+            await socket_manager.emit('add-notification', {
+                'data': user.notifs[-1].data,
+                'data_user_id': user.notifs[-1].data_user_id,
+                'type': user.notifs[-1].type.value
+            }, room=client["sid"])
+
+
+
+
         
-    # await socket_manager.emit('update-status', {'data': 'foobar'}, room=connected_clients[0]["sid"])
     
     
     
