@@ -2,6 +2,7 @@ from typing import Any, Optional, List
 from Schemas.token import TokenSchema
 from Schemas.notif import NotifSchema
 from Schemas.like import LikeSchema
+from Schemas.photo import PhotoSchema
 from Enum.GenderEnum import GenderEnum
 from Enum.SexualityEnum import SexualityEnum
 
@@ -21,7 +22,7 @@ class UserBase(BaseModel):
     sexuality: Optional[SexualityEnum]
     age: Optional[int]
     bio: Optional[str]
-    # photos: Optional[List[str]]
+    photos: Optional[PhotoSchema]
 
     _validate_name_not_none = validator("username", allow_reuse=True)(user_name_validator)
 
@@ -67,5 +68,5 @@ class UserSchema(UserInDBBase):
     notifs: List[NotifSchema]
     likes: List[LikeSchema]
     liked_by: List[LikeSchema]
-    photos: List[str]
+    photos: List[PhotoSchema]
     
