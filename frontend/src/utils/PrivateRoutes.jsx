@@ -6,6 +6,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { initialiseUser, selectUser } from '../store/slices/userSlice';
 import Snackbar from '@mui/material/Snackbar';
+import SnackBarsManager from './SnackbarsManager';
 
 const SocketContext = createContext();
 
@@ -28,30 +29,6 @@ export const PrivateRoutes = ({ children }) => {
       const newSocket = io("http://localhost:8000", { path: "/ws/socket.io/", transports: ['websocket', 'polling'], auth: { user_id: user.id } })
       setSocket(newSocket);
 
-      const handleClose = (event, reason, o) => {
-        if (reason === 'clickaway') {
-          return;
-        }
-    
-        console.log('event', event);
-        console.log('reason', reason);
-        console.log('o', o);
-      };
-
-      newSocket.on('add-notification', ({type, data, data_user_id}) => {
-
-
-        setSnackbar(prev => [...prev, <Snackbar
-          open={true}
-          autoHideDuration={6000}
-          onClose={handleClose}
-          message="Note archived"
-          // action={action}
-        />])
-      }
-      )
-
-
       return () => {
         newSocket.disconnect();
       };
@@ -67,7 +44,7 @@ export const PrivateRoutes = ({ children }) => {
     }).catch((error) => {
       navigate("/login")
     })
-  }, [])
+  }, [token])
 
   // if (authLogin === undefined) {
   //   return null; // or loading indicator/spinner/etc
@@ -75,8 +52,8 @@ export const PrivateRoutes = ({ children }) => {
 
   return token
     ? <SocketContext.Provider value={socket}>
-      {snackbars}
       {children}
+      <SnackBarsManager/>
     </SocketContext.Provider>
     : <Navigate to="/login" replace state={{ from: location }} />;
 }

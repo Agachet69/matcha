@@ -25,11 +25,12 @@ async def background_task():
         for client in disconnect_clients:
             now = time.time()
             
-            if now - client['time'] >= 1:
+            if now - client['time'] >= 5:
                 user = Crud.user.get(db, client["user_id"])
                 user_update = UserUpdate(status=StatusEnum.OFFLINE)
                 user = Crud.user.update(db, db_obj=user, obj_in=user_update)
                 disconnect_clients.remove(client)
+                await asyncio.sleep(.5)
                 await socket_manager.emit('update-status', {"user_id": client["user_id"], "status": StatusEnum.OFFLINE.value})
         await asyncio.sleep(1)
 

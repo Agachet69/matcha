@@ -5,6 +5,7 @@ from Enum.StatusEnum import StatusEnum
 from Schemas.notif import NotifCreate
 from Enum.NotifTypeEnum import NotifTypeEnum
 from Schemas.like import LikeSchema
+from Schemas.match import MatchCreate
 from fastapi import APIRouter, Depends, HTTPException, status
 from Schemas.user import UserLogin, UserSchema, UserCreate, UserUpdate
 import Crud
@@ -58,7 +59,7 @@ def get_me(current_user: UserSchema = Depends(get_current_user)):
     return current_user
 
 
-@router.post("/like/{user_id}", status_code=status.HTTP_200_OK, response_model=LikeSchema)
+@router.post("/like/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 async def get_me(
     current_user: UserSchema = Depends(get_current_user), user_to_like: UserSchema = Depends(get_user), db=Depends(get_db)
 ):
@@ -68,14 +69,54 @@ async def get_me(
     like = next((like for like in current_user.likes if like.user_target_id == user_to_like.id), None)
     
     if like != None:
-        raise HTTPException(status_code=400, detail="A like has already been created between those two people.")
+        Crud.like.remove(db, id=like.id)
+        
+        db.refresh(current_user)
+        
+        notif_to_create = NotifCreate(
+            data=f'{current_user.username} has no longer a crush on you.',
+            data_user_id=current_user.id,
+            type=NotifTypeEnum.LIKE
+        )
+        user = Crud.user.add_notif(db, user_to_like, notif_to_create)
+        if client := next((client for client in connected_clients if client['auth']['user_id'] == user_to_like.id), None):
+            await socket_manager.emit('add-notification', {
+                'data': user.notifs[-1].data,
+                'data_user_id': user.notifs[-1].data_user_id,
+                'type': user.notifs[-1].type.value
+            }, room=client["sid"])
+        return current_user
     
     like_target = next((like for like in user_to_like.likes if like.user_target_id == current_user.id), None)
     if like_target != None:
         Crud.like.remove(db, id=like_target.id)
-        print("                              MATCH HAS TO BE CREATED                              ")
+        Crud.match.create(db, MatchCreate(**{
+            "user_A_id": current_user.id,
+            "user_B_id": user_to_like.id,
+        }))
+        
+        notif_to_create = NotifCreate(
+            data=f"""It's a MATCH !""",
+            data_user_id=current_user.id,
+            type=NotifTypeEnum.MATCH
+        )
+        user = Crud.user.add_notif(db, user_to_like, notif_to_create)
+        if client := next((client for client in connected_clients if client['auth']['user_id'] == user_to_like.id), None):
+            await socket_manager.emit('add-notification', {
+                'data': user.notifs[-1].data,
+                'data_user_id': user.notifs[-1].data_user_id,
+                'type': user.notifs[-1].type.value
+            }, room=client["sid"])
+        
+        
+        db.refresh(current_user)
+        
+        return current_user
+        
+        
+        
     else:
-        like = Crud.user.like(db, current_user, user_to_like)
+        current_user = Crud.user.like(db, current_user, user_to_like)
         notif_to_create = NotifCreate(
             data=f'{current_user.username} has a crush on you.',
             data_user_id=current_user.id,
@@ -89,23 +130,9 @@ async def get_me(
                 'type': user.notifs[-1].type.value
             }, room=client["sid"])
 
-
-
-
-        
+    print(current_user.likes[0].__dict__)
     
-    
-    
-
-    print(connected_clients)
-    
-    
-    # socket_manager
-
-    
-    print(user_to_like)
-    
-    return like
+    return current_user
 
 # @router.get("/add_notif", status_code=status.HTTP_200_OK, response_model=UserSchema)
 # def get_me(current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):

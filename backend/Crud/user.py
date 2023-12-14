@@ -13,11 +13,6 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session, noload, selectinload
 
 class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
-    def get_all(self, db: Session, **kwargs) -> List[ModelType]:
-        stmt = select(self.model)
-        stmt = stmt.options(selectinload('*'))
-        return db.execute(stmt).scalars().all()
-
     def create(self, db: Session, obj_in: UserCreate, **kwargs) -> User:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data, status=StatusEnum.OFFLINE)
@@ -34,7 +29,9 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.add(like_obj)
         db.commit()
         db.refresh(like_obj)
-        return like_obj
+        
+        db.refresh(user_from)
+        return user_from
 
     def add_notif(self, db: Session, db_obj: User, notif: NotifCreate):
         db_obj.notifs.append(

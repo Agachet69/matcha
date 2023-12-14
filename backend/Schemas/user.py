@@ -2,6 +2,7 @@ from typing import Any, Optional, List
 from Schemas.token import TokenSchema
 from Schemas.notif import NotifSchema
 from Schemas.like import LikeSchema
+from Schemas.match import MatchSchema
 from Enum.GenderEnum import GenderEnum
 from Enum.SexualityEnum import SexualityEnum
 from Enum.StatusEnum import StatusEnum
@@ -70,6 +71,5 @@ class UserSchema(UserInDBBase):
     likes: List[LikeSchema]
     liked_by: List[LikeSchema]
     photos: List[str]
+    matches: List[MatchSchema]
     status: Optional[StatusEnum]
-    
-    
