@@ -8,6 +8,10 @@ from Schemas.user import UserLogin, UserSchema, UserCreate, UserUpdate
 import Crud
 from Deps.user import get_user, get_current_user
 from Utils import security
+import uuid
+from pathlib import Path as PathLib
+from sqlalchemy.orm import Session
+import Model 
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -53,9 +57,39 @@ def get_all_users(
 def get_me(current_user: UserSchema = Depends(get_current_user)):
     return current_user
 
-@router.post("/pic")
-async def upload_image(image: UploadFile = File(...), test : str="default value"):
-    print(test)
+@router.post("/pic/{user_id}")
+async def upload_image(user_id: int, images: List[UploadFile] = File(...), db:Session =Depends(get_db)):
+      try:
+        # Créer un dossier pour stocker les images s'il n'existe pas
+        save_folder = f"uploads/images/{user_id}"
+        PathLib(save_folder).mkdir(parents=True, exist_ok=True)
+        for index, image in enumerate(images):
+          filename = f"{user_id}__{index}_{image.filename}"
+
+          # Chemin complet du fichier
+          save_path = PathLib(save_folder) / filename
+
+          # Écrire les données binaires de l'image dans le fichier
+          with open(save_path, "wb") as file:
+            file.write(image.file.read())
+          
+          photo = Model.Photo(user_id=user_id, path=str(save_path))
+
+          # Ajouter l'instance à la session de la base de données
+          db.add(photo)
+
+        # Committer la session pour sauvegarder les changements
+        db.commit()
+      except:
+        return "error"
+    # images.filename = f"{uuid.uuid4()}.jpg"
+    # contents = await images.read()
+ 
+    # #save the file
+    # with open(f"{'/user/'}{images.filename}", "wb") as f:
+    #     f.write(contents)
+ 
+    # return {"filename": images.filename}
     # db = SessionLocal()
     
     # try:

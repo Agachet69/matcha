@@ -20,7 +20,7 @@ const Profil = () => {
   const [edit, setEdit] = useState(false);
 
   const [pic, setPic] = useState(null);
-  const [testImg, setTestImg] = useState(null);
+  const [myImgs, setMyImgs] = useState(null);
 
   function formUserChange(event, inputName) {
     switch (inputName) {
@@ -74,14 +74,12 @@ const Profil = () => {
   }
 
   useEffect(() => {
-    // console.log(testImg);
+    console.log(user);
     if (pic) {
-      // const myImageList = [...pic]
-      // setTestImg(myImageList);
+      console.log(pic);
+      const myImageList = [...pic];
+      setMyImgs(myImageList);
 
-      setTestImg(pic[0]);
-
-      // console.log(pic[i]);
       // const reader = new FileReader();
       // reader.onloadend = () => {
       //   setTestImg(reader.result);
@@ -92,20 +90,23 @@ const Profil = () => {
 
   async function sendImages() {
     const formData = new FormData();
-    // testImg.forEach((image, index) => {
-    // console.log(pic[0]);
-    formData.append("image", testImg);
-    // });
-    // try {
-    const res = await axios.post("http://localhost:8000/users/pic", formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    myImgs.forEach((image) => {
+      formData.append(`images`, image);
     });
-    console.log(res);
-    // } catch (err) {
-    // console.log(err);
-    // }
+    try {
+      const res = await axios.post(
+        "http://localhost:8000/users/pic/" + user.id,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   // const handleFileChange = (event) => {
@@ -127,23 +128,16 @@ const Profil = () => {
         type="file"
         id="pic"
         accept="image/*"
+        multiple
         onChange={(event) => {
           setPic(event.target.files);
         }}
       />
 
-      {testImg && (
-        <div>
-          Infos : 
-          <p> {testImg.name} </p>
-          <p> {testImg.type}</p>
-        </div>
-      )}
-
-      {testImg/*.length > 0*/ && (
+      {pic /*.length > 0*/ && (
         <button onClick={sendImages}> send images </button>
       )}
-      <img src={testImg} />
+      <img src={myImgs} />
       {!user && <div> Loader </div>}
       {user && (
         <form>
