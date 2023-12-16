@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from fastapi_socketio import SocketManager
+from fastapi.staticfiles import StaticFiles
 from Router import api_router
 import logging
 
@@ -28,6 +29,8 @@ logger.addHandler(ch)
 load_dotenv()
 
 app = FastAPI()
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,7 +1,22 @@
-from pydantic import BaseModel, EmailStr, constr, validator
+from pydantic import BaseModel
 
-class PhotoSchema(BaseModel):
+class PhotoBase(BaseModel):
   path: str
 
-  class Config:
-    orm_mode = True
+class PhotoCreate(PhotoBase):
+  path: str
+  user_id: int
+
+class PhotoUpdate(PhotoBase):
+    path: str
+
+class PhotoInDBBase(PhotoBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+
+class PhotoSchema(PhotoInDBBase):
+    pass
+

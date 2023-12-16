@@ -239,7 +239,7 @@ function App() {
 
     //     </div>
     //     <button onClick={() => {
-    //       axios.get(`http://localhost:8000/users/me`, {
+    //       (`http://localhost:8000/users/me`, {
     //         headers: {
     //           'Authorization': "Bearer " + (token ? token.access_token : "")
     //         }

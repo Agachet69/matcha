@@ -2,16 +2,13 @@ from typing import Any, Optional, List
 from Schemas.token import TokenSchema
 from Schemas.notif import NotifSchema
 from Schemas.like import LikeSchema
-from Schemas.photo import PhotoSchema
+from Schemas.photo import PhotoSchema, PhotoSchema
 from Enum.GenderEnum import GenderEnum
 from Enum.SexualityEnum import SexualityEnum
 
 from pydantic import BaseModel, EmailStr, constr, validator
 
 from Validators.user import user_name_validator, password_validator
-
-
-
 
 class UserBase(BaseModel):
     username: Optional[constr(min_length=1)]
@@ -22,7 +19,7 @@ class UserBase(BaseModel):
     sexuality: Optional[SexualityEnum]
     age: Optional[int]
     bio: Optional[str]
-    photos: Optional[PhotoSchema]
+    photos: Optional[List[PhotoSchema]]
 
     _validate_name_not_none = validator("username", allow_reuse=True)(user_name_validator)
 

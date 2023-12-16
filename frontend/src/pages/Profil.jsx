@@ -95,10 +95,11 @@ const Profil = () => {
     });
     try {
       const res = await axios.post(
-        "http://localhost:8000/users/pic/" + user.id,
+        "http://localhost:8000/users/pic",
         formData,
         {
           headers: {
+            Authorization: "Bearer " + (token ? token.access_token : ""),
             "Content-Type": "multipart/form-data",
           },
         }
@@ -120,8 +121,21 @@ const Profil = () => {
   //   }
   // };
 
+  async function testPhto() {
+    const res = await axios.get("http://localhost:8000/photo/", {
+      headers: {
+        Authorization: "Bearer " + (token ? token.access_token : ""),
+      },
+    });
+    console.log(res);
+  }
+
   return (
     <div className="ProfilContainer">
+      <button onClick={testPhto}> clik </button>
+      {user.photos.map((photo, index) => {
+        return <img key={index} src={`http://localhost:8000/${photo.path}`} alt="image test" />;
+      })}
       <h1>Votre profil</h1>
       <label htmlFor="pic"> Ajouter une image </label>
       <input
