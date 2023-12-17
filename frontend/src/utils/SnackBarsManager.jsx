@@ -57,6 +57,7 @@ const SnackBarsManager = () => {
 		<SnackbarProvider
 			className="provider"
 			hideIconVariant
+			preventDuplicate
 			maxSnack={10}
 			action={(snackbarId) => (
 				<button onClick={() => closeSnackbar(snackbarId)}>

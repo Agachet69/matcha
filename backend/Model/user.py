@@ -3,7 +3,7 @@ from typing import List
 from Enum.GenderEnum import GenderEnum
 from Enum.SexualityEnum import SexualityEnum
 from Enum.StatusEnum import StatusEnum
-from sqlalchemy import Column, Integer, String, Sequence, Enum
+from sqlalchemy import Column, Integer, String, Sequence, Enum, DateTime
 from sqlalchemy.orm import relationship
 from Utils import Base
 from Model.photo import Photo
@@ -27,7 +27,11 @@ class User(Base):
     
     bio = Column(String(400))
     
-    status = Column(Enum(StatusEnum))
+    last_connection_date = Column(DateTime)
+    
+    latitude = Column(Integer)
+    longitude = Column(Integer)
+    # status = Column(Enum(StatusEnum))
     
     
     # TODO: add position

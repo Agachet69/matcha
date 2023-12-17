@@ -22,7 +22,6 @@ export const PrivateRoutes = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const dispatch = useDispatch()
   const user = useSelector(selectUser);
-  const [snackbars, setSnackbar] = useState([])
 
   useEffect(() => {
     if (user) {
@@ -37,23 +36,21 @@ export const PrivateRoutes = ({ children }) => {
 
   useEffect(() => {
     if (token)
-    axios.get("http://localhost:8000/users/me", {
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.access_token}` }
-    }).then(({data}) => {
-      dispatch(initialiseUser(data));
-    }).catch((error) => {
-      navigate("/login")
-    })
+      axios.get("http://localhost:8000/users/me", {
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.access_token}` }
+      }).then(({ data }) => {
+        dispatch(initialiseUser(data));
+      }).catch((error) => {
+        navigate("/login")
+      })
   }, [token])
 
-  // if (authLogin === undefined) {
-  //   return null; // or loading indicator/spinner/etc
-  // }
-
-  return token
-    ? <SocketContext.Provider value={socket}>
-      {children}
-      <SnackBarsManager/>
-    </SocketContext.Provider>
-    : <Navigate to="/login" replace state={{ from: location }} />;
+  if (!token)
+    return <Navigate to="/login" replace state={{ from: location }} />
+  if (!socket || !user)
+    return <></>
+  return <SocketContext.Provider value={socket}>
+    {children}
+    <SnackBarsManager />
+  </SocketContext.Provider>
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { isAuth, selectAuth, setToken } from "../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +13,12 @@ const Login = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-  const [onLoginErrorMessage, setOnLoginErrorMessage] = useState("")
+    const [pos, setPos] = useState({
+        latitude: 0,
+        longitude: 0,
+    })
+
+    const [onLoginErrorMessage, setOnLoginErrorMessage] = useState("")
 
     const formik = useFormik({
         validationSchema: LoginSchema(),
@@ -24,9 +29,39 @@ const Login = () => {
         onSubmit: (values) => onLogin(values),
     });
 
+    useEffect(() => {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    setPos({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    })
+                },
+                (error) => {
+                    axios.get('https://ipapi.co/json/').then(({ data }) => {
+                        setPos({
+                            latitude: data.latitude,
+                            longitude: data.longitude
+                        })
+                        
+                    });
+                }
+            );
+        } else {
+            axios.get('https://ipapi.co/json/').then(({ data }) => {
+                setPos({
+                    latitude: data.latitude,
+                    longitude: data.longitude
+                })
+            });
+        }
+    }, [])
+
 
     const onLogin = (values) => {
-        axios.post('http://localhost:8000/users/login', values)
+
+        axios.post('http://localhost:8000/users/login', {...values, ...pos})
         .then(({ data }) => {
                 dispatch(setToken(data))
                 navigate('/')

@@ -1,3 +1,4 @@
+import datetime
 from typing import Any, Optional, List
 from Schemas.token import TokenSchema
 from Schemas.notif import NotifSchema
@@ -24,6 +25,7 @@ class UserBase(BaseModel):
     age: Optional[int]
     bio: Optional[str]
     # photos: Optional[List[str]]
+    last_connection_date: Optional[datetime.datetime]
 
     _validate_name_not_none = validator("username", allow_reuse=True)(user_name_validator)
 
@@ -40,7 +42,8 @@ class UserCreate(UserBase):
     # photos: Optional[List[str]]
     
     password: constr(min_length=1)
-    
+    latitude: int
+    longitude: int
     
     
     # _validate_password = validator("password", allow_reuse=True)(password_validator('CREATE'))
@@ -48,6 +51,8 @@ class UserCreate(UserBase):
 class UserLogin(UserBase):
     username: constr(min_length=1)
     password: constr(min_length=1)
+    latitude: int
+    longitude: int
     
     
     
@@ -55,8 +60,6 @@ class UserLogin(UserBase):
 
 class UserUpdate(UserBase):
     password: Optional[constr(min_length=1)]
-    status: Optional[StatusEnum]
-    
     # _validate_password = validator("password", allow_reuse=True)(password_validator('EDIT'))
 
 class UserInDBBase(UserBase):
@@ -72,4 +75,4 @@ class UserSchema(UserInDBBase):
     liked_by: List[LikeSchema]
     photos: List[str]
     matches: List[MatchSchema]
-    status: Optional[StatusEnum]
+    status: Optional[StatusEnum]    

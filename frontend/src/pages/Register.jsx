@@ -19,17 +19,50 @@ const Register = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
+  const [pos, setPos] = useState({
+    latitude: 0,
+    longitude: 0,
+  })
+
   const onRegister = (values) => {
-    axios.post('http://localhost:8000/users/register', values)
+    axios.post('http://localhost:8000/users/register', {...values, ...pos})
       .then(({ data }) => {
         dispatch(setToken(data))
         navigate('/profil')
       })
       .catch((error) => {
-        console.log(error.response.data.detail)
-        setOnRegisterErrorMessage(error.response.data.detail)
+        setOnRegisterErrorMessage(JSON.stringify(error.response.data))
       });
   }
+
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setPos({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          })
+        },
+        (error) => {
+          axios.get('https://ipapi.co/json/').then(({ data }) => {
+            setPos({
+              latitude: data.latitude,
+              longitude: data.longitude
+            })
+
+          });
+        }
+      );
+    } else {
+      axios.get('https://ipapi.co/json/').then(({ data }) => {
+        setPos({
+          latitude: data.latitude,
+          longitude: data.longitude
+        })
+      });
+    }
+  }, [])
 
   useEffect(() => window.scrollTo(0, 0), [])
 
