@@ -21,6 +21,7 @@ const Profil = () => {
 
   const [pic, setPic] = useState(null);
   const [myImgs, setMyImgs] = useState(null);
+  const [profilPic, setProfilPic] = useState(null);
 
   function formUserChange(event, inputName) {
     switch (inputName) {
@@ -95,7 +96,7 @@ const Profil = () => {
     });
     try {
       const res = await axios.post(
-        "http://localhost:8000/users/pic",
+        "http://localhost:8000/photo",
         formData,
         {
           headers: {
@@ -133,9 +134,23 @@ const Profil = () => {
   return (
     <div className="ProfilContainer">
       <button onClick={testPhto}> clik </button>
-      {user.photos.map((photo, index) => {
-        return <img key={index} src={`http://localhost:8000/${photo.path}`} alt="image test" />;
+      {
+        user.photos.filter((photo) => photo.main !== true).map((photo) => {
+          return (
+          <img 
+            onClick={async() => {
+              const res = await axios.delete('http://localhost:8000/photo/' + photo.id, {
+                headers: {
+                  Authorization: "Bearer " + (token ? token.access_token : ""),
+                }
+              })
+              console.log(res);
+              
+            }} key={photo.id} src={`http://localhost:8000/${photo.path}`} alt="image test" />
+          );
       })}
+
+
       <h1>Votre profil</h1>
       <label htmlFor="pic"> Ajouter une image </label>
       <input
@@ -147,6 +162,21 @@ const Profil = () => {
           setPic(event.target.files);
         }}
       />
+
+      <button style={{backgroundColor:"red"}} onClick={() => {
+            const formData = new FormData();
+            myImgs.forEach((image) => {
+              formData.append(`image`, image);
+            });
+        axios.patch('http://localhost:8000/photo/main', formData, {
+          headers: {
+            Authorization: "Bearer " + (token ? token.access_token : ""),
+            "Content-Type": "multipart/form-data",
+          },
+        })
+      }}> 
+      Changer ma photo de profil
+      </button>
 
       {pic /*.length > 0*/ && (
         <button onClick={sendImages}> send images </button>

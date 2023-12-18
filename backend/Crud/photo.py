@@ -1,18 +1,24 @@
-from typing import Optional
-from Schemas.notif import NotifCreate
-from .base import CRUDBase
-from Model import User, Notif, Photo
-from Schemas.user import UserCreate, UserUpdate
+from fastapi import Depends
+from sqlalchemy import select
+from sqlalchemy.orm import Session
+from Model import Photo
 from Schemas.photo import PhotoBase, PhotoCreate, PhotoUpdate
-
-from fastapi.encoders import jsonable_encoder
-from pydantic import BaseModel
-from sqlalchemy import select, update
-from sqlalchemy.orm import Session, noload
+from Schemas.user import UserSchema
+from Deps.user import get_current_user
+from .base import CRUDBase
 
 class CRUDPhoto(CRUDBase[Photo, PhotoCreate, PhotoUpdate]):
   
-  # def get_all_user_photos
-  pass
+  def get_main(
+    self, 
+    db: Session, 
+    current_user: UserSchema = Depends(get_current_user)
+    ):
+    
+    return db.execute(
+      select(self.model).where(
+        (self.model.main == True) & (self.model.user_id == current_user.id),
+      )
+    ).scalar()
 
 photo = CRUDPhoto(Photo)

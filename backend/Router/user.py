@@ -54,29 +54,6 @@ def get_all_users(
 def get_me(current_user: UserSchema = Depends(get_current_user)):
     return current_user
 
-@router.post("/pic")
-async def upload_image(current_user: UserSchema = Depends(get_current_user),
-                       images: List[UploadFile] = File(...),
-                       db:Session =Depends(get_db)):
-  
-      if (len(current_user.photos) + len(images) > 5):
-        raise HTTPException(status_code=400, detail="5 photos max.")
-      try:
-        save_folder = f"uploads/images/{current_user.id}"
-        PathLib(save_folder).mkdir(parents=True, exist_ok=True)
-        
-        for index, image in enumerate(images):
-          filename = f"{current_user.id}_{index}_{image.filename}"
-          save_path = PathLib(save_folder) / filename
-          with open(save_path, "wb") as file:
-            file.write(image.file.read())
-          photo = Model.Photo(user_id=current_user.id, path=str(save_path))
-          db.add(photo)
-        db.commit()
-      except:
-        raise HTTPException(status_code=400, detail="An error has occurred")
-
-
 
 # @router.get("/add_notif", status_code=status.HTTP_200_OK, response_model=UserSchema)
 # def get_me(current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
