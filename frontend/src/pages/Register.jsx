@@ -157,9 +157,9 @@ const Register = () => {
             <div className="selector">
               <label>Gender</label>
               {Object.keys(GenderEnum).map(value => (
-                <div key={value} className={"selectorItem " + (value == formik.values.gender ? "selected" : "")} onClick={() => formik.setFieldValue("gender", value)}>
+                <button key={value} className={"selectorItem " + (value == formik.values.gender ? "selected" : "")} onClick={() => formik.setFieldValue("gender", value)}>
                   {value}
-                </div>
+                </button>
               ))}
             </div>
             {!!formik.errors.gender && formik.touched.gender && <div className='error'>{formik.errors.gender}</div>}
@@ -167,9 +167,9 @@ const Register = () => {
             <div className="selector">
               <label>Sexuality</label>
               {Object.keys(SexualityEnum).map(value => (
-                <div key={value} className={"selectorItem " + (value == formik.values.sexuality ? "selected" : "")} onClick={() => formik.setFieldValue("sexuality", value)}>
+                <button key={value} className={"selectorItem " + (value == formik.values.sexuality ? "selected" : "")} onClick={() => formik.setFieldValue("sexuality", value)}>
                   {value}
-                </div>
+                </button>
               ))}
             </div>
             {!!formik.errors.sexuality && formik.touched.sexuality && <div className='error'>{formik.errors.sexuality}</div>}

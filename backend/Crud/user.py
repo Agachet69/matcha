@@ -2,6 +2,7 @@ from typing import Optional, List
 
 from Schemas.notif import NotifCreate
 from Enum.StatusEnum import StatusEnum
+from Schemas.search import SearchSchema
 
 from .base import CRUDBase
 from Model import User, Notif, Like
@@ -20,6 +21,27 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.commit()
         db.refresh(db_obj)
         return db_obj
+    
+    def search(self, db: Session, current_user_id: int, search_param: SearchSchema, **kwargs) -> List[User]:
+        query = select(self.model).where(self.model.id != current_user_id)
+
+        print(search_param)
+        if age_limit := getattr(search_param, 'age_limit', None):
+            if age_limit.min is not None and age_limit.max is not None:
+                query = query.where(self.model.age >= age_limit.min, self.model.age <= age_limit.max)
+        if fame_rate_limit := getattr(search_param, 'fame_rate_limit', None):
+            if fame_rate_limit.min is not None and fame_rate_limit.max is not None:
+                pass
+                # query = query.where(self.model.age >= age_limit.min, self.model.age <= age_limit.max)
+        if location_limit := getattr(search_param, 'location_limit', None):
+            if location_limit.min is not None and location_limit.max is not None:
+                pass
+                # query = query.where(self.model.age >= age_limit.min, self.model.age <= age_limit.max)
+        
+        
+
+        result = db.execute(query).scalars().all()
+        return result
     
     def like(self, db: Session, user_from: User, user_target: User):
         like_obj = Like(

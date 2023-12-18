@@ -7,6 +7,7 @@ from Schemas.notif import NotifCreate
 from Enum.NotifTypeEnum import NotifTypeEnum
 from Schemas.like import LikeSchema
 from Schemas.match import MatchCreate
+from Schemas.search import SearchSchema
 from fastapi import APIRouter, Depends, HTTPException, status
 from Schemas.user import UserLogin, UserSchema, UserCreate, UserUpdate
 import Crud
@@ -84,6 +85,27 @@ def get_one_user(
     else:
         user.status = 'OFFLINE'
     return user
+
+@router.post("/search", status_code=status.HTTP_200_OK, response_model=List[UserSchema])
+async def search(
+    search_params: SearchSchema,
+    current_user: UserSchema = Depends(get_current_user),
+    db=Depends(get_db)
+):
+    user_list = Crud.user.search(db, current_user.id, search_params)
+    
+    id_arr = [client["auth"]["user_id"] for client in connected_clients] + [client["user_id"] for client in disconnect_clients]
+    status_dict = {}
+    for user in user_list:
+        if user.id in id_arr:
+            status_dict[user.id] = "ONLINE"
+        else:
+            status_dict[user.id] = "OFFLINE"
+    
+    for user in user_list:
+        user.status = status_dict.get(user.id, "UNKNOWN")
+
+    return user_list
 
 @router.post("/like/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 async def like(

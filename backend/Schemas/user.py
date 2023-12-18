@@ -75,4 +75,4 @@ class UserSchema(UserInDBBase):
     liked_by: List[LikeSchema]
     photos: List[str]
     matches: List[MatchSchema]
-    status: Optional[StatusEnum]    
+    status: Optional[StatusEnum]
