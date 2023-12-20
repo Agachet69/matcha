@@ -5,8 +5,255 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px 30px;
+  // padding: 20px 30px;
   font-family: Montserrat;
+
+  .topContent {
+    width: 100%;
+    section {
+      height: 400px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+
+      input[type='file'] {
+        display: none;
+      }
+      
+      .defaultPic {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 200px;
+        background-color: rgba(0, 0, 0, 0.3333333333);
+        border-radius: 50%;
+        svg {
+          width: 150px;
+        }
+
+        label {
+          &:hover {
+            background-color: #ff4ca8;
+            transition: 0.2s;
+          }
+          position: absolute;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #ff4ca8b1;
+          border-radius: 50%;
+          padding: 6px;
+          right: -14px;
+          top: 50%;
+          transform: translateY(-50%);
+          transition: 0.2s;
+          cursor: pointer;
+
+          svg {
+            height: 22px;
+            width: 22px;
+            color: white;
+          }
+        }
+
+        input[type='file'] {
+          display: none;
+        }
+      }
+
+      .displayPic, .actualPic {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
+
+        img {
+          height: 200px;
+          width: 200px;
+          border-radius: 50%;
+        }
+
+        .confirmChoice, .cancelChoice {
+          &:hover {
+            background-color: #ff4ca8;
+            transition: 0.2s;
+          }
+          position: absolute;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #ff4ca8b1;
+          border-radius: 50%;
+          padding: 6px;
+          right: -14px;
+          top: 50%;
+          transform: translateY(-50%);
+          transition: 0.2s;
+          cursor: pointer;
+        }
+
+        .cancelChoice {
+          top: 70%;
+          right: -8px;
+        }
+
+        svg {
+          height: 22px;
+          width: 22px;
+          color: white;
+        }
+      }
+
+      .actualPic {
+        label {
+          &:hover {
+            background-color: #ff4ca8;
+            transition: 0.2s;
+          }
+          position: absolute;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background-color: #ff4ca8b1;
+          border-radius: 50%;
+          padding: 6px;
+          right: -14px;
+          top: 50%;
+          transform: translateY(-50%);
+          transition: 0.2s;
+          cursor: pointer;
+
+          svg {
+            height: 22px;
+            width: 22px;
+            color: white;
+          }
+        }
+      }
+      // .addingMainPic {
+      //   position: relative;
+
+
+      // }
+
+      // .secPic {
+      //   width: 100%;
+      //   height: 400px;
+      // }
+
+      // .mainPic {
+      //   position: absolute;
+      //   display: flex;
+      //   flex-direction: column;
+      //   align-items: center;
+      //   justify-content: center;
+      //   gap: 12px;
+
+      //   top: 50%;
+      //   left: 50%;
+      //   transform: translate(-50%, -50%);
+
+      //   .noPicMain {
+      //     width: 200px;
+      //     height: 200px;
+      //     position: relative;
+      //     display: flex;
+      //     justify-content: center;
+      //     align-items: center;
+      //     border-radius: 50%;
+      //     background-color: rgba(0, 0, 0, 0.3333333333);
+      //     border: 1px solid black;
+
+      //     .addingMain {
+      //       display: flex;
+      //       align-items:center;
+      //       justify-content: center;
+
+      //       .ConfirmChoice, .CancelChoice{
+      //         display: flex;
+      //         align-items: center;
+      //         justify-content: center;
+      //         position: absolute;
+      //         right: -14px;
+      //         top: 63%;
+      //         transform: translateY(-50%);
+      //         background-color: #ff4ca8;
+      //         border-radius: 50%;
+      //         padding: 6px;
+      //         cursor: pointer;
+
+      //         svg {
+      //           width: 22px;
+      //           height: 22px;
+      //           color: white;
+      //         }
+      //       }
+      //       .CancelChoice {
+      //         top: 81%;
+      //         right: 3px;
+      //       }
+
+      //     }
+
+      //     input {
+      //       display: none;
+      //     }
+
+      //     .picIconCtn {
+      //       display: flex;
+      //       align-items: center;
+      //       justify-content: center;
+      //       position: absolute;
+      //       right: -15px;
+      //       top: 50%;
+      //       transform: translateY(-50%);
+      //       background-color: #ff4ca8;
+      //       padding: 6px;
+      //       border-radius: 50%;
+      //       cursor: pointer;
+
+      //       svg {
+      //         height: 22px;
+      //         color: white;
+      //       }
+      //     }
+
+      //     svg {
+      //       height: 150px;
+      //     }
+      //   }
+
+      //   .hasMainPic {
+      //     display: flex;
+      //     align-items: center;
+      //     justify-content: center;
+
+      //     img {
+      //       height: 200px;
+      //       width: 200px;
+      //       object-fit: cover;
+      //       border-radius: 100%;
+      //       border: 1px solid black;
+      //     }
+      //   }
+
+
+      // }
+    }
+
+    h3 {
+      display: flex;
+      justify-content: center;
+    }
+  }
 
   form {
     display: flex;

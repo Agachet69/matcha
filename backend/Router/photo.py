@@ -16,7 +16,7 @@ router = APIRouter(prefix="/photo", tags=["Photos"])
 def get_all_photos(current_user: UserSchema = Depends(get_current_user)):
   return current_user.photos
 
-@router.patch('/main')  
+@router.patch('/main', response_model=PhotoSchema)  
 def change_main(
   current_user: UserSchema = Depends(get_current_user),
   image: UploadFile = File(...),
@@ -37,9 +37,12 @@ def change_main(
     photo = Model.Photo(user_id=current_user.id, path=str(save_path), main=True)
     db.add(photo)
     db.commit()
+    print(photo.path)
+    return photo
       
   except:
     raise HTTPException(status_code=400, detail="5 photos max.")
+  
     
 
 @router.post("/")

@@ -9,9 +9,11 @@ import {
   Edit,
   Identity,
   Letter,
+  Pic,
   UserIcon,
 } from "../components/icons/Icons";
 import axios from "axios";
+import { MainPic } from "../components/MainPic";
 
 const Profil = () => {
   const token = useSelector(getToken);
@@ -21,7 +23,6 @@ const Profil = () => {
 
   const [pic, setPic] = useState(null);
   const [myImgs, setMyImgs] = useState(null);
-  const [profilPic, setProfilPic] = useState(null);
 
   function formUserChange(event, inputName) {
     switch (inputName) {
@@ -80,12 +81,6 @@ const Profil = () => {
       console.log(pic);
       const myImageList = [...pic];
       setMyImgs(myImageList);
-
-      // const reader = new FileReader();
-      // reader.onloadend = () => {
-      //   setTestImg(reader.result);
-      // };
-      // reader.readAsDataURL(pic[i]);
     }
   }, [pic]);
 
@@ -95,16 +90,12 @@ const Profil = () => {
       formData.append(`images`, image);
     });
     try {
-      const res = await axios.post(
-        "http://localhost:8000/photo",
-        formData,
-        {
-          headers: {
-            Authorization: "Bearer " + (token ? token.access_token : ""),
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const res = await axios.post("http://localhost:8000/photo", formData, {
+        headers: {
+          Authorization: "Bearer " + (token ? token.access_token : ""),
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.log(res);
     } catch (err) {
       console.log(err);
@@ -122,36 +113,18 @@ const Profil = () => {
   //   }
   // };
 
-  async function testPhto() {
-    const res = await axios.get("http://localhost:8000/photo/", {
-      headers: {
-        Authorization: "Bearer " + (token ? token.access_token : ""),
-      },
-    });
-    console.log(res);
-  }
-
   return (
     <div className="ProfilContainer">
-      <button onClick={testPhto}> clik </button>
-      {
-        user.photos.filter((photo) => photo.main !== true).map((photo) => {
-          return (
-          <img 
-            onClick={async() => {
-              const res = await axios.delete('http://localhost:8000/photo/' + photo.id, {
-                headers: {
-                  Authorization: "Bearer " + (token ? token.access_token : ""),
-                }
-              })
-              console.log(res);
-              
-            }} key={photo.id} src={`http://localhost:8000/${photo.path}`} alt="image test" />
-          );
-      })}
+      <div className="topContent">
+        <section>
+          <MainPic />
+          <h3>
+            {" "}
+            {user.firstName}, {user.age}{" "}
+          </h3>
+        </section>
+      </div>
 
-
-      <h1>Votre profil</h1>
       <label htmlFor="pic"> Ajouter une image </label>
       <input
         type="file"
@@ -163,19 +136,22 @@ const Profil = () => {
         }}
       />
 
-      <button style={{backgroundColor:"red"}} onClick={() => {
-            const formData = new FormData();
-            myImgs.forEach((image) => {
-              formData.append(`image`, image);
-            });
-        axios.patch('http://localhost:8000/photo/main', formData, {
-          headers: {
-            Authorization: "Bearer " + (token ? token.access_token : ""),
-            "Content-Type": "multipart/form-data",
-          },
-        })
-      }}> 
-      Changer ma photo de profil
+      <button
+        style={{ backgroundColor: "red" }}
+        onClick={() => {
+          const formData = new FormData();
+          myImgs.forEach((image) => {
+            formData.append(`image`, image);
+          });
+          axios.patch("http://localhost:8000/photo/main", formData, {
+            headers: {
+              Authorization: "Bearer " + (token ? token.access_token : ""),
+              "Content-Type": "multipart/form-data",
+            },
+          });
+        }}
+      >
+        Changer ma photo de profil
       </button>
 
       {pic /*.length > 0*/ && (
@@ -343,7 +319,6 @@ const Profil = () => {
         </div>
       )}
 
-      <p> pictures + Photo de profil </p>
       <p>
         {" "}
         A list of interests with tags (e.g. #vegan, #geek, #piercing, etc.),
