@@ -2,14 +2,17 @@ import { useSelector } from "react-redux";
 import { getToken } from "../store/slices/authSlice";
 import { selectUser } from "../store/slices/userSlice";
 import "../styles/profil.scss";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
+  AddImage,
+  ArrowLeft,
+  ArrowRight,
   Cancel,
   Confirm,
   Edit,
   Identity,
   Letter,
-  Pic,
+  Trash,
   UserIcon,
 } from "../components/icons/Icons";
 import axios from "axios";
@@ -20,9 +23,29 @@ const Profil = () => {
   const user = useSelector(selectUser);
   const [formUser, setFormUser] = useState(user);
   const [edit, setEdit] = useState(false);
-
+  const [translateXValue, setTranslateXValue] = useState(0);
   const [pic, setPic] = useState(null);
   const [myImgs, setMyImgs] = useState(null);
+
+  const backPicRef = useRef();
+
+  useEffect(() => {
+    backPicRef.current.style.transform = `translateX(${translateXValue}%)`;
+  }, [translateXValue]);
+
+  useEffect(() => {
+    if (!pic) return;
+    const myImageList = [...pic];
+    setMyImgs(myImageList);
+  }, [pic]);
+
+  async function nextPhoto() {
+    setTranslateXValue((prevTranslateX) => prevTranslateX - 100);
+  }
+
+  function prevPhoto() {
+    setTranslateXValue((prevTranslateX) => prevTranslateX + 100);
+  }
 
   function formUserChange(event, inputName) {
     switch (inputName) {
@@ -75,17 +98,13 @@ const Profil = () => {
     }
   }
 
-  useEffect(() => {
-    console.log(user);
-    if (pic) {
-      console.log(pic);
-      const myImageList = [...pic];
-      setMyImgs(myImageList);
-    }
-  }, [pic]);
-
   async function sendImages() {
     const formData = new FormData();
+    if (myImgs.length + user.photos.length > 5) {
+      console.log("trop de photos");
+      return;
+    }
+
     myImgs.forEach((image) => {
       formData.append(`images`, image);
     });
@@ -102,6 +121,17 @@ const Profil = () => {
     }
   }
 
+  async function deleteImg(id) {
+    const res = await axios.delete("http://localhost:8000/photo/" + id, {
+      headers: {
+        Authorization: "Bearer " + (token ? token.access_token : ""),
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    console.log(res.data);
+    console.log(id);
+  }
+
   // const handleFileChange = (event) => {
   //   const file = event.target.files[0];
   //   const maxSize = 1024 * 1024; // 1 MB
@@ -115,49 +145,67 @@ const Profil = () => {
 
   return (
     <div className="ProfilContainer">
-      <div className="topContent">
+      <div className="topContainer">
+        <div className="topContent">
+          <div className="backPic" ref={backPicRef}>
+            {user.photos
+              .filter((photo) => photo.main === false)
+              .map((photo, index, photosTab) => {
+                return (
+                  <div className="oneBackPic" key={photo.id}>
+                    <img src={`http://localhost:8000/${photo.path}`} />
+                    {index !== 0 && (
+                      <div className="leftArrow" onClick={prevPhoto}>
+                        <ArrowLeft />
+                      </div>
+                    )}
+                    {index + 1 !== photosTab.length && (
+                      <div className="rightArrow" onClick={nextPhoto}>
+                        <ArrowRight />
+                      </div>
+                    )}
+                    <div className="buttonsImg">
+                      <button onClick={() => deleteImg(photo.id)}>
+                        <Trash />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
         <section>
           <MainPic />
           <h3>
             {" "}
-            {user.firstName}, {user.age}{" "}
+            {user.firstName} {user.lastName}
           </h3>
+          <p> Fame Rating</p>
         </section>
+        {user.photos.length < 5 && (
+          <div className="addBackPhoto">
+            <label htmlFor="pict">
+              <AddImage />
+              Ajouter une photo
+            </label>
+            <input
+              type="file"
+              multiple
+              id="pict"
+              accept="image/*"
+              onChange={(event) => {
+                setPic(event.target.files);
+              }}
+            />
+            <p className="photoCompteur"> {user.photos.length - 1}/4 </p>
+          </div>
+        )}
       </div>
-
-      <label htmlFor="pic"> Ajouter une image </label>
-      <input
-        type="file"
-        id="pic"
-        accept="image/*"
-        multiple
-        onChange={(event) => {
-          setPic(event.target.files);
-        }}
-      />
-
-      <button
-        style={{ backgroundColor: "red" }}
-        onClick={() => {
-          const formData = new FormData();
-          myImgs.forEach((image) => {
-            formData.append(`image`, image);
-          });
-          axios.patch("http://localhost:8000/photo/main", formData, {
-            headers: {
-              Authorization: "Bearer " + (token ? token.access_token : ""),
-              "Content-Type": "multipart/form-data",
-            },
-          });
-        }}
-      >
-        Changer ma photo de profil
-      </button>
 
       {pic /*.length > 0*/ && (
         <button onClick={sendImages}> send images </button>
       )}
-      <img src={myImgs} />
+
       {!user && <div> Loader </div>}
       {user && (
         <form>
@@ -307,7 +355,6 @@ const Profil = () => {
           <Edit />
         </div>
       )}
-
       {edit && (
         <div className="editContainer">
           <div className="confirmIcon">
@@ -327,7 +374,6 @@ const Profil = () => {
 
       <p> Qui à vue ton profil </p>
       <p> Qui à like ton profil </p>
-      <p> fame rating </p>
 
       <p> tout est modifiable</p>
     </div>

@@ -42,8 +42,7 @@ def change_main(
       
   except:
     raise HTTPException(status_code=400, detail="5 photos max.")
-  
-    
+     
 
 @router.post("/")
 async def upload_image(
