@@ -25,9 +25,17 @@ export const userSlice = createSlice({
     initialiseUser: (state, action) => {
       state.myUser = action.payload;
     },
+    deleteUserPhoto: (state, action) => {
+      state.myUser.photos = state.myUser.photos.filter(
+        (photo) => photo.id !== action.payload
+      );
+    },
+    addUserPhoto: (state, action) => {
+      state.myUser.photos = state.myUser.photos.concat(action.payload);
+    }
   },
 });
 
-export const { initialiseUser } = userSlice.actions;
+export const { initialiseUser, deleteUserPhoto, addUserPhoto } = userSlice.actions;
 export const selectUser = (state) => state.user.myUser;
 export default userSlice.reducer;

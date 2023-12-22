@@ -1,10 +1,9 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getToken } from "../store/slices/authSlice";
-import { selectUser } from "../store/slices/userSlice";
+import { addUserPhoto, deleteUserPhoto, selectUser } from "../store/slices/userSlice";
 import "../styles/profil.scss";
 import { useEffect, useRef, useState } from "react";
 import {
-  AddImage,
   ArrowLeft,
   ArrowRight,
   Cancel,
@@ -27,6 +26,7 @@ const Profil = () => {
   const [pic, setPic] = useState(null);
   const [myImgs, setMyImgs] = useState(null);
 
+  const dispatch = useDispatch();
   const backPicRef = useRef();
 
   useEffect(() => {
@@ -34,6 +34,11 @@ const Profil = () => {
   }, [translateXValue]);
 
   useEffect(() => {
+    console.log((user));
+  }, [user])
+
+  useEffect(() => {
+    console.log(user);
     if (!pic) return;
     const myImageList = [...pic];
     setMyImgs(myImageList);
@@ -115,7 +120,7 @@ const Profil = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(res);
+      dispatch(addUserPhoto(res.data[0]))
     } catch (err) {
       console.log(err);
     }
@@ -128,8 +133,8 @@ const Profil = () => {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log(res.data);
-    console.log(id);
+    dispatch(deleteUserPhoto(res.data.id))
+    setTranslateXValue(0);
   }
 
   // const handleFileChange = (event) => {
@@ -185,7 +190,7 @@ const Profil = () => {
         {user.photos.length < 5 && (
           <div className="addBackPhoto">
             <label htmlFor="pict">
-              <AddImage />
+              {/* <AddImage /> */}
               Ajouter une photo
             </label>
             <input
@@ -197,7 +202,7 @@ const Profil = () => {
                 setPic(event.target.files);
               }}
             />
-            <p className="photoCompteur"> {user.photos.length - 1}/4 </p>
+            <p className="photoCompteur"> {user.photos.length - 1} / 4 </p>
           </div>
         )}
       </div>

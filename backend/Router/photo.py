@@ -44,7 +44,7 @@ def change_main(
     raise HTTPException(status_code=400, detail="5 photos max.")
      
 
-@router.post("/")
+@router.post("/", response_model=List[PhotoSchema])
 async def upload_image(
   current_user: UserSchema = Depends(get_current_user),
   images: List[UploadFile] = File(...),
@@ -55,7 +55,8 @@ async def upload_image(
   try:
     save_folder = f"uploads/images/{current_user.id}"
     PathLib(save_folder).mkdir(parents=True, exist_ok=True)
-        
+    all_photo = []
+      
     for index, image in enumerate(images):
       filename = f"{current_user.id}_{index}_{image.filename}"
       save_path = PathLib(save_folder) / filename
@@ -63,7 +64,9 @@ async def upload_image(
         file.write(image.file.read())
       photo = Model.Photo(user_id=current_user.id, path=str(save_path), main=False)
       db.add(photo)
+      all_photo.append(photo)
     db.commit()
+    return all_photo
   except:
     raise HTTPException(status_code=400, detail="An error has occurred")
 
