@@ -5,7 +5,7 @@
 
   .header {
 	position: fixed;
-	z-index: 99999999999;
+	z-index: 10;
     top: 0px;
     margin-inline: auto;
 
@@ -74,11 +74,15 @@
         }
 
         .image {
+          display: flex;
+          // align-items: center;
+          justify-content: center;
           height: 100%;
           aspect-ratio: 1/1;
           background-color: #00000055;
           border-radius: 50%;
           color: inherit;
+          overflow: hidden;
         }
 
         .name {

@@ -11,7 +11,6 @@ import Model
 
 router = APIRouter(prefix="/photo", tags=["Photos"])
 
-
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[PhotoSchema])
 def get_all_photos(current_user: UserSchema = Depends(get_current_user)):
   return current_user.photos
@@ -26,7 +25,6 @@ def change_main(
   try:
     if (del_photo := Crud.photo.get_main(db, current_user)):
       delete_with_id(db, current_user, del_photo.id)
-    
     save_folder = f"uploads/images/{current_user.id}"
     PathLib(save_folder).mkdir(parents=True, exist_ok=True)
         
@@ -37,36 +35,34 @@ def change_main(
     photo = Model.Photo(user_id=current_user.id, path=str(save_path), main=True)
     db.add(photo)
     db.commit()
-    print(photo.path)
     return photo
       
   except:
     raise HTTPException(status_code=400, detail="5 photos max.")
      
 
-@router.post("/", response_model=List[PhotoSchema])
+@router.post("/", response_model=PhotoSchema)
 async def upload_image(
   current_user: UserSchema = Depends(get_current_user),
-  images: List[UploadFile] = File(...),
+  image: UploadFile = File(...),
   db = Depends(get_db)):
   
-  if (len(current_user.photos) + len(images) > 5):
-      raise HTTPException(status_code=400, detail="5 photos max.")
+  if (len([photo for photo in current_user.photos if not photo.main]) + 1 > 4):
+    raise HTTPException(status_code=400, detail="4 photos d'arrière plan maximum.")
+  
   try:
     save_folder = f"uploads/images/{current_user.id}"
     PathLib(save_folder).mkdir(parents=True, exist_ok=True)
-    all_photo = []
       
-    for index, image in enumerate(images):
-      filename = f"{current_user.id}_{index}_{image.filename}"
-      save_path = PathLib(save_folder) / filename
-      with open(save_path, "wb") as file:
-        file.write(image.file.read())
-      photo = Model.Photo(user_id=current_user.id, path=str(save_path), main=False)
-      db.add(photo)
-      all_photo.append(photo)
+    filename = f"{current_user.id}_{len(current_user.photos)}_{image.filename}"
+    save_path = PathLib(save_folder) / filename
+    with open(save_path, "wb") as file:
+      file.write(image.file.read())
+    photo = Model.Photo(user_id=current_user.id, path=str(save_path), main=False)
+    db.add(photo)
     db.commit()
-    return all_photo
+    return photo
+  
   except:
     raise HTTPException(status_code=400, detail="An error has occurred")
 

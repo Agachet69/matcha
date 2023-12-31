@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectUser } from "../store/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { editMainPic, selectUser } from "../store/slices/userSlice";
 import axios from "axios";
 import { getToken } from "../store/slices/authSlice";
-import { Cancel, Confirm, Pic, UserIcon } from "./icons/Icons";
+import { Cancel, Confirm, Pic, UserIcon, Trash } from "./icons/Icons";
+import { ValidImg } from "../utils/ValidImg";
+import { editDeleteMainPic } from "../store/slices/modalSlice";
 
 export const MainPic = () => {
   const token = useSelector(getToken);
   const user = useSelector(selectUser);
+  const dispatch = useDispatch();
   const [mainPic, setMainPic] = useState({
     displayPic: null,
     updatePic: null,
@@ -15,6 +18,7 @@ export const MainPic = () => {
   });
 
   async function patchPic() {
+    if (!ValidImg(mainPic.updatePic)) return;
     const formData = new FormData();
     formData.append(`image`, mainPic.updatePic);
 
@@ -29,7 +33,7 @@ export const MainPic = () => {
           },
         }
       );
-      console.log(res.data);
+      dispatch(editMainPic(res.data));
       setMainPic({
         actualPic: res.data,
         updatePic: null,
@@ -42,7 +46,7 @@ export const MainPic = () => {
 
   function setMainPicInput(e) {
     e.preventDefault();
-
+    if (!ValidImg(e.target.files[0])) return;
     const reader = new FileReader();
     const file = e.target.files[0];
     reader.onloadend = () => {
@@ -56,6 +60,10 @@ export const MainPic = () => {
     if (file) {
       reader.readAsDataURL(file);
     }
+  }
+
+  async function deleteActualPic() {
+    dispatch(editDeleteMainPic())
   }
 
   useEffect(() => {
@@ -92,6 +100,9 @@ export const MainPic = () => {
     return (
       <div className="actualPic">
         <img src={`http://localhost:8000/${mainPic.actualPic.path}`} />
+        <div className="deleteImg" onClick={deleteActualPic}>
+          <Trash />
+        </div>
         <label htmlFor="pic" className="picIconCtn">
           <Pic />
         </label>

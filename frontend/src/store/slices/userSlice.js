@@ -32,10 +32,16 @@ export const userSlice = createSlice({
     },
     addUserPhoto: (state, action) => {
       state.myUser.photos = state.myUser.photos.concat(action.payload);
+    },
+    editMainPic: (state, action) => {
+      state.myUser.photos = state.myUser.photos.filter(
+        (photo) => photo.main === false
+      );
+      state.myUser.photos = state.myUser.photos.concat(action.payload);
     }
   },
 });
 
-export const { initialiseUser, deleteUserPhoto, addUserPhoto } = userSlice.actions;
+export const { initialiseUser, deleteUserPhoto, addUserPhoto, editMainPic } = userSlice.actions;
 export const selectUser = (state) => state.user.myUser;
 export default userSlice.reducer;

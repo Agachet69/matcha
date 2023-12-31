@@ -1,6 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
 import { getToken } from "../store/slices/authSlice";
-import { addUserPhoto, deleteUserPhoto, selectUser } from "../store/slices/userSlice";
+import {
+  addUserPhoto,
+  deleteUserPhoto,
+  selectUser,
+} from "../store/slices/userSlice";
 import "../styles/profil.scss";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -13,36 +17,47 @@ import {
   Letter,
   Trash,
   UserIcon,
+  Pic,
+  Send,
 } from "../components/icons/Icons";
 import axios from "axios";
 import { MainPic } from "../components/MainPic";
+import { ValidImg } from "../utils/ValidImg";
+import {
+  editDeletePic,
+  selectModalMainPic,
+  selectModalPic,
+} from "../store/slices/modalSlice";
+import { DeleteMainPicModal } from "../components/Modals";
 
 const Profil = () => {
   const token = useSelector(getToken);
   const user = useSelector(selectUser);
+  const mainModal = useSelector(selectModalMainPic);
+  const deleteBack = useSelector(selectModalPic);
   const [formUser, setFormUser] = useState(user);
   const [edit, setEdit] = useState(false);
   const [translateXValue, setTranslateXValue] = useState(0);
-  const [pic, setPic] = useState(null);
   const [myImgs, setMyImgs] = useState(null);
-
-  const dispatch = useDispatch();
+  const [previewImg, setPreviewImg] = useState(null);
   const backPicRef = useRef();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     backPicRef.current.style.transform = `translateX(${translateXValue}%)`;
   }, [translateXValue]);
 
   useEffect(() => {
-    console.log((user));
-  }, [user])
+    console.log(user);
+  }, [user]);
 
   useEffect(() => {
-    console.log(user);
-    if (!pic) return;
-    const myImageList = [...pic];
-    setMyImgs(myImageList);
-  }, [pic]);
+    // console.log(user);
+    // if (!pic) return;
+    // const myImageList = [...pic];
+    // setMyImgs(myImageList);
+    console.log(myImgs);
+  }, [myImgs]);
 
   async function nextPhoto() {
     setTranslateXValue((prevTranslateX) => prevTranslateX - 100);
@@ -105,14 +120,14 @@ const Profil = () => {
 
   async function sendImages() {
     const formData = new FormData();
-    if (myImgs.length + user.photos.length > 5) {
+    if (1 + user.photos.length > 5) {
       console.log("trop de photos");
       return;
     }
 
-    myImgs.forEach((image) => {
-      formData.append(`images`, image);
-    });
+    if (!ValidImg(myImgs)) return;
+
+    formData.append(`image`, myImgs);
     try {
       const res = await axios.post("http://localhost:8000/photo", formData, {
         headers: {
@@ -120,7 +135,8 @@ const Profil = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      dispatch(addUserPhoto(res.data[0]))
+      dispatch(addUserPhoto(res.data));
+      setMyImgs(null);
     } catch (err) {
       console.log(err);
     }
@@ -133,20 +149,29 @@ const Profil = () => {
         "Content-Type": "multipart/form-data",
       },
     });
-    dispatch(deleteUserPhoto(res.data.id))
+    dispatch(deleteUserPhoto(res.data.id));
+    dispatch(editDeletePic());
     setTranslateXValue(0);
   }
 
-  // const handleFileChange = (event) => {
-  //   const file = event.target.files[0];
-  //   const maxSize = 1024 * 1024; // 1 MB
+  function myAddingImg(e) {
+    e.preventDefault();
+    if (!ValidImg(e.target.files[0])) return;
+    const reader = new FileReader();
+    const file = e.target.files[0];
 
-  //   if (file && file.size > maxSize) {
-  //     alert('Fichier trop volumineux. La taille maximale autorisée est 1 Mo.');
-  //   } else {
-  //     setSelectedFile(file);
-  //   }
-  // };
+    reader.onloadend = () => {
+      setMyImgs(file);
+      setPreviewImg(reader.result);
+    };
+    if (file) {
+      reader.readAsDataURL(file);
+    }
+  }
+
+  const nbBackPhotos = () => {
+    return user.photos.filter((photo) => photo.main === false).length;
+  };
 
   return (
     <div className="ProfilContainer">
@@ -155,28 +180,84 @@ const Profil = () => {
           <div className="backPic" ref={backPicRef}>
             {user.photos
               .filter((photo) => photo.main === false)
-              .map((photo, index, photosTab) => {
+              .map((photo, index) => {
                 return (
                   <div className="oneBackPic" key={photo.id}>
                     <img src={`http://localhost:8000/${photo.path}`} />
-                    {index !== 0 && (
+                    {index !== 0 && !deleteBack && (
                       <div className="leftArrow" onClick={prevPhoto}>
                         <ArrowLeft />
                       </div>
                     )}
-                    {index + 1 !== photosTab.length && (
+                    {index + 1 !== 4 && !deleteBack && (
                       <div className="rightArrow" onClick={nextPhoto}>
                         <ArrowRight />
                       </div>
                     )}
-                    <div className="buttonsImg">
-                      <button onClick={() => deleteImg(photo.id)}>
-                        <Trash />
-                      </button>
-                    </div>
+                    {!deleteBack && (
+                      <div className="buttonsImg">
+                        <button onClick={() => dispatch(editDeletePic())}>
+                          <Trash />
+                        </button>
+                      </div>
+                    )}
+                    {deleteBack && (
+                      <div className="deleteBackPhoto">
+                        <h3> Supprimer cette photo ?</h3>
+                        <div className="choices">
+                          <button
+                            className="del"
+                            onClick={() => deleteImg(photo.id)}
+                          >
+                            Supprimer
+                          </button>
+                          <button
+                            className="cancel"
+                            onClick={() => dispatch(editDeletePic())}
+                          >
+                            Annuler
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
+            {nbBackPhotos() < 4 && (
+              <div className="oneBackPic">
+                {!myImgs && (
+                  <div className="addImg">
+                    <label htmlFor="pict" className="iconAddImg">
+                      <Pic />
+                    </label>
+                    <input
+                      type="file"
+                      id="pict"
+                      accept="image/*"
+                      onChange={myAddingImg}
+                    />
+                    <label htmlFor="pict" className="addImgTxt">
+                      <p> Ajouter une photo </p>
+                      <p className="numberImg">{nbBackPhotos()} / 4</p>
+                    </label>
+                  </div>
+                )}
+                {myImgs && (
+                  <div className="previewPic">
+                    <img src={previewImg} alt="preview de l'image" />
+                    <button onClick={sendImages}>
+                      Envoyer
+                      <Send />
+                    </button>
+                  </div>
+                )}
+                {nbBackPhotos() !== 0 && (
+                  <div className="leftArrow" onClick={prevPhoto}>
+                    <ArrowLeft />
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
         <section>
@@ -187,29 +268,7 @@ const Profil = () => {
           </h3>
           <p> Fame Rating</p>
         </section>
-        {user.photos.length < 5 && (
-          <div className="addBackPhoto">
-            <label htmlFor="pict">
-              {/* <AddImage /> */}
-              Ajouter une photo
-            </label>
-            <input
-              type="file"
-              multiple
-              id="pict"
-              accept="image/*"
-              onChange={(event) => {
-                setPic(event.target.files);
-              }}
-            />
-            <p className="photoCompteur"> {user.photos.length - 1} / 4 </p>
-          </div>
-        )}
       </div>
-
-      {pic /*.length > 0*/ && (
-        <button onClick={sendImages}> send images </button>
-      )}
 
       {!user && <div> Loader </div>}
       {user && (
@@ -376,11 +435,11 @@ const Profil = () => {
         A list of interests with tags (e.g. #vegan, #geek, #piercing, etc.),
         which mustbe reusable{" "}
       </p>
-
       <p> Qui à vue ton profil </p>
       <p> Qui à like ton profil </p>
-
       <p> tout est modifiable</p>
+
+      {mainModal && <DeleteMainPicModal />}
     </div>
   );
 };
