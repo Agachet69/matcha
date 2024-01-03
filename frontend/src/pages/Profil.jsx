@@ -262,157 +262,192 @@ const Profil = () => {
         </div>
         <section>
           <MainPic />
-          <h3>
-            {" "}
-            {user.firstName} {user.lastName}
-          </h3>
-          <p> Fame Rating</p>
+          <h3> {/* {user.firstName} {user.lastName} */}</h3>
         </section>
+        {/* <p> Fame Rating</p> */}
       </div>
-
+      <h3 className="titleProfil">
+        {" "}
+        {user.firstName} {user.lastName}{" "}
+      </h3>
+      <div className="socialInfosContainer">
+        <div className="socialInfos borderR">
+          <h4> 13 </h4>
+          <p>fame</p>
+        </div>
+        <div className="socialInfos borderR">
+          <h4 className="pink"> 13 </h4>
+          <p>totolo</p>
+        </div>
+        <div className="socialInfos">
+          <h4> 13 </h4>
+          <p>vues</p>
+        </div>
+      </div>
       {!user && <div> Loader </div>}
       {user && (
-        <form>
-          <div className="inputContainer">
-            <label> Username</label>
-            <div className={edit ? "myTextInput" : "myTextInput inactive"}>
-              <input
-                type="text"
-                onChange={(e) => formUserChange(e, "username")}
-                defaultValue={formUser.username}
-                disabled={!edit}
-              />
-              <UserIcon />
+        <div className="mainInfoContainer">
+          <h3> Information de profil</h3>
+          <form>
+            <div className="inputContainer">
+              <label> Username</label>
+              <div className={edit ? "myTextInput" : "myTextInput inactive"}>
+                {/* <input
+                  type="text"
+                  onChange={(e) => formUserChange(e, "username")}
+                  defaultValue={formUser.username}
+                  disabled={!edit}
+                /> */}
+                <p>{formUser.username}</p>
+                <ArrowRight />
+              </div>
             </div>
-          </div>
-          <div className="inputContainer">
-            <label> Lastname </label>
-            <div className={edit ? "myTextInput" : "myTextInput inactive"}>
-              <input
-                type="text"
-                onChange={(e) => formUserChange(e, "lastname")}
-                defaultValue={formUser.lastName}
-                disabled={!edit}
-              />
-              <Identity />
+            <div className="inputContainer">
+              <label> Lastname </label>
+              <div className={edit ? "myTextInput" : "myTextInput inactive"}>
+                {/* <input
+                  type="text"
+                  onChange={(e) => formUserChange(e, "lastname")}
+                  defaultValue={formUser.lastName}
+                  disabled={!edit}
+                />
+                */}
+                <p>{formUser.lastName}</p>
+                <ArrowRight />
+              </div>
             </div>
-          </div>
-          <div className="inputContainer">
-            <label> Firstname </label>
-            <div className={edit ? "myTextInput" : "myTextInput inactive"}>
-              <input
-                type="text"
-                onChange={(e) => formUserChange(e, "firstname")}
-                defaultValue={formUser.firstName}
-                disabled={!edit}
-              />
-              <Identity />
+            <div className="inputContainer">
+              <label> Firstname </label>
+              <div className={edit ? "myTextInput" : "myTextInput inactive"}>
+                {/* <input
+                  type="text"
+                  onChange={(e) => formUserChange(e, "firstname")}
+                  defaultValue={formUser.firstName}
+                  disabled={!edit}
+                /> */}
+                <p>{formUser.firstName}</p>
+                <ArrowRight />
+              </div>
             </div>
-          </div>
-          <div className="inputContainer">
-            <label> Email </label>
-            <div className={edit ? "myTextInput" : "myTextInput inactive"}>
-              <input
-                type="text"
-                onChange={(e) => formUserChange(e, "email")}
-                defaultValue={formUser.email}
-                disabled={!edit}
-              />
-              <Letter />
+            <div className="inputContainer">
+              <label> Email </label>
+              <div className={edit ? "myTextInput" : "myTextInput inactive"}>
+                {/* <input
+                  type="text"
+                  onChange={(e) => formUserChange(e, "email")}
+                  defaultValue={formUser.email}
+                  disabled={!edit}
+                /> */}
+                <p>{formUser.email}</p>
+                <ArrowRight />
+              </div>
             </div>
-          </div>
-          <div className="inputContainer">
-            <label> Genre </label>
-            <div className="myRadioInput">
-              <input
-                type="radio"
-                name="Genre"
-                id="homme"
-                value="MALE"
-                checked={formUser.gender === "MALE"}
-                onChange={(e) => formUserChange(e, "gender")}
-                disabled={!edit}
-              />
-              <label htmlFor="homme"> Homme </label>
-              <input
-                type="radio"
-                name="Genre"
-                id="femme"
-                value="FEMALE"
-                checked={formUser.gender === "FEMALE"}
-                onChange={(e) => formUserChange(e, "gender")}
-                disabled={!edit}
-              />
-              <label htmlFor="femme"> Femme </label>
+            <div className="inputContainer">
+              <label> Genre </label>
+              {/* <div className="myRadioInput"> */}
+              {/* <input
+                  type="radio"
+                  name="Genre"
+                  id="homme"
+                  value="MALE"
+                  checked={formUser.gender === "MALE"}
+                  onChange={(e) => formUserChange(e, "gender")}
+                  disabled={!edit}
+                />
+                <label htmlFor="homme"> Homme </label>
+                <input
+                  type="radio"
+                  name="Genre"
+                  id="femme"
+                  value="FEMALE"
+                  checked={formUser.gender === "FEMALE"}
+                  onChange={(e) => formUserChange(e, "gender")}
+                  disabled={!edit}
+                />
+                <label htmlFor="femme"> Femme </label> */}
+              {/* </div> */}
+              <div className={edit ? "myTextInput" : "myTextInput inactive"}>
+                <p>{formUser.gender.toLowerCase()}</p>
+                <ArrowRight />
+              </div>
             </div>
-          </div>
-          <div className="inputContainer">
-            <label> Orientation </label>
-            <div className="myRadioInput">
-              <input
-                type="radio"
-                name="prefers"
-                id="hetero"
-                value="HETEROSEXUAL"
-                checked={formUser.sexuality === "HETEROSEXUAL"}
-                onChange={(e) => formUserChange(e, "orientation")}
-                disabled={!edit}
-              />
-              <label htmlFor="hetero"> Hétérosexuel </label>
-              <input
-                type="radio"
-                name="prefers"
-                id="homo"
-                value="HOMOSEXUAL"
-                checked={formUser.sexuality === "HOMOSEXUAL"}
-                onChange={(e) => formUserChange(e, "orientation")}
-                disabled={!edit}
-              />
-              <label htmlFor="homo"> Homosexuel </label>
-              <input
-                type="radio"
-                name="prefers"
-                id="bi"
-                value="BISEXUAL"
-                checked={formUser.sexuality === "BISEXUAL"}
-                onChange={(e) => formUserChange(e, "orientation")}
-                disabled={!edit}
-              />
-              <label htmlFor="bi"> Bisexuel </label>
+            <div className="inputContainer">
+              <label> Orientation </label>
+              {/* <div className="myRadioInput">
+                <input
+                  type="radio"
+                  name="prefers"
+                  id="hetero"
+                  value="HETEROSEXUAL"
+                  checked={formUser.sexuality === "HETEROSEXUAL"}
+                  onChange={(e) => formUserChange(e, "orientation")}
+                  disabled={!edit}
+                />
+                <label htmlFor="hetero"> Hétérosexuel </label>
+                <input
+                  type="radio"
+                  name="prefers"
+                  id="homo"
+                  value="HOMOSEXUAL"
+                  checked={formUser.sexuality === "HOMOSEXUAL"}
+                  onChange={(e) => formUserChange(e, "orientation")}
+                  disabled={!edit}
+                />
+                <label htmlFor="homo"> Homosexuel </label>
+                <input
+                  type="radio"
+                  name="prefers"
+                  id="bi"
+                  value="BISEXUAL"
+                  checked={formUser.sexuality === "BISEXUAL"}
+                  onChange={(e) => formUserChange(e, "orientation")}
+                  disabled={!edit}
+                />
+                <label htmlFor="bi"> Bisexuel </label>
+              </div> */}
+              <div className={edit ? "myTextInput" : "myTextInput inactive"}>
+                <p>{formUser.sexuality.toLowerCase()}</p>
+                <ArrowRight />
+              </div>
             </div>
-          </div>
 
-          <div className="inputContainer">
-            <label> Intérêts </label>
-            <div className="myRadioInput">
-              <input type="radio" id="musique" />
-              <label htmlFor="musique"> Musique</label>
+            <div className="inputContainer">
+              <label> Intérêts </label>
+              <div className="myRadioInput">
+                <input type="radio" id="musique" />
+                <label htmlFor="musique"> Musique</label>
 
-              <input type="radio" id="sport" />
-              <label htmlFor="sport"> Sport</label>
+                <input type="radio" id="sport" />
+                <label htmlFor="sport"> Sport</label>
 
-              <input type="radio" id="jeuxVideos" />
-              <label htmlFor="jeuxVideos"> Jeux vidéos </label>
+                <input type="radio" id="jeuxVideos" />
+                <label htmlFor="jeuxVideos"> Jeux vidéos </label>
 
-              <input type="radio" id="voyage" />
-              <label htmlFor="voyage"> Voyages </label>
+                <input type="radio" id="voyage" />
+                <label htmlFor="voyage"> Voyages </label>
 
-              <input type="radio" id="cinema" />
-              <label htmlFor="cinema"> Cinéma </label>
+                <input type="radio" id="cinema" />
+                <label htmlFor="cinema"> Cinéma </label>
+              </div>
             </div>
-          </div>
 
-          <div className="inputContainer">
-            <label> Biographie </label>
-            <textarea
-              value={formUser.bio}
-              onChange={(e) => formUserChange(e, "bio")}
-              disabled={!edit}
-            >
-              {" "}
-            </textarea>
-          </div>
-        </form>
+            <div className="inputContainer">
+              <label> Biographie </label>
+              {/* <textarea
+                value={formUser.bio}
+                onChange={(e) => formUserChange(e, "bio")}
+                disabled={!edit}
+              >
+                {" "}
+              </textarea> */}
+              <div className={edit ? "myTextInput" : "myTextInput inactive"}>
+                {/* <p>{formUser.bio}</p> */}
+                <p> modifier</p>
+                <ArrowRight />
+              </div>
+            </div>
+          </form>
+        </div>
       )}
       {!edit && (
         <div onClick={() => setEdit(true)} className="editIcon">
@@ -430,14 +465,8 @@ const Profil = () => {
         </div>
       )}
 
-      <p>
-        {" "}
-        A list of interests with tags (e.g. #vegan, #geek, #piercing, etc.),
-        which mustbe reusable{" "}
-      </p>
       <p> Qui à vue ton profil </p>
       <p> Qui à like ton profil </p>
-      <p> tout est modifiable</p>
 
       {mainModal && <DeleteMainPicModal />}
     </div>

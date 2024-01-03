@@ -6,17 +6,18 @@
   flex-direction: column;
   align-items: center;
   font-family: Montserrat;
-  gap: 50px;
+  gap: 10px;
+  padding-bottom: 20px;
 
   .topContainer {
     width: 100%;
     position: relative;
-    margin-bottom: 90px;
+    margin-bottom: 10px;
 
     section {
       position: absolute;
-      bottom: -125px;
-      left: 45px;
+      bottom: -45px;
+      left: 20px;
       width: auto;
       // position: relative;
       display: flex;
@@ -415,7 +416,7 @@
               border-radius: 20px;
               background-color: #ff4ca8;
               color: white;
-              
+
               svg {
                 height: 17px;
               }
@@ -458,94 +459,160 @@
     }
   }
 
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    background-color: rgba(128, 128, 128, 0.116);
-    width: 90%;
-    padding: 20px 30px;
-    border-radius: 20px;
+  .titleProfil {
+    font-size: 18px;
+    font-weight: 600;
+  }
 
-    label {
-      color: $labelGrey;
+  .socialInfosContainer {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 45px;
+
+    .borderR {
+      border-right: 1px solid #ff4ca8;
+
+      .pink {
+        color: #ff4ca8;
+      }
     }
 
-    .inputContainer {
+    .socialInfos {
       display: flex;
       flex-direction: column;
+      align-items: center;
+      align-self: stretch;
+      flex: 1;
+      font-family: Montserrat;
       gap: 10px;
 
-      .myTextInput {
-        position: relative;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: transparent;
-        background-color: white;
-        border: 1px solid $borderInput;
-
-        input {
-          position: relative;
-          z-index: 1;
-          border: none;
-          padding: 10px 35px 10px 20px;
-          width: 100%;
-          background-color: transparent;
-          font-size: 14px;
-          font-family: Montserrat;
-        }
-
-        svg {
-          position: absolute;
-          right: 10px;
-          z-index: 0;
-          // color: $labelGrey;
-          width: 20px;
-        }
+      h4 {
+        font-size: 16px;
       }
 
-      .myRadioInput {
+      p {
+        font-size: 12px;
+        color: rgba(0, 0, 0, 0.603);
+      }
+    }
+  }
+
+  .mainInfoContainer {
+
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    padding: 15px 45px;
+    gap: 20px;
+
+    h3 {
+      padding: 20px 0px 0px 30px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 20px;
+      // background-color: rgba(128, 128, 128, 0.116);
+      width: 100%;
+      padding: 20px 30px;
+      border-radius: 20px;
+      overflow: hidden;
+      flex-shrink: 0;
+
+      label {
+        color: $labelGrey;
+      }
+
+      .inputContainer {
+        width: 100%;
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 15px;
-      }
 
-      .myRadioInput input[type="radio"] + label {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 24px;
-        border: 1px solid var(--basic-dark, #192b3921);
-        border-radius: 100px;
-        font-size: 14px;
-        line-height: 16px;
-        letter-spacing: 0.75px;
-        cursor: pointer;
-      }
+        .myTextInput {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          background-color: transparent;
+          background-color: white;
+          flex: 1;
+          gap: 10px;
+          color: rgba(128, 128, 128, 0.671);
+          // border: 1px solid $borderInput;
 
-      .myRadioInput input[type="radio"]:checked + label {
-        background-color: black;
-        color: white;
-      }
+          input {
+            position: relative;
+            z-index: 1;
+            border: none;
+            padding: 10px 35px 10px 20px;
+            width: 100%;
+            background-color: transparent;
+            font-size: 14px;
+            font-family: Montserrat;
+          }
 
-      .inactive {
-        background-color: transparent;
-        input {
+          p {
+            overflow: hidden;
+            cursor: pointer;
+          }
+
+          svg {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+          }
+        }
+
+        .myRadioInput {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+        }
+
+        .myRadioInput input[type="radio"] + label {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 10px 24px;
+          border: 1px solid var(--basic-dark, #192b3921);
+          border-radius: 100px;
+          font-size: 14px;
+          line-height: 16px;
+          letter-spacing: 0.75px;
+          cursor: pointer;
+        }
+
+        .myRadioInput input[type="radio"]:checked + label {
+          background-color: black;
+          color: white;
+        }
+
+        .inactive {
+          background-color: transparent;
+          input {
+            color: rgba(168, 168, 168, 0.692);
+          }
           color: rgba(168, 168, 168, 0.692);
         }
-        color: rgba(168, 168, 168, 0.692);
-      }
 
-      input[type="radio"] {
-        display: none;
-      }
+        input[type="radio"] {
+          display: none;
+        }
 
-      textarea {
-        resize: none;
-        outline: none;
-        height: 150px;
-        padding: 10px 20px;
+        textarea {
+          resize: none;
+          outline: none;
+          height: 150px;
+          padding: 10px 20px;
+        }
       }
     }
   }
