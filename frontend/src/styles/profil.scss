@@ -499,123 +499,123 @@
     }
   }
 
-  .mainInfoContainer {
+  // .mainInfoContainer {
 
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    width: 100%;
-    padding: 15px 45px;
-    gap: 20px;
+  //   display: flex;
+  //   justify-content: center;
+  //   flex-direction: column;
+  //   width: 100%;
+  //   padding: 15px 45px;
+  //   gap: 20px;
 
-    h3 {
-      padding: 20px 0px 0px 30px;
-    }
+  //   h3 {
+  //     padding: 20px 0px 0px 30px;
+  //   }
 
-    form {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 20px;
-      // background-color: rgba(128, 128, 128, 0.116);
-      width: 100%;
-      padding: 20px 30px;
-      border-radius: 20px;
-      overflow: hidden;
-      flex-shrink: 0;
+  //   form {
+  //     display: flex;
+  //     flex-direction: column;
+  //     align-items: flex-start;
+  //     justify-content: center;
+  //     gap: 20px;
+  //     // background-color: rgba(128, 128, 128, 0.116);
+  //     width: 100%;
+  //     padding: 20px 30px;
+  //     border-radius: 20px;
+  //     overflow: hidden;
+  //     flex-shrink: 0;
 
-      label {
-        color: $labelGrey;
-      }
+  //     label {
+  //       color: $labelGrey;
+  //     }
 
-      .inputContainer {
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 15px;
+  //     .inputContainer {
+  //       width: 100%;
+  //       display: flex;
+  //       align-items: center;
+  //       justify-content: space-between;
+  //       gap: 15px;
 
-        .myTextInput {
-          position: relative;
-          display: flex;
-          align-items: center;
-          justify-content: flex-end;
-          background-color: transparent;
-          background-color: white;
-          flex: 1;
-          gap: 10px;
-          color: rgba(128, 128, 128, 0.671);
-          // border: 1px solid $borderInput;
+  //       .myTextInput {
+  //         position: relative;
+  //         display: flex;
+  //         align-items: center;
+  //         justify-content: flex-end;
+  //         background-color: transparent;
+  //         background-color: white;
+  //         flex: 1;
+  //         gap: 10px;
+  //         color: rgba(128, 128, 128, 0.671);
+  //         // border: 1px solid $borderInput;
 
-          input {
-            position: relative;
-            z-index: 1;
-            border: none;
-            padding: 10px 35px 10px 20px;
-            width: 100%;
-            background-color: transparent;
-            font-size: 14px;
-            font-family: Montserrat;
-          }
+  //         input {
+  //           position: relative;
+  //           z-index: 1;
+  //           border: none;
+  //           padding: 10px 35px 10px 20px;
+  //           width: 100%;
+  //           background-color: transparent;
+  //           font-size: 14px;
+  //           font-family: Montserrat;
+  //         }
 
-          p {
-            overflow: hidden;
-            cursor: pointer;
-          }
+  //         p {
+  //           overflow: hidden;
+  //           cursor: pointer;
+  //         }
 
-          svg {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-          }
-        }
+  //         svg {
+  //           width: 20px;
+  //           height: 20px;
+  //           cursor: pointer;
+  //         }
+  //       }
 
-        .myRadioInput {
-          display: flex;
-          align-items: center;
-          gap: 15px;
-        }
+  //       .myRadioInput {
+  //         display: flex;
+  //         align-items: center;
+  //         gap: 15px;
+  //       }
 
-        .myRadioInput input[type="radio"] + label {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 10px 24px;
-          border: 1px solid var(--basic-dark, #192b3921);
-          border-radius: 100px;
-          font-size: 14px;
-          line-height: 16px;
-          letter-spacing: 0.75px;
-          cursor: pointer;
-        }
+  //       .myRadioInput input[type="radio"] + label {
+  //         display: flex;
+  //         align-items: center;
+  //         justify-content: center;
+  //         padding: 10px 24px;
+  //         border: 1px solid var(--basic-dark, #192b3921);
+  //         border-radius: 100px;
+  //         font-size: 14px;
+  //         line-height: 16px;
+  //         letter-spacing: 0.75px;
+  //         cursor: pointer;
+  //       }
 
-        .myRadioInput input[type="radio"]:checked + label {
-          background-color: black;
-          color: white;
-        }
+  //       .myRadioInput input[type="radio"]:checked + label {
+  //         background-color: black;
+  //         color: white;
+  //       }
 
-        .inactive {
-          background-color: transparent;
-          input {
-            color: rgba(168, 168, 168, 0.692);
-          }
-          color: rgba(168, 168, 168, 0.692);
-        }
+  //       .inactive {
+  //         background-color: transparent;
+  //         input {
+  //           color: rgba(168, 168, 168, 0.692);
+  //         }
+  //         color: rgba(168, 168, 168, 0.692);
+  //       }
 
-        input[type="radio"] {
-          display: none;
-        }
+  //       input[type="radio"] {
+  //         display: none;
+  //       }
 
-        textarea {
-          resize: none;
-          outline: none;
-          height: 150px;
-          padding: 10px 20px;
-        }
-      }
-    }
-  }
+  //       textarea {
+  //         resize: none;
+  //         outline: none;
+  //         height: 150px;
+  //         padding: 10px 20px;
+  //       }
+  //     }
+  //   }
+  // }
 
   .editIcon {
     &:hover {
