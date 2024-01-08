@@ -13,6 +13,10 @@ import {
   Trash,
   Pic,
   Send,
+  Stonks,
+  Fire,
+  Eye,
+  Sparkless,
 } from "../components/icons/Icons";
 import axios from "axios";
 import { MainPic } from "../components/MainPic";
@@ -206,22 +210,29 @@ const Profil = () => {
       <p> Qui à like ton profil </p>
       <div className="socialInfosContainer">
         <div className="socialInfos borderR">
-          <h4> 13 </h4>
-          <p>fame</p>
+          <div className="socialTitleSvg">
+            <h4> 13 </h4>
+            <Fire />
+          </div>
+          <p>fame rating</p>
         </div>
         <div className="socialInfos borderR">
-          <h4 className="pink"> 13 </h4>
+        <div className="socialTitleSvg">
+            <h4 className="pink"> 13 </h4>
+            <Sparkless />
+          </div>
           <p>totolo</p>
         </div>
         <div className="socialInfos">
-          <h4> 13 </h4>
+        <div className="socialTitleSvg">
+            <h4> 13 </h4>
+            <Eye />
+          </div>
           <p>vues</p>
         </div>
       </div>
       {!user && <div> Loader </div>}
-      {user && (
-        <EditUser />
-      )}
+      {user && <EditUser />}
       {mainModal && <DeleteMainPicModal />}
     </div>
   );

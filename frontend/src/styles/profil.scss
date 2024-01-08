@@ -425,6 +425,14 @@
       font-family: Montserrat;
       gap: 10px;
 
+      .socialTitleSvg {
+        display: flex;
+        gap: 10px;
+        svg {
+          height: 22px;
+        }
+      }
+
       h4 {
         font-size: 16px;
       }
