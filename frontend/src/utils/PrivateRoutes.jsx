@@ -6,7 +6,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { initialiseUser, selectUser } from '../store/slices/userSlice';
 import Snackbar from '@mui/material/Snackbar';
-import SnackBarsManager from './SnackbarsManager';
+import SnackBarsManager from './SnackBarsManager';
 
 const SocketContext = createContext();
 

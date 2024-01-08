@@ -92,7 +92,7 @@ async def search(
     current_user: UserSchema = Depends(get_current_user),
     db=Depends(get_db)
 ):
-    user_list = Crud.user.search(db, current_user.id, search_params)
+    user_list = Crud.user.search(db, current_user, search_params)
     
     id_arr = [client["auth"]["user_id"] for client in connected_clients] + [client["user_id"] for client in disconnect_clients]
     status_dict = {}
