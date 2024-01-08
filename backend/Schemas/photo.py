@@ -1,6 +1,4 @@
 from pydantic import BaseModel
-from typing import Optional
-
 
 class PhotoBase(BaseModel):
   path: str

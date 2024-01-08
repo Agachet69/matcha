@@ -8,7 +8,8 @@ from Utils import Base
 from Model.photo import Photo
 from Model.like import Like
 from Model.notif import Notif
-# from Model.tag import Tag
+from Model.tag import Tag
+from Model.association import user_tag_association
 
 class User(Base):
     __tablename__ = "users"
@@ -26,21 +27,13 @@ class User(Base):
     
     bio = Column(String(400))
     
-    
-    
-    # TODO: add position
-    
-    # photos
-    
-    
-    
     password = Column(String(256))
+    
+    tags= relationship("Tag", secondary=user_tag_association, back_populates="users")
     
     photos: List[Photo] = relationship("Photo", back_populates="user")
     
     notifs: List[Notif] = relationship("Notif", back_populates="user")
-    
-    # tags: List[Tag] = relationship("Tag", back_populates="user")
     
     likes: List[Like] = relationship("Like", back_populates="user", foreign_keys="[Like.user_id]")
     liked_by: List[Like] = relationship("Like", back_populates="user_target", foreign_keys="[Like.user_target_id]")

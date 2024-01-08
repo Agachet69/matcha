@@ -1,15 +1,16 @@
-# from Utils import Base
-# from sqlalchemy import Column, Sequence, Enum, Integer, ForeignKey
-# from sqlalchemy.orm import relationship
-# from Enum.TagEnum import TagEnum
+from Utils import Base
+from sqlalchemy import Column, Sequence, Enum, Integer, ForeignKey, Table
+from sqlalchemy.orm import relationship
+from Enum.TagEnum import TagEnum
+from Model.association import user_tag_association
 
-# class Tag(Base):
-#   __tablename__ = 'tag'
+class Tag(Base):
+  __tablename__ = 'tags'
   
-#   id = Column(int, Sequence('tag_id_sequence'), primary_key=True, index=True)
+  id = Column(Integer, Sequence('tag_id_sequence'), primary_key=True, index=True)
   
-#   tag = Column(Enum(TagEnum))
+  tag = Column(Enum(TagEnum))
   
-#   user_id = Column(Integer, ForeignKey('users.id'))
+  # user_id = Column(Integer, ForeignKey('users.id'))
   
-#   user = relationship("User", back_populates="tag")
+  users = relationship("User", secondary=user_tag_association, back_populates="tags")

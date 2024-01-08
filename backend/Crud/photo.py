@@ -2,7 +2,7 @@ from fastapi import Depends
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 from Model import Photo
-from Schemas.photo import PhotoBase, PhotoCreate, PhotoUpdate
+from Schemas.photo import PhotoCreate, PhotoUpdate
 from Schemas.user import UserSchema
 from Deps.user import get_current_user
 from .base import CRUDBase

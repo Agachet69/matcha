@@ -3,6 +3,7 @@ from Schemas.token import TokenSchema
 from Schemas.notif import NotifSchema
 from Schemas.like import LikeSchema
 from Schemas.photo import PhotoSchema, PhotoSchema
+from Schemas.tag import TagSchema
 from Enum.GenderEnum import GenderEnum
 from Enum.SexualityEnum import SexualityEnum
 
@@ -61,4 +62,5 @@ class UserSchema(UserInDBBase):
     likes: List[LikeSchema]
     liked_by: List[LikeSchema]
     photos: List[PhotoSchema]
+    tags: List[TagSchema]
     

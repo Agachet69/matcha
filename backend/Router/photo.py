@@ -38,8 +38,7 @@ def change_main(
     return photo
       
   except:
-    raise HTTPException(status_code=400, detail="5 photos max.")
-     
+    raise HTTPException(status_code=400, detail="5 photos max.")   
 
 @router.post("/", response_model=PhotoSchema)
 async def upload_image(

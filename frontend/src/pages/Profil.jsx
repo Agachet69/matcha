@@ -10,9 +10,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   ArrowLeft,
   ArrowRight,
-  Cancel,
-  Confirm,
-  Edit,
   Trash,
   Pic,
   Send,
@@ -33,8 +30,6 @@ const Profil = () => {
   const user = useSelector(selectUser);
   const mainModal = useSelector(selectModalMainPic);
   const deleteBack = useSelector(selectModalPic);
-  const [formUser, setFormUser] = useState(user);
-  const [edit, setEdit] = useState(false);
   const [translateXValue, setTranslateXValue] = useState(0);
   const [myImgs, setMyImgs] = useState(null);
   const [previewImg, setPreviewImg] = useState(null);
@@ -49,71 +44,12 @@ const Profil = () => {
     console.log(user);
   }, [user]);
 
-  useEffect(() => {
-    // console.log(user);
-    // if (!pic) return;
-    // const myImageList = [...pic];
-    // setMyImgs(myImageList);
-    console.log(myImgs);
-  }, [myImgs]);
-
   async function nextPhoto() {
     setTranslateXValue((prevTranslateX) => prevTranslateX - 100);
   }
 
   function prevPhoto() {
     setTranslateXValue((prevTranslateX) => prevTranslateX + 100);
-  }
-
-  function formUserChange(event, inputName) {
-    switch (inputName) {
-      case "username":
-        setFormUser((prevState) => ({
-          ...prevState,
-          username: event.target.value,
-        }));
-        break;
-
-      case "lastname":
-        setFormUser((prevState) => ({
-          ...prevState,
-          lastName: event.target.value,
-        }));
-        break;
-      case "firstname":
-        setFormUser((prevState) => ({
-          ...prevState,
-          firstName: event.target.value,
-        }));
-        break;
-      case "email":
-        setFormUser((prevState) => ({
-          ...prevState,
-          email: event.target.value,
-        }));
-        break;
-      case "gender":
-        setFormUser((prevState) => ({
-          ...prevState,
-          gender: event.target.value,
-        }));
-        break;
-      case "orientation":
-        setFormUser((prevState) => ({
-          ...prevState,
-          sexuality: event.target.value,
-        }));
-        break;
-      case "bio":
-        setFormUser((prevState) => ({
-          ...prevState,
-          bio: event.target.value,
-        }));
-        break;
-
-      default:
-        console.log("bad name");
-    }
   }
 
   async function sendImages() {
@@ -260,14 +196,14 @@ const Profil = () => {
         </div>
         <section>
           <MainPic />
-          <h3> {/* {user.firstName} {user.lastName} */}</h3>
         </section>
-        {/* <p> Fame Rating</p> */}
       </div>
       <h3 className="titleProfil">
         {" "}
         {user.firstName} {user.lastName}{" "}
       </h3>
+      <p> Qui à vue ton profil </p>
+      <p> Qui à like ton profil </p>
       <div className="socialInfosContainer">
         <div className="socialInfos borderR">
           <h4> 13 </h4>
@@ -284,193 +220,8 @@ const Profil = () => {
       </div>
       {!user && <div> Loader </div>}
       {user && (
-        // <div className="mainInfoContainer">
-        //   <h3> Information de profil</h3>
-        //   <form>
-        //     <div className="inputContainer">
-        //       <label> Username</label>
-        //       <div className={edit ? "myTextInput" : "myTextInput inactive"}>
-        //         {/* <input
-        //           type="text"
-        //           onChange={(e) => formUserChange(e, "username")}
-        //           defaultValue={formUser.username}
-        //           disabled={!edit}
-        //         /> */}
-        //         <p>{formUser.username}</p>
-        //         <ArrowRight />
-        //       </div>
-        //     </div>
-        //     <div className="inputContainer">
-        //       <label> Lastname </label>
-        //       <div className={edit ? "myTextInput" : "myTextInput inactive"}>
-        //         {/* <input
-        //           type="text"
-        //           onChange={(e) => formUserChange(e, "lastname")}
-        //           defaultValue={formUser.lastName}
-        //           disabled={!edit}
-        //         />
-        //         */}
-        //         <p>{formUser.lastName}</p>
-        //         <ArrowRight />
-        //       </div>
-        //     </div>
-        //     <div className="inputContainer">
-        //       <label> Firstname </label>
-        //       <div className={edit ? "myTextInput" : "myTextInput inactive"}>
-        //         {/* <input
-        //           type="text"
-        //           onChange={(e) => formUserChange(e, "firstname")}
-        //           defaultValue={formUser.firstName}
-        //           disabled={!edit}
-        //         /> */}
-        //         <p>{formUser.firstName}</p>
-        //         <ArrowRight />
-        //       </div>
-        //     </div>
-        //     <div className="inputContainer">
-        //       <label> Email </label>
-        //       <div className={edit ? "myTextInput" : "myTextInput inactive"}>
-        //         {/* <input
-        //           type="text"
-        //           onChange={(e) => formUserChange(e, "email")}
-        //           defaultValue={formUser.email}
-        //           disabled={!edit}
-        //         /> */}
-        //         <p>{formUser.email}</p>
-        //         <ArrowRight />
-        //       </div>
-        //     </div>
-        //     <div className="inputContainer">
-        //       <label> Genre </label>
-        //       {/* <div className="myRadioInput"> */}
-        //       {/* <input
-        //           type="radio"
-        //           name="Genre"
-        //           id="homme"
-        //           value="MALE"
-        //           checked={formUser.gender === "MALE"}
-        //           onChange={(e) => formUserChange(e, "gender")}
-        //           disabled={!edit}
-        //         />
-        //         <label htmlFor="homme"> Homme </label>
-        //         <input
-        //           type="radio"
-        //           name="Genre"
-        //           id="femme"
-        //           value="FEMALE"
-        //           checked={formUser.gender === "FEMALE"}
-        //           onChange={(e) => formUserChange(e, "gender")}
-        //           disabled={!edit}
-        //         />
-        //         <label htmlFor="femme"> Femme </label> */}
-        //       {/* </div> */}
-        //       <div className={edit ? "myTextInput" : "myTextInput inactive"}>
-        //         <p>{formUser.gender.toLowerCase()}</p>
-        //         <ArrowRight />
-        //       </div>
-        //     </div>
-        //     <div className="inputContainer">
-        //       <label> Orientation </label>
-        //       {/* <div className="myRadioInput">
-        //         <input
-        //           type="radio"
-        //           name="prefers"
-        //           id="hetero"
-        //           value="HETEROSEXUAL"
-        //           checked={formUser.sexuality === "HETEROSEXUAL"}
-        //           onChange={(e) => formUserChange(e, "orientation")}
-        //           disabled={!edit}
-        //         />
-        //         <label htmlFor="hetero"> Hétérosexuel </label>
-        //         <input
-        //           type="radio"
-        //           name="prefers"
-        //           id="homo"
-        //           value="HOMOSEXUAL"
-        //           checked={formUser.sexuality === "HOMOSEXUAL"}
-        //           onChange={(e) => formUserChange(e, "orientation")}
-        //           disabled={!edit}
-        //         />
-        //         <label htmlFor="homo"> Homosexuel </label>
-        //         <input
-        //           type="radio"
-        //           name="prefers"
-        //           id="bi"
-        //           value="BISEXUAL"
-        //           checked={formUser.sexuality === "BISEXUAL"}
-        //           onChange={(e) => formUserChange(e, "orientation")}
-        //           disabled={!edit}
-        //         />
-        //         <label htmlFor="bi"> Bisexuel </label>
-        //       </div> */}
-        //       <div className={edit ? "myTextInput" : "myTextInput inactive"}>
-        //         <p>{formUser.sexuality.toLowerCase()}</p>
-        //         <ArrowRight />
-        //       </div>
-        //     </div>
-
-        //     <div className="inputContainer">
-        //       <label> Intérêts </label>
-        //       <div className={edit ? "myTextInput" : "myTextInput inactive"}>
-        //         <p>liste d&apos; intêret </p>
-        //         <ArrowRight />
-        //       </div>
-        //       {/* <div className="myRadioInput">
-        //         <input type="checkbox" id="musique" />
-        //         <label htmlFor="musique"> Musique</label>
-
-        //         <input type="checkbox" id="sport" />
-        //         <label htmlFor="sport"> Sport</label>
-
-        //         <input type="checkbox" id="jeuxVideos" />
-        //         <label htmlFor="jeuxVideos"> Jeux vidéos </label>
-
-        //         <input type="checkbox" id="voyage" />
-        //         <label htmlFor="voyage"> Voyages </label>
-
-        //         <input type="checkbox" id="cinema" />
-        //         <label htmlFor="cinema"> Cinéma </label>
-        //       </div> */}
-        //     </div>
-
-        //     <div className="inputContainer">
-        //       <label> Biographie </label>
-        //       {/* <textarea
-        //         value={formUser.bio}
-        //         onChange={(e) => formUserChange(e, "bio")}
-        //         disabled={!edit}
-        //       >
-        //         {" "}
-        //       </textarea> */}
-        //       <div className={edit ? "myTextInput" : "myTextInput inactive"}>
-        //         {/* <p>{formUser.bio}</p> */}
-        //         <p> modifier</p>
-        //         <ArrowRight />
-        //       </div>
-        //     </div>
-        //   </form>
-        // </div>
         <EditUser />
       )}
-      {!edit && (
-        <div onClick={() => setEdit(true)} className="editIcon">
-          <Edit />
-        </div>
-      )}
-      {edit && (
-        <div className="editContainer">
-          <div className="confirmIcon">
-            <Confirm />
-          </div>
-          <div className="cancelIcon" onClick={() => setEdit(false)}>
-            <Cancel />
-          </div>
-        </div>
-      )}
-
-      <p> Qui à vue ton profil </p>
-      <p> Qui à like ton profil </p>
-
       {mainModal && <DeleteMainPicModal />}
     </div>
   );
