@@ -1,0 +1,14 @@
+.provider {
+	background-color: green;
+}
+
+.snackbar-icon {
+	cursor: pointer;
+	height: 25px;
+	aspect-ratio: 1/1;
+	transition: all .5s;
+
+	&:hover {
+		color: #ff4ca8
+	}
+}

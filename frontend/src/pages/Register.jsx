@@ -1,16 +1,16 @@
 import { useFormik } from 'formik';
-import GenderEnum from '../../Enum/GenderEnum';
-import SexualityEnum from '../../Enum/SexualityEnum';
-import printVarsHook from '../../components/printVarsHook';
-import RegisterSchema from './RegisterSchema';
+import GenderEnum from '../Enum/GenderEnum';
+import SexualityEnum from '../Enum/SexualityEnum';
+import printVarsHook from '../components/printVarsHook';
+import RegisterSchema from '../schemas/RegisterSchema';
 import { useNavigate } from "react-router-dom";
-import "../../styles/register.scss";
+import "../styles/register.scss";
 import { useEffect, useRef, useState } from 'react';
 import axios from "axios"
-import Carousel from '../../components/Carousel';
-import { KeyIcon } from '../../components/icons/Icons';
+import Carousel from '../components/Carousel';
+import { KeyIcon } from '../components/icons/Icons';
 import { useDispatch } from 'react-redux';
-import { setToken } from '../../store/slices/authSlice';
+import { setToken } from '../store/slices/authSlice';
 
 const Register = () => {
 
@@ -19,17 +19,50 @@ const Register = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
+  const [pos, setPos] = useState({
+    latitude: 0,
+    longitude: 0,
+  })
+
   const onRegister = (values) => {
-    axios.post('http://localhost:8000/users/register', values)
+    axios.post('http://localhost:8000/users/register', {...values, ...pos})
       .then(({ data }) => {
         dispatch(setToken(data))
         navigate('/profil')
       })
       .catch((error) => {
-        console.log(error.response.data.detail)
-        setOnRegisterErrorMessage(error.response.data.detail)
+        setOnRegisterErrorMessage(JSON.stringify(error.response.data))
       });
   }
+
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setPos({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude
+          })
+        },
+        (error) => {
+          axios.get('https://ipapi.co/json/').then(({ data }) => {
+            setPos({
+              latitude: data.latitude,
+              longitude: data.longitude
+            })
+
+          });
+        }
+      );
+    } else {
+      axios.get('https://ipapi.co/json/').then(({ data }) => {
+        setPos({
+          latitude: data.latitude,
+          longitude: data.longitude
+        })
+      });
+    }
+  }, [])
 
   useEffect(() => window.scrollTo(0, 0), [])
 
@@ -124,9 +157,9 @@ const Register = () => {
             <div className="selector">
               <label>Gender</label>
               {Object.keys(GenderEnum).map(value => (
-                <div key={value} className={"selectorItem " + (value == formik.values.gender ? "selected" : "")} onClick={() => formik.setFieldValue("gender", value)}>
+                <button key={value} className={"selectorItem " + (value == formik.values.gender ? "selected" : "")} onClick={() => formik.setFieldValue("gender", value)}>
                   {value}
-                </div>
+                </button>
               ))}
             </div>
             {!!formik.errors.gender && formik.touched.gender && <div className='error'>{formik.errors.gender}</div>}
@@ -134,9 +167,9 @@ const Register = () => {
             <div className="selector">
               <label>Sexuality</label>
               {Object.keys(SexualityEnum).map(value => (
-                <div key={value} className={"selectorItem " + (value == formik.values.sexuality ? "selected" : "")} onClick={() => formik.setFieldValue("sexuality", value)}>
+                <button key={value} className={"selectorItem " + (value == formik.values.sexuality ? "selected" : "")} onClick={() => formik.setFieldValue("sexuality", value)}>
                   {value}
-                </div>
+                </button>
               ))}
             </div>
             {!!formik.errors.sexuality && formik.touched.sexuality && <div className='error'>{formik.errors.sexuality}</div>}
@@ -190,7 +223,7 @@ const Register = () => {
     </div>
     // <form onSubmit={formik.handleSubmit} className='container'>
     //   <h1>Register</h1>
-    //   <input type="text" name='username' value={formik.values.username} onChange={formik.handleChange} placeholder='Pseudo'/>
+    //   <input type="text" name='username' value={formik.values.username} onChange={formik.handleChange} placeholder='Username'/>
     //   <p>username</p>
     //   <p>mdp</p>
     //   <p>nom</p>

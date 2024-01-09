@@ -5,7 +5,7 @@ import { router } from './utils/Router.jsx'
 import {
   RouterProvider,
 } from "react-router-dom";
-import App from './App.jsx'
+// import App from './App.jsx'
 import { persistor, store } from './store/store.js';
 import {Provider, useDispatch, useSelector} from "react-redux";
 import { PersistGate } from 'redux-persist/integration/react';

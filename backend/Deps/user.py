@@ -1,8 +1,7 @@
 from Schemas.user import UserSchema
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2AuthorizationCodeBearer
-
 from Utils import get_db, security
 import Crud
 

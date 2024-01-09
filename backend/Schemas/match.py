@@ -4,6 +4,7 @@ from Enum.NotifTypeEnum import NotifTypeEnum
 from Enum.GenderEnum import GenderEnum
 from Enum.SexualityEnum import SexualityEnum
 
+
 from pydantic import BaseModel, EmailStr, constr, validator
 
 from Validators.user import user_name_validator, password_validator
@@ -11,19 +12,19 @@ from Validators.user import user_name_validator, password_validator
 
 
 
-class NotifBase(BaseModel):
-    type: NotifTypeEnum
-    data: str
-    data_user_id: Optional[int]
+class MatchBase(BaseModel):
+    user_A_id: Optional[int]
+    user_B_id: Optional[int]
 
-class NotifCreate(NotifBase):
+class MatchCreate(MatchBase):
 	pass
 
-class NotifInDBBase(NotifBase):
+class MatchInDBBase(MatchBase):
     id: int
 
     class Config:
         orm_mode = True
+
 
 class UserBase(BaseModel):
     username: Optional[constr(min_length=1)]
@@ -34,8 +35,11 @@ class UserBase(BaseModel):
     sexuality: Optional[SexualityEnum]
     age: Optional[int]
     bio: Optional[str]
+    id: int
     class Config:
         orm_mode = True
 
-class NotifSchema(NotifInDBBase):
-    data_user: Optional[UserBase]
+class MatchSchema(MatchInDBBase):
+    user_A: Optional[UserBase]
+    user_B: Optional[UserBase]
+    

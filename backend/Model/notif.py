@@ -13,5 +13,7 @@ class Notif(Base):
     user_id = Column(Integer, ForeignKey('users.id'))
     user = relationship("User", back_populates="notifs")
     
-    data = Column(String(256))
     type = Column(Enum(NotifTypeEnum))
+    data = Column(String(256))
+    data_user_id = Column(Integer, nullable=True)
+    data_user = relationship("User", foreign_keys=[data_user_id], primaryjoin="Notif.data_user_id == User.id")
