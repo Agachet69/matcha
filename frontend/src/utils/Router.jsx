@@ -10,69 +10,81 @@ import Header from "../components/Header";
 import "../App.css";
 
 export const router = createBrowserRouter([
-    {
-        path: '/profil',
-        element:
-            <PrivateRoutes>
-                <Header>
-                    <Profil />
-                </Header>
-            </PrivateRoutes>
-    },
-    {
-        path: '/home',
-        element:
-            <PrivateRoutes>
-                <Header>
-                    <Home />
-                </Header>
-            </PrivateRoutes>
-    },
-    {
-        path: '/chat/:id',
-        element: <PrivateRoutes>
+  {
+    path: "/profil",
+    element: (
+      <PrivateRoutes>
         <Header>
-            <Chat />
+          <Profil />
         </Header>
-    </PrivateRoutes>
-    },
-    {
-        path: '/chat',
-        element: <PrivateRoutes>
-                <Header>
-                    <Chat />
-                </Header>
-            </PrivateRoutes>
-    },
-    {
-        path: '/profil/:id',
-        element: <OtherProfil />
-    },
-    {
-        path: '/login',
-        element:
-            <Header connected={false}>
-                <Login />
-            </Header>
-        ,
-    },
-    {
-        path: '/register',
-        element:
-            <Header connected={false}>
-                <Register />
-            </Header>
-        ,
-    },
-    {
-        path: '/404',
-        element:
-            <Header connected={false}>
-                <div>404</div>
-            </Header>,
-    },
-    {
-        path: '/*',
-        element: <Navigate to='/home' />,
-    }
-])
+      </PrivateRoutes>
+    ),
+  },
+  {
+    path: "/home",
+    element: (
+      <PrivateRoutes>
+        <Header>
+          <Home />
+        </Header>
+      </PrivateRoutes>
+    ),
+  },
+  {
+    path: "/chat/:id",
+    element: (
+      <PrivateRoutes>
+        <Header>
+          <Chat />
+        </Header>
+      </PrivateRoutes>
+    ),
+  },
+  {
+    path: "/chat",
+    element: (
+      <PrivateRoutes>
+        <Header>
+          <Chat />
+        </Header>
+      </PrivateRoutes>
+    ),
+  },
+  {
+    path: "/profil/:id",
+    element: (
+      <PrivateRoutes>
+        <OtherProfil />
+      </PrivateRoutes>
+    ),
+    
+  },
+  {
+    path: "/login",
+    element: (
+      <Header connected={false}>
+        <Login />
+      </Header>
+    ),
+  },
+  {
+    path: "/register",
+    element: (
+      <Header connected={false}>
+        <Register />
+      </Header>
+    ),
+  },
+  {
+    path: "/404",
+    element: (
+      <Header connected={false}>
+        <div>404</div>
+      </Header>
+    ),
+  },
+  {
+    path: "/*",
+    element: <Navigate to="/home" />,
+  },
+]);

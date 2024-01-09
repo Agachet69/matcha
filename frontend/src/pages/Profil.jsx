@@ -226,7 +226,7 @@ const Profil = () => {
         <div className="socialInfos">
         <div className="socialTitleSvg">
             <h4> 13 </h4>
-            <Eye />
+            <Eye/>
           </div>
           <p>vues</p>
         </div>
