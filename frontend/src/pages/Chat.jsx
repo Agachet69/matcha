@@ -70,7 +70,8 @@ const Chat = () => {
 
     useEffect(() => {
         const elem = document.getElementById("messageList")
-        elem.scrollTop = elem.scrollHeight
+        if (elem)
+            elem.scrollTop = elem.scrollHeight
     }, [messages])
 
     const onUpdateStatus = ({ user_id, status }) => {
@@ -153,6 +154,21 @@ const Chat = () => {
                 console.error(error);
             });}
         }
+
+
+        useEffect(() => {
+            if (socket) {
+                socket.off('add-message-notification')
+                socket.on('add-message-notification', ({notif_id}) => {
+                    axios.post(`http://localhost:8000/users/del_notif/${notif_id}`, {}, {
+                        headers: {
+                            Authorization: `Bearer ${token.access_token}`
+                        }
+                    })
+                })
+
+            }
+        }, [])
 
 if (id == undefined)
     return (

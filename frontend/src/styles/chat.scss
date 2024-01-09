@@ -199,6 +199,11 @@
         width: 100%;
         font-size: 20px;
         height: 100%;
+        
+
+        &::placeholder {
+          color: black;
+        }
       }
       .icon {
         height: 50%;

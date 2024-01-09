@@ -2,7 +2,7 @@ import { forwardRef, useEffect } from "react"
 import { useSocket } from "./PrivateRoutes"
 import { SnackbarProvider, enqueueSnackbar, closeSnackbar, SnackbarContent } from 'notistack'
 import '../styles/SnackBarsManager.scss'
-import { CrossIcon, UserIcon } from "../components/icons/Icons"
+import { ChatIcon, CrossIcon, UserIcon } from "../components/icons/Icons"
 import { Tooltip } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import { initialiseUser } from "../store/slices/userSlice"
@@ -17,6 +17,13 @@ export const getActions = (notif_type, data_user_id) => id => {
 			<Tooltip title='view profile'>
 				<div className="snackbar-icon" onClick={() => { navigate(`/profil/${data_user_id}`) }}>
 					<UserIcon />
+				</div>
+			</Tooltip>}
+		
+		{(notif_type == 'MESSAGE' || notif_type == 'MATCH') &&
+			<Tooltip title='Go to chat'>
+				<div className="snackbar-icon" onClick={() => { navigate(`/chat/${data_user_id}`) }}>
+					<ChatIcon />
 				</div>
 			</Tooltip>}
 
@@ -43,14 +50,19 @@ const SnackBarsManager = () => {
 	})
 
 	useEffect(() => {
-		if (socket)
+		if (socket){
+
 			socket.on('add-notification', ({ type, data, data_user_id }) => {
 				getMe()
-				enqueueSnackbar(data, {
-					variant: 'info', action: getActions(type, data_user_id)
-				})
-			}
-			)
+				enqueueSnackbar(data, { variant: 'info', action: getActions(type, data_user_id) })
+			})
+			socket.on('add-message-notification', ({ data, data_user_id, notif_id }) => {
+				console.log(data, data_user_id, notif_id)
+				getMe()
+				enqueueSnackbar(data, { variant: 'info', action: getActions('MESSAGE', data_user_id) })
+			})
+		}
+			
 	}, [socket])
 
 	return <>

@@ -59,7 +59,7 @@ def login(user_to_login: UserLogin, db=Depends(get_db)):
     if not (user := Crud.user.get_from_key(db, "username", user_to_login.username)):
         raise HTTPException(status_code=404, detail="Username incorrect")
     if not security.verify_password(user_to_login.password, user.password):
-        raise HTTPException(status_code=400, detail="Password incorrect")
+        raise HTTPException(status_code=404, detail="Password incorrect")
     
     user_update = UserUpdate(last_connection_date=datetime.datetime.now())
 
@@ -192,6 +192,13 @@ async def like(
         }, room=client["sid"])
 
     return current_user
+
+@router.post("del_notif/{notif_id}")
+def del_notif(notid_id: int, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
+    if notif_id not in (notif.id for notif in current_user.notifs):
+        raise HTTPException(status_code=404, detail="Notification not found")
+    return Crud.user.delete_notif(db, current_user, notif_id)
+
 
 # @router.get("/add_notif", status_code=status.HTTP_200_OK, response_model=UserSchema)
 # def get_me(current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):

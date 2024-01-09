@@ -73,5 +73,11 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.refresh(db_obj)
         return db_obj
 
+        def delete_notif(self, db: Session, db_obj: User, notif_id: int):
+            db_obj.notifs.remove(notif_to_delete)
+            db.commit()
+            db.refresh(db_obj)
+            return db_obj
+
 
 user = CRUDUser(User)
