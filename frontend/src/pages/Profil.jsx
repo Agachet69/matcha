@@ -221,7 +221,7 @@ const Profil = () => {
             <h4 className="pink"> 13 </h4>
             <Sparkless />
           </div>
-          <p>totolo</p>
+          <p>crush</p>
         </div>
         <div className="socialInfos">
         <div className="socialTitleSvg">
