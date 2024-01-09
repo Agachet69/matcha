@@ -12,7 +12,6 @@ import { selectUser } from './store/slices/userSlice';
 
 
 function App() {
-  const [token, setToken] = useState(null)
   // const [user, setUser] = useState(null)
   const [allUsers, setAllUsers] = useState(null)
   const [name, setName] = useState("")

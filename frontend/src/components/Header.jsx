@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import "../styles/header.scss"
-import { BellIcon, Logout, UserIcon } from "./icons/Icons";
+import { BellIcon, ChatIcon, Logout, UserIcon } from "./icons/Icons";
 import { setToken } from "../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { selectUser } from "../store/slices/userSlice";
@@ -32,9 +32,13 @@ const Header = ({ children, connected = true }) => {
                     <div className="limiter" />
                     <Badge badgeContent={user.notifs.length} color="error">
                         <div className="logout" onClick={() => {
+                            navigate('/chat')
+                        }}><ChatIcon /></div>
+                    </Badge>
+                    <div className="limiter" />
+                    <Badge badgeContent={user.notifs.length} color="error">
+                        <div className="logout" onClick={() => {
                             alert('Open Notif Modal')
-                            // dispatch(setToken(null))
-                            // navigate('/login')
                         }}><BellIcon /></div>
                     </Badge>
                     <div className="limiter" />
@@ -55,7 +59,6 @@ const Header = ({ children, connected = true }) => {
                     <div className="wave" />
                 </div>
             </div>
-            {/* <BlobAnimation/> */}
         </div>
     )
 }

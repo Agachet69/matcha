@@ -28,8 +28,20 @@ export const router = createBrowserRouter([
             </PrivateRoutes>
     },
     {
+        path: '/chat/:id',
+        element: <PrivateRoutes>
+        <Header>
+            <Chat />
+        </Header>
+    </PrivateRoutes>
+    },
+    {
         path: '/chat',
-        element: <Chat />
+        element: <PrivateRoutes>
+                <Header>
+                    <Chat />
+                </Header>
+            </PrivateRoutes>
     },
     {
         path: '/profil/:id',

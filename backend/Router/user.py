@@ -75,7 +75,7 @@ def login(user_to_login: UserLogin, db=Depends(get_db)):
 def get_me(current_user: UserSchema = Depends(get_current_user)):
     return current_user
 
-@router.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=List[UserSchema])
+@router.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def get_one_user(
     current_user: UserSchema = Depends(get_current_user), user: UserSchema = Depends(get_user)
 ):

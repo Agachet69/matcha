@@ -60,6 +60,8 @@ class UserLogin(UserBase):
 
 class UserUpdate(UserBase):
     password: Optional[constr(min_length=1)]
+    latitude: Optional[int]
+    longitude: Optional[int]
     # _validate_password = validator("password", allow_reuse=True)(password_validator('EDIT'))
 
 class UserInDBBase(UserBase):

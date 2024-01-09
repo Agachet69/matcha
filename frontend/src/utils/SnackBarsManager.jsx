@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { getToken } from "../store/slices/authSlice"
 import axios from "axios"
 
-const getActions = (notif_type, data_user_id) => id => {
+export const getActions = (notif_type, data_user_id) => id => {
 	const navigate = useNavigate()
 	return (<>
 		{(notif_type == 'LIKE' || notif_type == 'MATCH') &&

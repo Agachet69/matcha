@@ -1,6 +1,6 @@
 import { Tooltip } from "@mui/material"
 import GenderEnum from "../Enum/GenderEnum"
-import { Age, FemaleIcon, HeartIcon, MaleIcon, UserIcon } from "./icons/Icons"
+import { Age, ChatIcon, FemaleIcon, HeartIcon, MaleIcon, UserIcon } from "./icons/Icons"
 import '../styles/userCard.scss'
 
 
@@ -13,8 +13,8 @@ const user_image_list = [
 ]
 
 
-const UserCard = ({ user, me, onLikeUser }) => (
-	<div className="user-card-item" onWheel={e => { e.currentTarget.scrollLeft += e.deltaY }}>
+const UserCard = ({ user, me, onLikeUser, selector = false, onClick }) => (
+	<div className="user-card-item" onWheel={e => { e.currentTarget.scrollLeft += e.deltaY }} onClick={() => onClick(user.id)}>
 		<img src={user_image_list[user.id % user_image_list.length]} className='background' alt="" />
 		<div className="item-content">
 			<div className="image">
@@ -54,13 +54,22 @@ const UserCard = ({ user, me, onLikeUser }) => (
 					{user.status}
 				</div>
 			</div>
-			<Tooltip title={me.likes.find(like => like.user_target_id == user.id) ? "Un-like" : me.matches.find(match => match.user_A_id == user.id || match.user_B_id == user.id) ? "un-match" : "Like"}>
+			{!selector &&
 				<div className="actions">
-					<div className="like" onClick={() => onLikeUser(user.id)}>
-						<HeartIcon />
-					</div>
-				</div>
-			</Tooltip>
+					<Tooltip title="chat">
+					{me.matches.find(match => match.user_A_id == user.id || match.user_B_id == user.id) != undefined &&
+						<div className="like" onClick={() => {alert("move to chat")}}>
+							<ChatIcon />
+						</div>
+					}
+					</Tooltip>
+					<Tooltip title={me.likes.find(like => like.user_target_id == user.id) ? "Un-like" : me.matches.find(match => match.user_A_id == user.id || match.user_B_id == user.id) ? "un-match" : "Like"}>
+						<div className="like" onClick={() => onLikeUser(user.id)}>
+							<HeartIcon />
+						</div>
+					</Tooltip>
+			</div>
+}
 		</div>
 	</div>)
 

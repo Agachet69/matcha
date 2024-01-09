@@ -15,6 +15,10 @@ export const useSocket = () => {
 };
 
 export const PrivateRoutes = ({ children }) => {
+  const [pos, setPos] = useState({
+    latitude: 0,
+    longitude: 0,
+})
   const location = useLocation();
   const authLogin = false /* some auth state provider */;
   const token = useSelector(getToken);
@@ -24,15 +28,44 @@ export const PrivateRoutes = ({ children }) => {
   const user = useSelector(selectUser);
 
   useEffect(() => {
-    if (user) {
-      const newSocket = io("http://localhost:8000", { path: "/ws/socket.io/", transports: ['websocket', 'polling'], auth: { user_id: user.id } })
+    if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                setPos({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude
+                })
+            },
+            (error) => {
+                axios.get('https://ipapi.co/json/').then(({ data }) => {
+                    setPos({
+                        latitude: data.latitude,
+                        longitude: data.longitude
+                    })
+                    
+                });
+            }
+        );
+    } else {
+        axios.get('https://ipapi.co/json/').then(({ data }) => {
+            setPos({
+                latitude: data.latitude,
+                longitude: data.longitude
+            })
+        });
+    }
+}, [])
+
+  useEffect(() => {
+    if (user && pos.latitude) {
+      const newSocket = io("http://localhost:8000", { path: "/ws/socket.io/", transports: ['websocket', 'polling'], auth: { user_id: user.id, localisation: pos } })
       setSocket(newSocket);
 
       return () => {
         newSocket.disconnect();
       };
     }
-  }, [user]);
+  }, [user, pos]);
 
   useEffect(() => {
     if (token)

@@ -35,6 +35,7 @@ class UserBase(BaseModel):
     sexuality: Optional[SexualityEnum]
     age: Optional[int]
     bio: Optional[str]
+    id: int
     class Config:
         orm_mode = True
 
