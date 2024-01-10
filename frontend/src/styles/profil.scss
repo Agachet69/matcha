@@ -25,6 +25,7 @@
       flex-direction: column;
       z-index: 1;
       gap: 15px;
+
       input[type="file"] {
         display: none;
       }
@@ -161,6 +162,23 @@
         display: flex;
         justify-content: center;
         font-size: 21px;
+      }
+
+      .statusUser {
+        position: absolute;
+        right: 16px;
+        bottom: 20px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+      }
+
+      .online {
+        background-color: #32cd32;
+      }
+
+      .offline {
+        background-color: red;
       }
     }
 
@@ -396,9 +414,11 @@
     }
   }
 
-  .titleProfil {
-    font-size: 18px;
-    font-weight: 600;
+  .otherProfilBio {
+    padding: 0px 45px;
+    font-family: Inter;
+    font-style: italic;
+    font-size: 14px;
   }
 
   .socialInfosContainer {
@@ -440,6 +460,70 @@
       p {
         font-size: 12px;
         color: rgb(255, 255, 255);
+      }
+    }
+  }
+
+  .otherProfilTitlesInfos {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // padding: 0px 220px;
+    gap: 30px;
+
+    .titleProfil {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    svg {
+      height: 20px;
+    }
+    // p {
+    //   padding: 2px 15px;
+    //   border: 1px solid #ff4ca8;
+    //   border-radius: 100px;
+    //   background-color: #13131300;
+    //   font-size: 14px;
+    // }
+
+    .iconCrush {
+      &:hover {
+        border: 1px solid #ff4ca8;
+        transition: 0.3s;
+        svg {
+          color: #ff4ca8;
+          transition: 0.3s;
+        }
+      }
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid white;
+      border-radius: 50%;
+      padding: 5px 5px;
+      transition: 0.3s;
+      cursor: pointer;
+      svg {
+        height: 18px;
+        transition: 0.3s;
+      }
+    }
+
+    .otherProfilMore {
+      position: absolute;
+      top: 50%;
+      right: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transform: translateY(-50%);
+      svg {
+        height: 22px;
+        cursor: pointer;
       }
     }
   }

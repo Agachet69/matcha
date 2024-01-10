@@ -58,6 +58,12 @@ const Home = () => {
       });
   };
 
+  const navOtherProfil = (user) => {
+    navigate("/profil/" + user.id, {
+      state: user
+    })
+  }
+
   const onLikeUser = (user_id) => {
     const headers = {
       "Content-Type": "application/json",
@@ -279,9 +285,7 @@ const Home = () => {
             user={user}
             key={user.id}
             onLikeUser={onLikeUser}
-            onClick={() => navigate("/profil/" + user.id, {
-              state: user
-            })}
+            onClick={navOtherProfil}
           />
         ))}
       </form>

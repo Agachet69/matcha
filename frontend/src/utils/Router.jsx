@@ -54,10 +54,11 @@ export const router = createBrowserRouter([
     path: "/profil/:id",
     element: (
       <PrivateRoutes>
-        <OtherProfil />
+        <Header>
+          <OtherProfil />
+        </Header>
       </PrivateRoutes>
     ),
-    
   },
   {
     path: "/login",

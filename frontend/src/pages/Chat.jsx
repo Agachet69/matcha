@@ -198,8 +198,8 @@ const Chat = () => {
               key={match.id}
               selector
               me={me}
-              onClick={(id) => {
-                navigate(`/chat/${id}`);
+              onClick={(user) => {
+                navigate(`/chat/${user.id}`);
               }}
               user={match.user_A_id == me.id ? match.user_B : match.user_A}
               onLikeUser={() => {}}

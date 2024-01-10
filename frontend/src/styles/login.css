@@ -99,7 +99,7 @@
 }
 
 .loginInput input:focus {
-    color: black;
+    color: white;
     border: 1px solid #ff4ca8;
     background-color: transparent;
     transition: 0.3s;
