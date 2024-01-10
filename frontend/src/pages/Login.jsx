@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { isAuth, selectAuth, setToken } from "../store/slices/authSlice";
+import { useDispatch } from "react-redux";
+import { setToken } from "../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import "../styles/login.css";
 import { KeyIcon, UserIcon } from "../components/icons/Icons";
@@ -10,8 +10,8 @@ import axios from "axios"
 
 const Login = () => {
 
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
     const [pos, setPos] = useState({
         latitude: 0,

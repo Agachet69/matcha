@@ -1,5 +1,5 @@
 .container {
-  width: 100vw;
+  width: 100%;
   height: fit-content;
   // background-color: red;
 
@@ -9,7 +9,7 @@
     top: 1rem;
     margin-inline: auto;
 
-    width: 95%;
+    width: 100%;
     height: 50px;
 
     padding: 1rem;
@@ -75,11 +75,15 @@
         }
 
         .image {
+          display: flex;
+          // align-items: center;
+          justify-content: center;
           height: 100%;
           aspect-ratio: 1/1;
           background-color: #00000055;
           border-radius: 50%;
           color: inherit;
+          overflow: hidden;
         }
 
         .name {

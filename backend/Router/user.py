@@ -10,9 +10,13 @@ from Schemas.match import MatchCreate
 from Schemas.search import SearchSchema
 from fastapi import APIRouter, Depends, HTTPException, status
 from Schemas.user import UserLogin, UserSchema, UserCreate, UserUpdate
+from Schemas.tag import TagCreate
 import Crud
 from Deps.user import get_user, get_current_user
 from Utils import security
+import uuid
+from pathlib import Path as PathLib
+from sqlalchemy.orm import Session
 from Socket import connected_clients, disconnect_clients
 from fastapi.encoders import jsonable_encoder
 
@@ -53,7 +57,6 @@ def register(user_to_create: UserCreate, db=Depends(get_db)):
         "token_type": "bearer",
     }
 
-
 @router.post("/login", status_code=status.HTTP_200_OK, response_model=TokenSchema)
 def login(user_to_login: UserLogin, db=Depends(get_db)):
     if not (user := Crud.user.get_from_key(db, "username", user_to_login.username)):
@@ -75,6 +78,30 @@ def login(user_to_login: UserLogin, db=Depends(get_db)):
 def get_me(current_user: UserSchema = Depends(get_current_user)):
     return current_user
 
+@router.put('/', status_code=status.HTTP_200_OK, response_model=UserSchema)
+def update_user(user_update: UserUpdate, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
+  return Crud.user.update(db, db_obj=current_user, obj_in=user_update)
+
+@router.put('/tags', response_model=UserSchema)
+def update_tags(tags: List[TagCreate], current_user= Depends(get_current_user), db= Depends(get_db)):
+  
+  if (len(tags) > 5):
+    raise HTTPException(status_code=400, detail="You can't have more than 5 tags.")
+  
+  user = Crud.user.get(db, current_user.id)
+  if user is None:
+    raise HTTPException(status_code=404, detail="User not found")
+  
+  all_tags = []
+  for exist_tag in tags:
+    tag = Crud.tag.get_or_create_tag(db, exist_tag)
+    all_tags.append(tag)
+    
+  user.tags = all_tags
+  db.commit()
+  db.refresh(user)
+  
+  return user
 @router.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def get_one_user(
     current_user: UserSchema = Depends(get_current_user), user: UserSchema = Depends(get_user)

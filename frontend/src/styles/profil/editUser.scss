@@ -1,0 +1,238 @@
+@import "../var.scss";
+
+.editUserContainer {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  padding: 15px 45px;
+  gap: 40px;
+
+  h3 {
+    padding: 20px 0px 0px 30px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    padding: 20px 30px;
+    border-radius: 20px;
+    overflow: hidden;
+    flex-shrink: 0;
+
+    .inputContainer {
+      position: relative;
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 15px;
+
+      .errorMsg {
+        position: absolute;
+        color: red;
+        top: 25px;
+        left: 0px;
+        font-size: 12px;
+      }
+
+
+      .labelContainer {
+        color: $labelGrey;
+        width: 100px;
+      }
+
+      .active {
+        svg {
+          transform: rotate(90deg);
+          transition: 1s;
+        }
+
+        max-height: 180px !important;
+        transition: 0.5s;
+      }
+
+      .activeBioTags {
+        svg {
+          transform: rotate(90deg);
+          // transition: transform .1s;
+        }
+
+        max-height: 450px !important;
+        // transition: max-height 0.5s;
+      }
+
+      .myTextInput {
+        max-height: 24px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: start;
+        background-color: transparent;
+        background-color: white;
+        flex: 1;
+        gap: 10px;
+        overflow: hidden;
+        color: rgba(128, 128, 128, 0.671);
+        transition: max-height 1s;
+
+        .currentValue {
+          display: flex;
+          align-items: flex-start;
+          justify-content: flex-end;
+          align-self: stretch;
+          gap: 20px;
+          cursor: pointer;
+        }
+
+        .tagName::first-letter {
+          text-transform: capitalize;
+        }
+
+        .DisplayInputContainer {
+          display: flex;
+          justify-content: flex-end;
+          width: 100%;
+          input {
+            position: relative;
+            z-index: 1;
+            border: none;
+            padding: 10px 35px 10px 20px;
+            width: 70%;
+            border-radius: 100px;
+            background-color: rgba(128, 128, 128, 0.142);
+            font-size: 14px;
+            font-family: Montserrat;
+          }
+        }
+
+        svg {
+          flex-shrink: 0;
+          width: 20px;
+          height: 24px;
+          transition: transform 0.8s;
+        }
+      }
+
+      .myRadioInput {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+
+        input[type="checkbox"] {
+          display: none;
+        }
+
+        input[type="checkbox"]:checked + label {
+          cursor: pointer;
+          background-color: black;
+          color: white;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 10px 24px;
+          border: 1px solid var(--basic-dark, rgba(25, 43, 57, 0.1294117647));
+          border-radius: 100px;
+          font-size: 14px;
+          line-height: 16px;
+          letter-spacing: 0.75px;
+        }
+
+        label {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 140px;
+          padding: 10px 24px;
+          border: 1px solid var(--basic-dark, rgba(25, 43, 57, 0.1294117647));
+          border-radius: 100px;
+          font-size: 14px;
+          line-height: 16px;
+          letter-spacing: 0.75px;
+          cursor: pointer;
+          user-select: none;
+        }
+      }
+
+      .myRadioInput input[type="radio"] + label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 24px;
+        border: 1px solid var(--basic-dark, #192b3921);
+        border-radius: 100px;
+        font-size: 14px;
+        line-height: 16px;
+        letter-spacing: 0.75px;
+        cursor: pointer;
+      }
+
+      .myRadioInput input[type="radio"]:checked + label {
+        background-color: black;
+        color: white;
+      }
+
+      .inactive {
+        background-color: transparent;
+        input {
+          color: rgba(168, 168, 168, 0.692);
+        }
+        color: rgba(168, 168, 168, 0.692);
+      }
+
+      input[type="radio"] {
+        display: none;
+      }
+
+      textarea {
+        resize: none;
+        outline: none;
+        height: 300px;
+        width: 100%;
+        padding: 10px 20px;
+        font-family: Montserrat;
+        font-size: 14px;
+        line-height: 16px;
+        letter-spacing: 0.75px;
+      }
+    }
+  }
+
+  .sendButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background-color: #ff4ca8;
+      color: white;
+      padding: 10px 24px;
+      border-radius: 100px;
+      font-family: Montserrat;
+      font-size: 14px;
+      line-height: 16px;
+      letter-spacing: 0.75px;
+
+      svg {
+        height: 18px;
+      }
+    }
+
+    .disabledBtn {
+      color: grey;
+      background-color: rgba(208, 208, 208, 0.636);
+      border: 1px solid rgba(0, 0, 0, 0.393);
+      cursor: unset;
+    }
+  }
+}

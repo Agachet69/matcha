@@ -7,6 +7,7 @@ import { PrivateRoutes } from "./PrivateRoutes";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Header from "../components/Header";
+import "../App.css";
 
 export const router = createBrowserRouter([
     {

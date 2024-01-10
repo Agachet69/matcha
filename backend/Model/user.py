@@ -9,6 +9,8 @@ from Utils import Base
 from Model.photo import Photo
 from Model.like import Like
 from Model.notif import Notif
+from Model.tag import Tag
+from Model.association import user_tag_association
 from Model.match import Match
 
 class User(Base):
@@ -33,15 +35,9 @@ class User(Base):
     longitude = Column(Integer)
     # status = Column(Enum(StatusEnum))
     
-    
-    # TODO: add position
-    
-    # photos
-    
-    
-    
     password = Column(String(256))
 
+    tags= relationship("Tag", secondary=user_tag_association, back_populates="users")
     
     photos: List[Photo] = relationship("Photo", back_populates="user")
     

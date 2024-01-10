@@ -7,7 +7,6 @@ from Schemas.search import SearchSchema
 from .base import CRUDBase
 from Model import User, Notif, Like
 from Schemas.user import UserCreate, UserUpdate
-
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy import select, func
@@ -78,6 +77,5 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             db.commit()
             db.refresh(db_obj)
             return db_obj
-
 
 user = CRUDUser(User)

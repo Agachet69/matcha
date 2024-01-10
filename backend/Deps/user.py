@@ -18,7 +18,7 @@ def get_user(
 
     return user
 
-def get_current_user(token: str = Depends(security.verify_token), db = Depends(get_db)) -> UserSchema:
+def get_current_user(token: str = Depends(security.verify_token), db = Depends(get_db))-> UserSchema:
     user = Crud.user.get_from_key(db, 'username', token["username"])
     if user is None:
         raise HTTPException(
