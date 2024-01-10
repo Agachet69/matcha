@@ -89,16 +89,6 @@ const Chat = () => {
         };
     }, [socket]);
 
-    useEffect(() => {
-        if (socket)
-            socket.on('update-status', onUpdateStatus);
-
-        return () => {
-            if (socket)
-                socket.off('update-status', onUpdateStatus);
-        };
-    }, [socket]);
-
 
     const onUpdateMessages = () => {
         getAllMessages()
@@ -135,10 +125,7 @@ const Chat = () => {
 
             setTimeout(() => {
                 setDisabled(false)
-                return () => alert('oui')
             }, [1000]);
-            
-
                 
             axios.post(`http://localhost:8000/messages/${id}`, { data: formik.values.message }, {
                 headers: {
@@ -155,20 +142,21 @@ const Chat = () => {
             });}
         }
 
+        const onDeleteNewNotifMessage = ({notif_id}) => axios.post(`http://localhost:8000/users/del_notif/${notif_id}`, {}, {
+            headers: {
+                Authorization: `Bearer ${token.access_token}`
+            }
+        })
+
 
         useEffect(() => {
+            console.log('socket', socket)
             if (socket) {
-                socket.off('add-message-notification')
-                socket.on('add-message-notification', ({notif_id}) => {
-                    axios.post(`http://localhost:8000/users/del_notif/${notif_id}`, {}, {
-                        headers: {
-                            Authorization: `Bearer ${token.access_token}`
-                        }
-                    })
-                })
-
+                socket.on('add-message-notification', onDeleteNewNotifMessage)
+                return () => socket.off('add-message-notification', onDeleteNewNotifMessage)
             }
-        }, [])
+
+        }, [socket])
 
 if (id == undefined)
     return (

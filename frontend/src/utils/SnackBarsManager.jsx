@@ -61,6 +61,18 @@ const SnackBarsManager = () => {
 				getMe()
 				enqueueSnackbar(data, { variant: 'info', action: getActions('MESSAGE', data_user_id) })
 			})
+
+			return () => {
+				socket.off('add-notification', ({ type, data, data_user_id }) => {
+					getMe()
+					enqueueSnackbar(data, { variant: 'info', action: getActions(type, data_user_id) })
+				})
+				socket.off('add-message-notification', ({ data, data_user_id, notif_id }) => {
+					console.log(data, data_user_id, notif_id)
+					getMe()
+					enqueueSnackbar(data, { variant: 'info', action: getActions('MESSAGE', data_user_id) })
+				})
+			}
 		}
 			
 	}, [socket])

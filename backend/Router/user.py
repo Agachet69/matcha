@@ -193,8 +193,8 @@ async def like(
 
     return current_user
 
-@router.post("del_notif/{notif_id}")
-def del_notif(notid_id: int, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
+@router.post("/del_notif/{notif_id}")
+def del_notif(notif_id: int, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
     if notif_id not in (notif.id for notif in current_user.notifs):
         raise HTTPException(status_code=404, detail="Notification not found")
     return Crud.user.delete_notif(db, current_user, notif_id)
