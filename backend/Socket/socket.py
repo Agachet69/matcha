@@ -29,10 +29,6 @@ async def background_task():
             if now - client['time'] >= 5:
                 user = Crud.user.get(db, client["user_id"])
                 logger.info(f'{user.username} OFFLINE')
-                # user_update = UserUpdate(status=StatusEnum.OFFLINE)
-                # await asyncio.sleep(.5)
-                # logger.info(user_update)
-                # user = Crud.user.update(db, db_obj=user, obj_in=user_update)
                 disconnect_clients.remove(client)
                 await socket_manager.emit('update-status', {"user_id": client["user_id"], "status": StatusEnum.OFFLINE.value})
         await asyncio.sleep(1)
@@ -48,8 +44,6 @@ async def connect(sid, environ, auth):
         return
     user_update = UserUpdate(longitude=auth["localisation"]["longitude"], latitude=auth["localisation"]["latitude"])
     user = Crud.user.update(db, db_obj=user, obj_in=user_update)
-    print(user_update)
-    print(user.__dict__)
     
     connected_clients.append({
         'sid': sid,
@@ -63,7 +57,6 @@ async def connect(sid, environ, auth):
         disconnect_clients.remove(disconnect_client)
         logger.info(f"{user.username} reconnected {sid}")
     else:
-        logger.info("oui")
         user = Crud.user.get(db, auth["user_id"])
         user_update = UserUpdate(last_connection_date=datetime.datetime.now())
         user = Crud.user.update(db, db_obj=user, obj_in=user_update)

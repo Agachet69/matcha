@@ -253,7 +253,6 @@ def del_notif(notif_id: int, current_user: UserSchema = Depends(get_current_user
 @router.post("/block/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def block_user(current_user: UserSchema = Depends(get_current_user), target_user = Depends(get_user), db=Depends(get_db)):
     if block := next((block for block in current_user.blocked if block.user_target_id == target_user.id), None):
-        print('kjhgfsjgkjdsgffsjdhfgjhgfdjhgdsjkfgsjkfgsdkjgffffsdjkgfskjdgf')
         Crud.user.remove_block(db, current_user, target_user)
     else:
         Crud.user.add_block(db, current_user, target_user)

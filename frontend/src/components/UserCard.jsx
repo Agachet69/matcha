@@ -16,12 +16,14 @@ const user_image_list = [
 
 const UserCard = ({ user, me, onLikeUser, selector = false, onClick, onBlockUser = undefined }) => {
 	const navigate = useNavigate()
+	console.log(user)
+	console.log(user.photos.find(photo => photo.main))
 	return (
 	<div className="user-card-item" onWheel={e => { e.currentTarget.scrollLeft += e.deltaY }} onClick={() => onClick(user.id)}>
-		<img src={user_image_list[user.id % user_image_list.length]} className='background' alt="" />
+		<img src={user.photos.find(photo => photo.main) ? `http://localhost:8000/${user.photos.find(photo => photo.main).path}` : null} className='background' alt="" />
 		<div className="item-content">
 			<div className="image">
-				<img src={user_image_list[user.id % user_image_list.length]} alt="" />
+				<img src={user.photos.find(photo => photo.main) ? `http://localhost:8000/${user.photos.find(photo => photo.main).path}` : null} alt="" />
 			</div>
 			<div className="name">{user.username}</div>
 			<div className="limiter" />

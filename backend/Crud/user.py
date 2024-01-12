@@ -5,7 +5,7 @@ from Enum.StatusEnum import StatusEnum
 from Schemas.search import SearchSchema
 
 from .base import CRUDBase
-from Model import User, Notif, Like, Block
+from Model import User, Notif, Like, Block, Photo
 from Schemas.user import UserCreate, UserUpdate
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
@@ -27,8 +27,13 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         return db_obj
     
     def search(self, db: Session, current_user: User, search_param: SearchSchema, **kwargs) -> List[User]:
-        print(search_param)
-        query = select(self.model).where(self.model.id != current_user.id).filter(~User.id.in_([block.user_target_id for block in current_user.blocked])).filter(~User.id.in_([block.user_id for block in current_user.blocked_by]))
+        query = (
+            select(self.model)
+            .where(self.model.id != current_user.id)
+            .filter(~User.id.in_([block.user_target_id for block in current_user.blocked]))
+            .filter(~User.id.in_([block.user_id for block in current_user.blocked_by]))
+            .filter(User.photos.any(Photo.main.is_(True)))
+        )
 
         if age_limit := getattr(search_param, 'age_limit', None):
             if age_limit.min is not None and age_limit.max is not None:
