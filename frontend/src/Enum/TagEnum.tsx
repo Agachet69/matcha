@@ -1,0 +1,12 @@
+const enum TagEnum {
+	MUSIQUE = "MUSIQUE",
+	SPORT = "SPORT",
+	JEUX_VIDEOS = "JEUX_VIDEOS",
+	VOYAGES = "VOYAGES",
+	CINEMA = "CINEMA",
+	VEGAN = "VEGAN",
+	PIERCING = "PIERCING",
+	TATOO = "TATOO",
+}
+
+export default TagEnum

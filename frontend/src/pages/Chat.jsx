@@ -1,6 +1,6 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import UserCard from "../components/UserCard"
-import { selectUser } from "../store/slices/userSlice"
+import { initialiseUser, selectUser } from "../store/slices/userSlice"
 import '../styles/chat.scss'
 import { Age, FemaleIcon, MaleIcon, SearchIcon, SendIcon, UserIcon } from "../components/icons/Icons"
 import { useNavigate, useParams } from "react-router-dom"
@@ -30,7 +30,7 @@ const Chat = () => {
 
     const socket = useSocket()
     const me = useSelector(selectUser)
-
+    const dispatch = useDispatch()
     const navigate = useNavigate()
 
     const { id } = useParams()
@@ -146,7 +146,7 @@ const Chat = () => {
             headers: {
                 Authorization: `Bearer ${token.access_token}`
             }
-        })
+        }).then(({data}) => dispatch(initialiseUser({...data})))
 
 
         useEffect(() => {

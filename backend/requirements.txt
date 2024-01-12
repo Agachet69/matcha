@@ -14,3 +14,4 @@ python-multipart
 asyncio
 starlette
 httpx
+aiofiles

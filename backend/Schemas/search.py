@@ -7,6 +7,7 @@ from Schemas.match import MatchSchema
 from Enum.GenderEnum import GenderEnum
 from Enum.SexualityEnum import SexualityEnum
 from Enum.StatusEnum import StatusEnum
+from Enum.TagEnum import TagEnum
 
 from pydantic import BaseModel, EmailStr, constr, validator
 
@@ -23,3 +24,4 @@ class SearchSchema(BaseModel):
     age_limit: Optional[SearchParam]
     fame_rate_limit: Optional[SearchParam]
     location_limit: Optional[SearchParam]
+    tags: Optional[List[TagEnum]]

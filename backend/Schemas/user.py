@@ -3,6 +3,7 @@ from typing import Any, Optional, List
 from Schemas.token import TokenSchema
 from Schemas.notif import NotifSchema
 from Schemas.like import LikeSchema
+from Schemas.block import BlockSchema
 from Schemas.photo import PhotoSchema, PhotoSchema
 from Schemas.tag import TagSchema
 from Schemas.match import MatchSchema
@@ -23,6 +24,7 @@ class UserBase(BaseModel):
     sexuality: Optional[SexualityEnum]
     age: Optional[int]
     bio: Optional[str]
+    fame_rate: Optional[int]
     last_connection_date: Optional[datetime.datetime]
 
     _validate_name_not_none = validator("username", allow_reuse=True)(user_name_validator)
@@ -55,6 +57,7 @@ class UserUpdate(UserBase):
     password: Optional[constr(min_length=1)]
     latitude: Optional[int]
     longitude: Optional[int]
+    
     # _validate_password = validator("password", allow_reuse=True)(password_validator('EDIT'))
 
 class UserInDBBase(UserBase):
@@ -71,4 +74,5 @@ class UserSchema(UserInDBBase):
     photos: List[PhotoSchema]
     tags: List[TagSchema]
     matches: List[MatchSchema]
+    blocked: List[BlockSchema]
     status: Optional[StatusEnum]

@@ -12,6 +12,7 @@ from Model.notif import Notif
 from Model.tag import Tag
 from Model.association import user_tag_association
 from Model.match import Match
+from Model.block import Block
 
 class User(Base):
     __tablename__ = "users"
@@ -33,8 +34,9 @@ class User(Base):
     
     latitude = Column(Integer)
     longitude = Column(Integer)
-    # status = Column(Enum(StatusEnum))
     
+    fame_rate = Column(Integer, default=0)
+
     password = Column(String(256))
 
     tags= relationship("Tag", secondary=user_tag_association, back_populates="users")
@@ -45,6 +47,9 @@ class User(Base):
     
     likes: List[Like] = relationship("Like", back_populates="user", foreign_keys="[Like.user_id]")
     liked_by: List[Like] = relationship("Like", back_populates="user_target", foreign_keys="[Like.user_target_id]")
+
+    blocked: List[Block] = relationship("Block", back_populates="user", foreign_keys="[Block.user_id]")
+    blocked_by: List[Block] = relationship("Block", back_populates="user_target", foreign_keys="[Block.user_target_id]")
 
     matches_A = relationship("Match", foreign_keys="[Match.user_A_id]", back_populates="user_A")
     matches_B = relationship("Match", foreign_keys="[Match.user_B_id]", back_populates="user_B")

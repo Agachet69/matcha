@@ -1,7 +1,8 @@
 import { Tooltip } from "@mui/material"
 import GenderEnum from "../Enum/GenderEnum"
-import { Age, ChatIcon, FemaleIcon, HeartIcon, MaleIcon, UserIcon } from "./icons/Icons"
+import { Age, ChatIcon, CogIcon, FemaleIcon, HeartIcon, MaleIcon, Star4, UserIcon } from "./icons/Icons"
 import '../styles/userCard.scss'
+import { useNavigate } from "react-router"
 
 
 const user_image_list = [
@@ -13,7 +14,9 @@ const user_image_list = [
 ]
 
 
-const UserCard = ({ user, me, onLikeUser, selector = false, onClick }) => (
+const UserCard = ({ user, me, onLikeUser, selector = false, onClick, onBlockUser = undefined }) => {
+	const navigate = useNavigate()
+	return (
 	<div className="user-card-item" onWheel={e => { e.currentTarget.scrollLeft += e.deltaY }} onClick={() => onClick(user.id)}>
 		<img src={user_image_list[user.id % user_image_list.length]} className='background' alt="" />
 		<div className="item-content">
@@ -45,6 +48,15 @@ const UserCard = ({ user, me, onLikeUser, selector = false, onClick }) => (
 			<div className="limiter" />
 			<div className="info">
 				<div className="icon">
+					<Star4 />
+				</div>
+				<div className="text">
+					{user.fame_rate}
+				</div>
+			</div>
+			<div className="limiter" />
+			<div className="info">
+				<div className="icon">
 					{user.gender == GenderEnum.MALE ? <MaleIcon /> : <FemaleIcon />}
 				</div>
 			</div>
@@ -56,9 +68,14 @@ const UserCard = ({ user, me, onLikeUser, selector = false, onClick }) => (
 			</div>
 			{!selector &&
 				<div className="actions">
+					{onBlockUser && <Tooltip title={"Block"}>
+						<div className="like" onClick={() => onBlockUser(user.id)}>
+							<CogIcon />
+						</div>
+					</Tooltip>}
 					<Tooltip title="chat">
 					{me.matches.find(match => match.user_A_id == user.id || match.user_B_id == user.id) != undefined &&
-						<div className="like" onClick={() => {alert("move to chat")}}>
+						<div className="like" onClick={() => {navigate(`/chat/${user.id}`)}}>
 							<ChatIcon />
 						</div>
 					}
@@ -72,6 +89,7 @@ const UserCard = ({ user, me, onLikeUser, selector = false, onClick }) => (
 }
 		</div>
 	</div>)
+	}
 
 
 export default UserCard

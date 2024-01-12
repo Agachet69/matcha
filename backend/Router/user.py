@@ -35,7 +35,7 @@ def get_all_users(
             status_dict[user.id] = "ONLINE"
         else:
             status_dict[user.id] = "OFFLINE"
-    
+
     for user in user_list:
         user.status = status_dict.get(user.id, "UNKNOWN")
 
@@ -172,6 +172,11 @@ async def like(
             type=NotifTypeEnum.LIKE
         )
         user = Crud.user.add_notif(db, user_to_like, notif_to_create)
+
+        update_obj = UserUpdate(fame_rate=user.fame_rate-1)
+        user = Crud.user.update(db, db_obj=user, obj_in=update_obj)
+
+
         if client := next((client for client in connected_clients if client['auth']['user_id'] == user_to_like.id), None):
             await socket_manager.emit('add-notification', {
                 'data': user.notifs[-1].data,
@@ -201,6 +206,13 @@ async def like(
                 'type': user.notifs[-1].type.value
             }, room=client["sid"])
         db.refresh(current_user)
+
+        user_update_obj = UserUpdate(fame_rate=user.fame_rate+2)
+        user = Crud.user.update(db, db_obj=user, obj_in=user_update_obj)
+
+        current_user_update_obj = UserUpdate(fame_rate=current_user.fame_rate+1)
+        current_user = Crud.user.update(db, db_obj=current_user, obj_in=current_user_update_obj)
+
         return current_user
     
     # IF NO USER HAS LIKE
@@ -218,16 +230,32 @@ async def like(
             'type': user.notifs[-1].type.value
         }, room=client["sid"])
 
+    user_update_obj = UserUpdate(fame_rate=user.fame_rate+1)
+    user = Crud.user.update(db, db_obj=user, obj_in=user_update_obj)
+
     return current_user
 
-@router.post("/del_notif/{notif_id}")
+@router.post("/del_notif/{notif_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def del_notif(notif_id: int, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
-    if notif_id not in (notif.id for notif in current_user.notifs):
+    if not (notif := next(notif for notif in current_user.notifs if notif.id == notif_id)):
         raise HTTPException(status_code=404, detail="Notification not found")
-    return Crud.user.delete_notif(db, current_user, notif_id)
+    Crud.user.delete_notif(db, current_user, notif)
+    db.refresh(current_user)
+    return current_user
 
 
 # @router.get("/add_notif", status_code=status.HTTP_200_OK, response_model=UserSchema)
 # def get_me(current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
 #     notif = NotifCreate(type=NotifTypeEnum.ERROR, data="Error")
 #     return Crud.user.add_notif(db, current_user, notif)
+
+
+@router.post("/block/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
+def block_user(current_user: UserSchema = Depends(get_current_user), target_user = Depends(get_user), db=Depends(get_db)):
+    if block := next((block for block in current_user.blocked if block.user_target_id == target_user.id), None):
+        print('kjhgfsjgkjdsgffsjdhfgjhgfdjhgdsjkfgsjkfgsdkjgffffsdjkgfskjdgf')
+        Crud.user.remove_block(db, current_user, target_user)
+    else:
+        Crud.user.add_block(db, current_user, target_user)
+    db.refresh(current_user)
+    return current_user

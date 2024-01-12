@@ -9,12 +9,12 @@ import { UserIcon, Age, MaleIcon, FemaleIcon, HeartIcon, CrossIcon, CogIcon, Tri
 import GenderEnum from '../Enum/GenderEnum';
 import { useSocket } from '../utils/PrivateRoutes';
 import { initialiseUser, selectUser } from '../store/slices/userSlice';
-import { Box, Chip, MenuItem, OutlinedInput, Slider, Tooltip } from '@mui/material';
+import { Autocomplete, Box, Chip, MenuItem, OutlinedInput, Slider, TextField, Tooltip } from '@mui/material';
 import UserCard from '../components/UserCard';
 import SearchSchema from '../schemas/SearchSchema';
 import { useFormik } from 'formik';
 import Select from 'react-select'
-import SearchParamEnum from '../Enum/SearchParamEnum'
+import TagEnum from '../Enum/TagEnum'
 import { object } from 'yup';
 const Home = () => {
 
@@ -41,6 +41,17 @@ const Home = () => {
             headers: headers
         }).then(({ data }) => {
             dispatch(initialiseUser(data))
+            onSearch(searchFormik.values)
+        })
+    }
+
+    const onBlockUser = (user_id) => {
+        const headers = { "Content-Type": "application/json", Authorization: `Bearer ${token.access_token}` }
+        axios.post(`http://localhost:8000/users/block/${user_id}`, {}, {
+            headers: headers
+        }).then(({ data }) => {
+            dispatch(initialiseUser(data))
+            onSearch(searchFormik.values)
         })
     }
 
@@ -75,7 +86,7 @@ const Home = () => {
     const searchFormik = useFormik({
         validationSchema: SearchSchema(),
         initialValues: {},
-        onSubmit: (values) => onSearch(values),
+    onSubmit: (values) => onSearch(values),
     });
 
 
@@ -159,13 +170,33 @@ const Home = () => {
                             onChange={e =>
                                 Object.keys(searchFormik.values).includes("location_limit") && searchFormik.setFieldValue("location_limit", { min: e.target.value[0], max: e.target.value[1] })}
                             valueLabelDisplay="auto"
+                            valueLabelFormat={(value) => value == 500 ? "∞" : value}
+                        />
+                    </div>
+                    <div className='item'>
+                        <Autocomplete
+                            multiple
+                            className='input'
+                            id="tags-outlined"
+                            options={Object.keys(TagEnum)}
+                            filterSelectedOptions
+                            disableCloseOnSelect
+                            renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Search by tags"
+                                // placeholder="Favorites"
+                            />
+                            )}
+                            selectOnFocus
+                            onChange={(e, value) => searchFormik.setFieldValue('tags', value.length ? value : undefined)}
                         />
                     </div>
                 </div>
                 {!Object.keys(searchFormik.values).length && searchFormik.isSubmitting && <div className="error">Need at least one param.</div>}
 
                 {allUsers.map((user, index) =>
-                    <UserCard me={me} user={user} key={user.id} onLikeUser={onLikeUser} />
+                    <UserCard me={me} user={user} key={user.id} onLikeUser={onLikeUser} onBlockUser={onBlockUser} />
                 )}
             </form>
             <button onClick={() => onSearch()}>OUIIIIIIIIIII</button>

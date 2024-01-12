@@ -32,7 +32,7 @@ class CRUDMessage(CRUDBase[Message, MessageCreate, MessageCreate]):
             select(self.model).where(
             ((self.model.user_A_id == user_A.id) & (self.model.user_B_id == user_B.id)) |
             ((self.model.user_A_id == user_B.id) & (self.model.user_B_id == user_A.id))
-        )
+        ).order_by(self.model.date)
         ).scalars().all()
 
 
