@@ -9,7 +9,6 @@ import {
   UserIcon,
 } from "./icons/Icons";
 import "../styles/userCard.scss";
-import { useNavigate } from "react-router-dom";
 
 const user_image_list = [
   "https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHdvbWVufGVufDB8fDB8fHww",
@@ -20,15 +19,12 @@ const user_image_list = [
 ];
 
 const UserCard = ({ user, me, onLikeUser, selector = false, onClick }) => {
-  const navigate = useNavigate();
-
   return (
     <div
       className="user-card-item"
       onWheel={(e) => {
         e.currentTarget.scrollLeft += e.deltaY;
       }}
-      // onClick={() => onClick(user/*.id*/)}
     >
       <img
         src={user_image_list[user.id % user_image_list.length]}
@@ -41,10 +37,7 @@ const UserCard = ({ user, me, onLikeUser, selector = false, onClick }) => {
         </div>
         <div className="name">{user.username}</div>
         <div className="limiter" />
-        <div
-          className="info"
-          onClick={() => onClick(user/*.id*/)}
-        >
+        <div className="info" onClick={() => onClick(user /*.id*/)}>
           <div className="icon">
             <UserIcon />
           </div>

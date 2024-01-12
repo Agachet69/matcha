@@ -489,10 +489,8 @@
     //   font-size: 14px;
     // }
 
-    .iconCrush {
+    .iconChat {
       &:hover {
-        border: 1px solid #ff4ca8;
-        transition: 0.3s;
         svg {
           color: #ff4ca8;
           transition: 0.3s;
@@ -501,12 +499,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid white;
       border-radius: 50%;
       padding: 5px 5px;
       transition: 0.3s;
       cursor: pointer;
       svg {
+        transform:scaleX(-1);
         height: 18px;
         transition: 0.3s;
       }
@@ -515,7 +513,7 @@
     .otherProfilMore {
       position: absolute;
       top: 50%;
-      right: 500px;
+      right: 10%;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -524,6 +522,35 @@
       svg {
         height: 22px;
         cursor: pointer;
+      }
+
+      .ellipsMenu {
+        position: relative;
+        display: flex;
+        align-items: center;
+        // overflow: hidden;
+
+        .ellipsMenuContent {
+          position: absolute;
+          left: -60px;
+          top: -200px;
+          display: flex;
+          flex-direction: column;
+          width: 150px;
+          border: 1px solid grey;
+          overflow: hidden;
+          border-radius: 15px;
+          p {
+            &:hover {
+              background-color: grey; 
+            }
+            padding: 10px 20px;
+            font-size: 12px;
+            text-align: center;
+            background-color: #1e1e1e;
+            cursor: pointer;
+          }
+        }
       }
     }
   }
