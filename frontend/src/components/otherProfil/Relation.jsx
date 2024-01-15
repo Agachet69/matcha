@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { initialiseUser, selectUser } from "../../store/slices/userSlice";
-import { BoltIcon, CheckBadgeIcon, Trash, UnBoltIcon } from "../icons/Icons";
+import { BoltIcon, Cancel, CheckBadgeIcon, Trash, UnBoltIcon } from "../icons/Icons";
 import "../../styles/otherProfil/relation.scss";
 import { addLike } from "../../services/like";
 import { getToken } from "../../store/slices/authSlice";
@@ -58,7 +58,7 @@ const Relation = ({ userSeen }) => {
           <p> match </p>
         </div>
         <div className="delete">
-          <Trash />
+          <Cancel />
           <p> Supprimer ce match </p>
         </div>
       </div>

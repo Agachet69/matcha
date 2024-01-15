@@ -8,15 +8,18 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import Header from "../components/Header";
 import "../App.css";
+import Modals from "../components/Modals";
 
 export const router = createBrowserRouter([
   {
     path: "/profil",
     element: (
       <PrivateRoutes>
-        <Header>
-          <Profil />
-        </Header>
+        <Modals>
+          <Header>
+            <Profil />
+          </Header>
+        </Modals>
       </PrivateRoutes>
     ),
   },
@@ -51,7 +54,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/profil/:id",
+    path: "/profil/see",
     element: (
       <PrivateRoutes>
         <Header>

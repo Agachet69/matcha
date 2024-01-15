@@ -20,32 +20,21 @@ class User(Base):
     username = Column(String(50))
     lastName = Column(String(50))
     firstName = Column(String(50))
-
     email = Column(String(50))
-    
     gender = Column(Enum(GenderEnum))
     sexuality = Column(Enum(SexualityEnum))
     age = Column(Integer)
-    
     bio = Column(String(400))
-    
     last_connection_date = Column(DateTime)
-    
     latitude = Column(Integer)
     longitude = Column(Integer)
     # status = Column(Enum(StatusEnum))
-    
     password = Column(String(256))
-
     tags= relationship("Tag", secondary=user_tag_association, back_populates="users")
-    
     photos: List[Photo] = relationship("Photo", back_populates="user")
-    
     notifs: List[Notif] = relationship("Notif", back_populates="user")
-    
     likes: List[Like] = relationship("Like", back_populates="user", foreign_keys="[Like.user_id]")
     liked_by: List[Like] = relationship("Like", back_populates="user_target", foreign_keys="[Like.user_target_id]")
-
     matches_A = relationship("Match", foreign_keys="[Match.user_A_id]", back_populates="user_A")
     matches_B = relationship("Match", foreign_keys="[Match.user_B_id]", back_populates="user_B")
 

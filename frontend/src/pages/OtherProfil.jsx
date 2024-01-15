@@ -14,7 +14,6 @@ import {
   Eye,
   UserIcon,
   EmptyImgIcon,
-  BoltIcon,
   EllipsisVerticalIcon,
   FemaleIcon,
   MaleIcon,
@@ -31,14 +30,10 @@ const OtherProfil = () => {
   const navigate = useNavigate();
   const token = useSelector(getToken);
   const userSeen = location.state;
-  // const mainModal = useSelector(selectModalMainPic);
-  // const deleteBack = useSelector(selectModalPic);
+  const [seenMenuEllips, setSeenMenuEllips] = useState(false);
   const [translateXValue, setTranslateXValue] = useState(0);
   const [mainSeen, setMainSeen] = useState(null);
-  // const [previewImg, setPreviewImg] = useState(null);
   const backPicRef = useRef();
-  // const dispatch = useDispatch();
-  const { id } = useParams();
 
   useEffect(() => {
     if (backPicRef.current)
@@ -46,19 +41,47 @@ const OtherProfil = () => {
   }, [translateXValue]);
 
   useEffect(() => {
-    setMainSeen(
-      userSeen.photos.filter((photo) => photo.main === true)[0]?.path
-    );
-    console.log(userSeen);
-  }, [userSeen]);
+    if (userSeen)
+      setMainSeen(
+        userSeen.photos.filter((photo) => photo.main === true)[0]?.path
+      );
+    else navigate("/");
 
-  async function nextPhoto() {
+    console.log(userSeen)
+  }, [userSeen, navigate]);
+
+  function nextPhoto() {
     setTranslateXValue((prevTranslateX) => prevTranslateX - 100);
   }
 
   function prevPhoto() {
     setTranslateXValue((prevTranslateX) => prevTranslateX + 100);
   }
+
+  function getMonth(number) {
+    var date = new Date(2000, number - 1, 1);
+    var nomMois = date.toLocaleString("fr-FR", { month: "long" });
+    return nomMois;
+  }
+
+  const lastConnexion = () => {
+    const date = new Date(userSeen.last_connection_date);
+    const options = {
+      // year: 'numeric',
+      month: "numeric",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      // second: 'numeric',
+      // timeZoneName: 'short'
+    };
+    const formatter = new Intl.DateTimeFormat("fr-FR", options);
+    const res = formatter.format(date).split("");
+    const display = `${res[0]}${res[1]} ${getMonth(res[3] + res[4])} à ${
+      res[6]
+    }${res[7]}h${res[9]}${res[10]}`;
+    return display;
+  };
 
   const isMatched = () => {
     if (
@@ -74,6 +97,7 @@ const OtherProfil = () => {
     return false;
   };
 
+  if (!userSeen) return <div> Compte inconnu </div>;
   if (userSeen.id === myUser.id)
     return (
       <div>
@@ -157,8 +181,16 @@ const OtherProfil = () => {
           )}
           <div className="otherProfilMore">
             <div className="ellipsMenu">
-              <EllipsisVerticalIcon />
-              <div className="ellipsMenuContent">
+              <div  onClick={() => setSeenMenuEllips((prevState) => !prevState)}>
+                <EllipsisVerticalIcon />
+              </div>
+              <div
+                className={
+                  seenMenuEllips
+                    ? "ellipsMenuContent active"
+                    : "ellipsMenuContent inactive"
+                }
+              >
                 <p> Report as fake account</p>
                 <p> Block this user</p>
               </div>
@@ -176,12 +208,12 @@ const OtherProfil = () => {
             <p>fame rating</p>
           </div>
           <div className="socialInfos borderR">
-            {/* <div className="socialTitleSvg">
-            <h4 className="pink"> 13 </h4>
-            <Sparkless />
-          </div> */}
-            {/* <p>crush</p> */}
-            <Relation userSeen={userSeen} />
+            {
+              mainSeen ?
+              <Relation userSeen={userSeen} />
+              :
+              <p> Cet utilisateur n&apos;a pas de photo de profil</p>
+            }
           </div>
           <div className="socialInfos">
             <div className="socialTitleSvg">
@@ -197,54 +229,41 @@ const OtherProfil = () => {
             <h3> Profil</h3>
             <form>
               <div className="inputContainer">
-                <label className="labelContainer"> Username</label>
-                <div className="myTextInput">
-                  <div className="currentValue">
-                    <p>{userSeen.username}</p>
-                  </div>
-                </div>
+                <p>{userSeen.username}, </p>
               </div>
               <div className="inputContainer">
-                <label className="labelContainer"> Orientation </label>
-                <div className="myTextInput">
-                  <div className="currentValue">
-                    {((userSeen.sexuality.toLowerCase() === "heterosexual" &&
-                      userSeen.gender === "MALE") ||
-                      (userSeen.sexuality.toLowerCase() === "homosexual" &&
-                        userSeen.gender === "FEMALE")) && (
-                      <p> attracted to womens. </p>
-                    )}
-                    {((userSeen.sexuality.toLowerCase() === "heterosexual" &&
-                      userSeen.gender === "FEMALE") ||
-                      (userSeen.sexuality.toLowerCase() === "homosexual" &&
-                        userSeen.gender === "MALE")) && (
-                      <p> attracted to mens. </p>
-                    )}
-                    {userSeen.sexuality.toLowerCase() === "bisexual" && (
-                      <p> attracted to both men and women. </p>
-                    )}
-                  </div>
-                </div>
+                {((userSeen.sexuality.toLowerCase() === "heterosexual" &&
+                  userSeen.gender === "MALE") ||
+                  (userSeen.sexuality.toLowerCase() === "homosexual" &&
+                    userSeen.gender === "FEMALE")) && (
+                  <p> attracted to womens. </p>
+                )}
+                {((userSeen.sexuality.toLowerCase() === "heterosexual" &&
+                  userSeen.gender === "FEMALE") ||
+                  (userSeen.sexuality.toLowerCase() === "homosexual" &&
+                    userSeen.gender === "MALE")) && <p> attracted to mens. </p>}
+                {userSeen.sexuality.toLowerCase() === "bisexual" && (
+                  <p> attracted to both men and women. </p>
+                )}
               </div>
               <div className="inputContainer">
-                <label className="labelContainer"> Intérêts </label>
-                <div className="myTextInput">
-                  <div className="currentValue">
-                    {userSeen.tags.length > 0 ? (
-                      userSeen.tags.map((tag, index) => (
-                        <p key={index} className="tagName">
-                          {" "}
-                          {tag.tag.toLowerCase()}{" "}
-                        </p>
-                      ))
-                    ) : (
-                      <p> Pas d&apos;interêts enregistré.</p>
-                    )}
-                  </div>
-                </div>
+                {userSeen.tags.length > 0 ? (
+                  userSeen.tags.map((tag, index) => (
+                    <p key={index} className="tagName">
+                      {" "}
+                      {tag.tag.toLowerCase()}{" "}
+                    </p>
+                  ))
+                ) : (
+                  <p> Pas d&apos;interêts enregistré.</p>
+                )}
               </div>
+              {
+                userSeen.status === "OFFLINE" ?
+                <p> Dernière connexion le {lastConnexion()}.</p>
+                :<p>En ligne.</p>
+              }
             </form>
-            <p> Pas de crush si pas de photo de profil.</p>
           </div>
         )}
       </div>

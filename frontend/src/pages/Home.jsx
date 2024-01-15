@@ -59,7 +59,7 @@ const Home = () => {
   };
 
   const navOtherProfil = (user) => {
-    navigate("/profil/" + user.id, {
+    navigate("/profil/see", {
       state: user
     })
   }

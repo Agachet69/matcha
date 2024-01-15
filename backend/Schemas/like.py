@@ -40,4 +40,5 @@ class UserBase(BaseModel):
 
 class LikeSchema(LikeInDBBase):
     user_target: Optional[UserBase]
+    user: Optional[UserBase]
     

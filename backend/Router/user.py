@@ -102,6 +102,7 @@ def update_tags(tags: List[TagCreate], current_user= Depends(get_current_user), 
   db.refresh(user)
   
   return user
+
 @router.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def get_one_user(
     current_user: UserSchema = Depends(get_current_user), user: UserSchema = Depends(get_user)
