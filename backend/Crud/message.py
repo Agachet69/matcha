@@ -15,7 +15,6 @@ class CRUDMessage(CRUDBase[Message, MessageCreate, MessageCreate]):
 
     def create(self, db, obj_in: MessageCreate, current_user, user) -> Message:
         obj_in_data = jsonable_encoder(obj_in)
-        print(obj_in_data)
         obj_in_data['user_A_id'] = current_user.id
         obj_in_data['user_B_id'] = user.id
 
@@ -32,7 +31,7 @@ class CRUDMessage(CRUDBase[Message, MessageCreate, MessageCreate]):
             select(self.model).where(
             ((self.model.user_A_id == user_A.id) & (self.model.user_B_id == user_B.id)) |
             ((self.model.user_A_id == user_B.id) & (self.model.user_B_id == user_A.id))
-        )
+        ).order_by(self.model.date)
         ).scalars().all()
 
 

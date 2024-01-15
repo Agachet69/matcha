@@ -1,6 +1,6 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UserCard from "../components/UserCard";
-import { selectUser } from "../store/slices/userSlice";
+import { initialiseUser, selectUser } from "../store/slices/userSlice";
 import "../styles/chat.scss";
 import {
   Age,
@@ -19,7 +19,6 @@ import axios from "axios";
 import GenderEnum from "../Enum/GenderEnum";
 import { useFormik } from "formik";
 import MessageSchema from "../schemas/MessageSchema";
-import printVarsHook from "../components/printVarsHook";
 import { useSocket } from "../utils/PrivateRoutes";
 import { ParseDate } from "../utils/ParseDate";
 
@@ -36,7 +35,7 @@ const Chat = () => {
 
   const socket = useSocket();
   const me = useSelector(selectUser);
-
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const { id } = useParams();
@@ -103,14 +102,6 @@ const Chat = () => {
     };
   }, [socket]);
 
-  useEffect(() => {
-    if (socket) socket.on("update-status", onUpdateStatus);
-
-    return () => {
-      if (socket) socket.off("update-status", onUpdateStatus);
-    };
-  }, [socket]);
-
   const onUpdateMessages = () => {
     getAllMessages();
   };
@@ -141,7 +132,6 @@ const Chat = () => {
 
       setTimeout(() => {
         setDisabled(false);
-        return () => alert("oui");
       }, [1000]);
 
       axios
@@ -165,22 +155,27 @@ const Chat = () => {
     }
   };
 
+  const onDeleteNewNotifMessage = ({ notif_id }) =>
+    axios
+      .post(
+        `http://localhost:8000/users/del_notif/${notif_id}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token.access_token}`,
+          },
+        }
+      )
+      .then(({ data }) => dispatch(initialiseUser({ ...data })));
+
   useEffect(() => {
+    console.log("socket", socket);
     if (socket) {
-      socket.off("add-message-notification");
-      socket.on("add-message-notification", ({ notif_id }) => {
-        axios.post(
-          `http://localhost:8000/users/del_notif/${notif_id}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${token.access_token}`,
-            },
-          }
-        );
-      });
+      socket.on("add-message-notification", onDeleteNewNotifMessage);
+      return () =>
+        socket.off("add-message-notification", onDeleteNewNotifMessage);
     }
-  }, []);
+  }, [socket]);
 
   if (id == undefined)
     return (
@@ -198,8 +193,8 @@ const Chat = () => {
               key={match.id}
               selector
               me={me}
-              onClick={(user) => {
-                navigate(`/chat/${user.id}`);
+              onClick={(id) => {
+                navigate(`/chat/${id}`);
               }}
               user={match.user_A_id == me.id ? match.user_B : match.user_A}
               onLikeUser={() => {}}

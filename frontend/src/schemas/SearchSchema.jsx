@@ -15,7 +15,8 @@ const RegisterSchema = () =>
 		location_limit: object().notRequired().shape({
 			min: number().required().min(0, "Min value is 0").max(500, "Max value is 500").notRequired(),
 			max: number().required().min(0, "Min value is 0").max(500, "Max value is 500").notRequired()
-		})
+		}),
+		tags: array().notRequired()
 	})
 
 export default RegisterSchema;

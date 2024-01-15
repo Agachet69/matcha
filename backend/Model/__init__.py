@@ -5,3 +5,4 @@ from .photo import Photo
 from .tag import Tag
 from .match import Match
 from .message import Message
+from .block import Block

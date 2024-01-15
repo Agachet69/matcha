@@ -45,7 +45,7 @@ const OtherProfil = () => {
       setMainSeen(
         userSeen.photos.filter((photo) => photo.main === true)[0]?.path
       );
-    else navigate("/");
+    // else navigate("/");
 
     console.log(userSeen)
   }, [userSeen, navigate]);

@@ -3,12 +3,15 @@ import GenderEnum from "../Enum/GenderEnum";
 import {
   Age,
   ChatIcon,
+  CogIcon,
   FemaleIcon,
   HeartIcon,
   MaleIcon,
+  Star4,
   UserIcon,
 } from "./icons/Icons";
 import "../styles/userCard.scss";
+import { useNavigate } from "react-router";
 
 const user_image_list = [
   "https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHdvbWVufGVufDB8fDB8fHww",
@@ -18,26 +21,57 @@ const user_image_list = [
   "https://images.unsplash.com/photo-1560087637-bf797bc7796a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjZ8fHdvbWVufGVufDB8fDB8fHww",
 ];
 
-const UserCard = ({ user, me, onLikeUser, selector = false, onClick }) => {
+const UserCard = ({
+  user,
+  me,
+  onLikeUser,
+  selector = false,
+  onClick,
+  onBlockUser = undefined,
+}) => {
+  const navigate = useNavigate();
+  console.log(user);
+  console.log(user.photos.find((photo) => photo.main));
   return (
     <div
       className="user-card-item"
       onWheel={(e) => {
         e.currentTarget.scrollLeft += e.deltaY;
       }}
+      // onClick={() => onClick(user)}
     >
       <img
-        src={user_image_list[user.id % user_image_list.length]}
+        src={
+          user.photos.find((photo) => photo.main)
+            ? `http://localhost:8000/${
+                user.photos.find((photo) => photo.main).path
+              }`
+            : null
+        }
         className="background"
         alt=""
       />
       <div className="item-content">
         <div className="image">
-          <img src={user_image_list[user.id % user_image_list.length]} alt="" />
+          <img
+            src={
+              user.photos.find((photo) => photo.main)
+                ? `http://localhost:8000/${
+                    user.photos.find((photo) => photo.main).path
+                  }`
+                : null
+            }
+            alt=""
+          />
         </div>
         <div className="name">{user.username}</div>
         <div className="limiter" />
-        <div className="info" onClick={() => onClick(user /*.id*/)}>
+        <div
+          className="info"
+          onClick={() => {
+            navigate(`/profil/see`, {state: user});
+          }}
+        >
           <div className="icon">
             <UserIcon />
           </div>
@@ -54,6 +88,13 @@ const UserCard = ({ user, me, onLikeUser, selector = false, onClick }) => {
         <div className="limiter" />
         <div className="info">
           <div className="icon">
+            <Star4 />
+          </div>
+          <div className="text">{user.fame_rate}</div>
+        </div>
+        <div className="limiter" />
+        <div className="info">
+          <div className="icon">
             {user.gender == GenderEnum.MALE ? <MaleIcon /> : <FemaleIcon />}
           </div>
         </div>
@@ -63,6 +104,13 @@ const UserCard = ({ user, me, onLikeUser, selector = false, onClick }) => {
         </div>
         {!selector && (
           <div className="actions">
+            {onBlockUser && (
+              <Tooltip title={"Block"}>
+                <div className="like" onClick={() => onBlockUser(user.id)}>
+                  <CogIcon />
+                </div>
+              </Tooltip>
+            )}
             <Tooltip title="chat">
               {me.matches.find(
                 (match) =>
@@ -71,7 +119,7 @@ const UserCard = ({ user, me, onLikeUser, selector = false, onClick }) => {
                 <div
                   className="like"
                   onClick={() => {
-                    alert("move to chat");
+                    navigate(`/chat/${user.id}`);
                   }}
                 >
                   <ChatIcon />
