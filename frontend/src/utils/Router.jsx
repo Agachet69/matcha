@@ -27,9 +27,11 @@ export const router = createBrowserRouter([
     path: "/home",
     element: (
       <PrivateRoutes>
-        <Header>
-          <Home />
-        </Header>
+        <Modals>
+          <Header>
+            <Home />
+          </Header>
+        </Modals>
       </PrivateRoutes>
     ),
   },
@@ -37,9 +39,11 @@ export const router = createBrowserRouter([
     path: "/chat/:id",
     element: (
       <PrivateRoutes>
-        <Header>
-          <Chat />
-        </Header>
+        <Modals>
+          <Header>
+            <Chat />
+          </Header>
+        </Modals>
       </PrivateRoutes>
     ),
   },
@@ -47,9 +51,11 @@ export const router = createBrowserRouter([
     path: "/chat",
     element: (
       <PrivateRoutes>
-        <Header>
-          <Chat />
-        </Header>
+        <Modals>
+          <Header>
+            <Chat />
+          </Header>
+        </Modals>
       </PrivateRoutes>
     ),
   },
@@ -57,9 +63,11 @@ export const router = createBrowserRouter([
     path: "/profil/see",
     element: (
       <PrivateRoutes>
-        <Header>
-          <OtherProfil />
-        </Header>
+        <Modals>
+          <Header>
+            <OtherProfil />
+          </Header>
+        </Modals>
       </PrivateRoutes>
     ),
   },

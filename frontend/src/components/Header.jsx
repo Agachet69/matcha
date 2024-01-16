@@ -6,12 +6,14 @@ import { useNavigate } from "react-router-dom";
 import { selectUser } from "../store/slices/userSlice";
 import { Badge } from "@mui/material";
 import { useEffect, useState } from "react";
+import { editNotif, selectAllModals } from "../store/slices/modalSlice";
 
 const Header = ({ children, connected = true }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   const [profilPic, setProfilPic] = useState(null);
+  const modals = useSelector(selectAllModals);
 
   useEffect(() => {
     setProfilPic(user.photos.filter((photo) => photo.main === true)[0]);
@@ -53,7 +55,7 @@ const Header = ({ children, connected = true }) => {
               <div
                 className="logout"
                 onClick={() => {
-                  alert("Open Notif Modal");
+                  dispatch(editNotif(modals.notif));
                 }}
               >
                 <BellIcon />

@@ -36,14 +36,21 @@ const Modals = ({ children }) => {
         }
       );
       dispatch(deleteUserPhoto(res.data.id));
-      dispatch(editDeleteMainPic());
+      dispatch(editDeleteMainPic(allModals.deleteMainPic));
     } catch (err) {
       console.log(err);
     }
   }
 
+  const mainPic = (currentUser) => {
+    const res = currentUser.photos.find((photo) => photo.main === true);
+    if (res) return res.path;
+    return null;
+  };
+
   useEffect(() => {
-    if (allModals.likedUser) getLikedUsers();
+    console.log(allModals);
+    // if (allModals.likedUser) getLikedUsers();
   }, [allModals]);
 
   useEffect(() => {
@@ -75,7 +82,9 @@ const Modals = ({ children }) => {
               </button>
               <button
                 className="cancel"
-                onClick={() => dispatch(editDeleteMainPic())}
+                onClick={() =>
+                  dispatch(editDeleteMainPic(allModals.deleteMainPic))
+                }
               >
                 Annuler
               </button>
@@ -83,18 +92,13 @@ const Modals = ({ children }) => {
           </section>
           <div
             className="modalRest"
-            onClick={() => dispatch(editDeleteMainPic())}
+            onClick={() => dispatch(editDeleteMainPic(allModals.deleteMainPic))}
           ></div>
         </main>
         <div className="App">{children}</div>
       </div>
     );
   else if (allModals.likedUser) {
-    const mainPic = (user) => {
-      const res = user.photos.find((photo) => photo.main === true);
-      if (res) return res.path;
-      return null;
-    };
     return (
       <div className="modal">
         <main className="overlayModal">
@@ -142,12 +146,16 @@ const Modals = ({ children }) => {
               })}
             </div>
             <div className="btnClose">
-              <button onClick={() => dispatch(editLikedUser())}>Fermer</button>
+              <button
+                onClick={() => dispatch(editLikedUser(allModals.likedUser))}
+              >
+                Fermer
+              </button>
             </div>
           </section>
           <div
             className="modalRest"
-            onClick={() => dispatch(editLikedUser())}
+            onClick={() => dispatch(editLikedUser(allModals.likedUser))}
           ></div>
         </main>
 
@@ -155,11 +163,6 @@ const Modals = ({ children }) => {
       </div>
     );
   } else if (allModals.viewUser) {
-    const mainPic = (user) => {
-      const res = user.photos.find((photo) => photo.main === true);
-      if (res) return res.path;
-      return null;
-    };
     return (
       <div className="modal">
         <main className="overlayModal">
@@ -207,12 +210,73 @@ const Modals = ({ children }) => {
               })}
             </div>
             <div className="btnClose">
-              <button onClick={() => dispatch(editViewUser())}>Fermer</button>
+              <button
+                onClick={() => dispatch(editViewUser(allModals.viewUser))}
+              >
+                Fermer
+              </button>
             </div>
           </section>
           <div
             className="modalRest"
-            onClick={() => dispatch(editViewUser())}
+            onClick={() => dispatch(editViewUser(allModals.viewUser))}
+          ></div>
+        </main>
+
+        <div className="App">{children}</div>
+      </div>
+    );
+  } else if (allModals.notif) {
+    return (
+      <div className="modal">
+        <main className="overlayModal">
+          {user.notifs.length > 0 ? (
+            <section className="listModal">
+              <h3> mes notifications </h3>
+              <div className="listContainer">
+                {user.notifs.map((notif, index) => {
+                  return (
+                    <div
+                      className="userLiked"
+                      key={index}
+                      // onClick={() =>
+                      //   navigate("/profil/see", {
+                      //     state: userSeen,
+                      //   })
+                      // }
+                    >
+                      <div className="leftContent">
+                        <div className="profilPic">
+                          {/* {mainPic(userSeen) && (
+                            <img
+                              src={`http://localhost:8000/${mainPic(userSeen)}`}
+                              alt="photo de profil"
+                            />
+                          )} */}
+                          <p> img</p>
+                        </div>
+                        <p>{notif.data}</p>
+                      </div>
+                      <div className="rightContent">
+                          <p> delete</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="btnClose">
+                <button onClick={() => dispatch(editViewUser(allModals.notif))}>
+                  Fermer
+                </button>
+              </div>
+            </section>
+          ) : (
+            <section>Pas de notif</section>
+          )}
+
+          <div
+            className="modalRest"
+            onClick={() => dispatch(editViewUser(allModals.notif))}
           ></div>
         </main>
 

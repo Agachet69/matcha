@@ -24,7 +24,6 @@ import {
   editDeletePic,
   editLikedUser,
   editViewUser,
-  resetAllModals,
   selectAllModals,
   // selectModalMainPic,
   selectModalPic,
@@ -42,6 +41,10 @@ const Profil = () => {
   const [previewImg, setPreviewImg] = useState(null);
   const backPicRef = useRef();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(user);
+  }, [])
 
   useEffect(() => {
     backPicRef.current.style.transform = `translateX(${translateXValue}%)`;
@@ -87,7 +90,7 @@ const Profil = () => {
       },
     });
     dispatch(deleteUserPhoto(res.data.id));
-    dispatch(editDeletePic());
+    dispatch(editDeletePic(deleteBack.deletePic));
     setTranslateXValue(0);
   }
 
@@ -133,7 +136,7 @@ const Profil = () => {
                     )}
                     {!deleteBack.deletePic && (
                       <div className="buttonsImg">
-                        <button onClick={() => dispatch(editDeletePic())}>
+                        <button onClick={() => dispatch(editDeletePic(deleteBack.deletePic))}>
                           <Trash />
                         </button>
                       </div>
@@ -150,7 +153,7 @@ const Profil = () => {
                           </button>
                           <button
                             className="cancel"
-                            onClick={() => dispatch(editDeletePic())}
+                            onClick={() => dispatch(editDeletePic(deleteBack.deletePic))}
                           >
                             Annuler
                           </button>
@@ -217,7 +220,7 @@ const Profil = () => {
         </div>
         <div
           className="socialInfos borderR"
-          onClick={() => dispatch(editLikedUser())}
+          onClick={() => dispatch(editLikedUser(deleteBack.likedUser))}
         >
           <div className="socialTitleSvg">
             <h4 className="pink"> {user.liked_by.length} </h4>
@@ -225,7 +228,7 @@ const Profil = () => {
           </div>
           <p>crush</p>
         </div>
-        <div className="socialInfos" onClick={() => dispatch(editViewUser())}>
+        <div className="socialInfos" onClick={() => dispatch(editViewUser(deleteBack.viewUser))}>
           <div className="socialTitleSvg">
             <h4> 13 </h4>
             <Eye />
