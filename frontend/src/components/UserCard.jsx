@@ -4,20 +4,10 @@ import { Age, ChatIcon, CogIcon, FemaleIcon, HeartIcon, MaleIcon, Star4, UserIco
 import '../styles/userCard.scss'
 import { useNavigate } from "react-router"
 
-
-const user_image_list = [
-	"https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHdvbWVufGVufDB8fDB8fHww",
-	"https://images.unsplash.com/photo-1557862921-37829c790f19?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFufGVufDB8fDB8fHww",
-	"https://plus.unsplash.com/premium_photo-1679440415182-c362deb2fd40?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjV8fHdvbWVufGVufDB8fDB8fHww",
-	"https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bWFufGVufDB8fDB8fHww",
-	"https://images.unsplash.com/photo-1560087637-bf797bc7796a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjZ8fHdvbWVufGVufDB8fDB8fHww",
-]
-
-
 const UserCard = ({ user, me, onLikeUser, selector = false, onClick, onBlockUser = undefined }) => {
 	const navigate = useNavigate()
 	console.log(user)
-	console.log(user.photos.find(photo => photo.main))
+	if (user)
 	return (
 	<div className="user-card-item" onWheel={e => { e.currentTarget.scrollLeft += e.deltaY }} onClick={() => onClick(user.id)}>
 		<img src={user.photos.find(photo => photo.main) ? `http://localhost:8000/${user.photos.find(photo => photo.main).path}` : null} className='background' alt="" />
