@@ -1,0 +1,108 @@
+@import "../var.scss";
+
+.matchContainer {
+  position: relative;
+  padding: 10px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  svg {
+    height: 28px;
+  }
+
+  .match,
+  .delete,
+  .addCrush {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    opacity: 1;
+    gap: 5px;
+    transition: opacity 0.8s;
+    color: $pink;
+
+    p {
+      color: $pink !important;
+      font-weight: bold;
+    }
+  }
+
+  .delete {
+    opacity: 0;
+
+    p {
+      color: red !important;
+    }
+
+    svg {
+      color: red;
+    }
+  }
+
+  .addCrush {
+    opacity: 0;
+  }
+}
+
+.deleteContainer {
+  .delete,
+  .match {
+    opacity: 1;
+    transition: opacity 0.8s;
+  }
+
+  .match {
+    opacity: 0;
+  }
+}
+
+.addCrushContainer {
+  .addCrush,
+  .match {
+    opacity: 1;
+    transition: opacity 0.8s;
+  }
+
+  .match {
+    opacity: 0;
+  }
+}
+
+.addCrush {
+  &:hover {
+    svg {
+      color: $pink;
+      transition: .8s;
+    }
+
+    p {
+      color: $pink !important;
+      transition: .8s;
+    }
+  }
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+
+  svg {
+    height: 28px;
+  }
+
+  p {
+    font-weight: bold;
+  }
+}

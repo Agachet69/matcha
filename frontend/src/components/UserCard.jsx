@@ -83,5 +83,4 @@ const UserCard = ({ user, me, onLikeUser, selector = false, onClick, onBlockUser
 	</div>)
 	}
 
-
-export default UserCard
+export default UserCard;

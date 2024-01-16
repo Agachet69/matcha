@@ -13,7 +13,6 @@ import {
   Trash,
   Pic,
   Send,
-  Stonks,
   Fire,
   Eye,
   Sparkless,
@@ -23,17 +22,20 @@ import { MainPic } from "../components/MainPic";
 import { ValidImg } from "../utils/ValidImg";
 import {
   editDeletePic,
-  selectModalMainPic,
+  editLikedUser,
+  editViewUser,
+  selectAllModals,
+  // selectModalMainPic,
   selectModalPic,
 } from "../store/slices/modalSlice";
-import { DeleteMainPicModal } from "../components/Modals";
+// import Modals from "../components/Modals";
 import EditUser from "../components/profil/EditUser";
 
 const Profil = () => {
   const token = useSelector(getToken);
   const user = useSelector(selectUser);
-  const mainModal = useSelector(selectModalMainPic);
-  const deleteBack = useSelector(selectModalPic);
+  // const mainModal = useSelector(selectModalMainPic);
+  const deleteBack = useSelector(selectAllModals);
   const [translateXValue, setTranslateXValue] = useState(0);
   const [myImgs, setMyImgs] = useState(null);
   const [previewImg, setPreviewImg] = useState(null);
@@ -41,12 +43,12 @@ const Profil = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    backPicRef.current.style.transform = `translateX(${translateXValue}%)`;
-  }, [translateXValue]);
+    console.log(user);
+  }, [])
 
   useEffect(() => {
-    console.log(user);
-  }, [user]);
+    backPicRef.current.style.transform = `translateX(${translateXValue}%)`;
+  }, [translateXValue]);
 
   async function nextPhoto() {
     setTranslateXValue((prevTranslateX) => prevTranslateX - 100);
@@ -88,7 +90,7 @@ const Profil = () => {
       },
     });
     dispatch(deleteUserPhoto(res.data.id));
-    dispatch(editDeletePic());
+    dispatch(editDeletePic(deleteBack.deletePic));
     setTranslateXValue(0);
   }
 
@@ -122,24 +124,24 @@ const Profil = () => {
                 return (
                   <div className="oneBackPic" key={photo.id}>
                     <img src={`http://localhost:8000/${photo.path}`} />
-                    {index !== 0 && !deleteBack && (
+                    {index !== 0 && !deleteBack.deletePic && (
                       <div className="leftArrow" onClick={prevPhoto}>
                         <ArrowLeft />
                       </div>
                     )}
-                    {index + 1 !== 4 && !deleteBack && (
+                    {index + 1 !== 4 && !deleteBack.deletePic && (
                       <div className="rightArrow" onClick={nextPhoto}>
                         <ArrowRight />
                       </div>
                     )}
-                    {!deleteBack && (
+                    {!deleteBack.deletePic && (
                       <div className="buttonsImg">
-                        <button onClick={() => dispatch(editDeletePic())}>
+                        <button onClick={() => dispatch(editDeletePic(deleteBack.deletePic))}>
                           <Trash />
                         </button>
                       </div>
                     )}
-                    {deleteBack && (
+                    {deleteBack.deletePic && (
                       <div className="deleteBackPhoto">
                         <h3> Supprimer cette photo ?</h3>
                         <div className="choices">
@@ -151,7 +153,7 @@ const Profil = () => {
                           </button>
                           <button
                             className="cancel"
-                            onClick={() => dispatch(editDeletePic())}
+                            onClick={() => dispatch(editDeletePic(deleteBack.deletePic))}
                           >
                             Annuler
                           </button>
@@ -207,7 +209,7 @@ const Profil = () => {
         {user.firstName} {user.lastName}{" "}
       </h3>
       <p> Qui à vue ton profil </p>
-      <p> Qui à like ton profil </p>
+      <p> Modifier sa position </p>
       <div className="socialInfosContainer">
         <div className="socialInfos borderR">
           <div className="socialTitleSvg">
@@ -216,15 +218,18 @@ const Profil = () => {
           </div>
           <p>fame rating</p>
         </div>
-        <div className="socialInfos borderR">
-        <div className="socialTitleSvg">
-            <h4 className="pink"> 13 </h4>
+        <div
+          className="socialInfos borderR"
+          onClick={() => dispatch(editLikedUser(deleteBack.likedUser))}
+        >
+          <div className="socialTitleSvg">
+            <h4 className="pink"> {user.liked_by.length} </h4>
             <Sparkless />
           </div>
           <p>crush</p>
         </div>
-        <div className="socialInfos">
-        <div className="socialTitleSvg">
+        <div className="socialInfos" onClick={() => dispatch(editViewUser(deleteBack.viewUser))}>
+          <div className="socialTitleSvg">
             <h4> 13 </h4>
             <Eye />
           </div>
@@ -233,7 +238,6 @@ const Profil = () => {
       </div>
       {!user && <div> Loader </div>}
       {user && <EditUser />}
-      {mainModal && <DeleteMainPicModal />}
     </div>
   );
 };

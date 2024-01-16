@@ -5,10 +5,11 @@ import axios from "axios";
 import { getToken } from "../store/slices/authSlice";
 import { Cancel, Confirm, Pic, UserIcon, Trash } from "./icons/Icons";
 import { ValidImg } from "../utils/ValidImg";
-import { editDeleteMainPic } from "../store/slices/modalSlice";
+import { editDeleteMainPic, selectModalMainPic } from "../store/slices/modalSlice";
 
 export const MainPic = () => {
   const token = useSelector(getToken);
+  const modalState = useSelector(selectModalMainPic)
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const [mainPic, setMainPic] = useState({
@@ -63,7 +64,7 @@ export const MainPic = () => {
   }
 
   async function deleteActualPic() {
-    dispatch(editDeleteMainPic())
+    dispatch(editDeleteMainPic(modalState))
   }
 
   useEffect(() => {

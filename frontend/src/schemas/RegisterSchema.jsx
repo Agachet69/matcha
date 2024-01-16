@@ -6,15 +6,15 @@ const RegisterSchema = () =>
 	object().shape({
 		username: string()
 			.min(3, "Username must have at least 3 characters.")
-			.max(50, "Username length must be less than 50 long.")
+			.max(30, "Username length must be less than 30 long.")
 			.required("Username is required.").test("onlyASCIIAndUnderScore", "The only characters allowed are [aA-zZ] [0-9] and '_'", value => /^[a-zA-Z0-9_]+$/.test(value)),
 		lastName: string()
 			.min(3, "Last Name must have at least 3 characters.")
-			.max(50, "Last Name length must be less than 50 long.")
+			.max(30, "Last Name length must be less than 30 long.")
 			.required("Last Name is required.").test("onlyASCIIAndUnderScore", "The only characters allowed are [aA-zZ]", value => /^[a-zA-Z0-9_]+$/.test(value)),
 		firstName: string()
 			.min(3, "First Name must have at least 3 characters.")
-			.max(50, "First Name length must be less than 50 long.")
+			.max(30, "First Name length must be less than 30 long.")
 			.required("First Name is required.").test("onlyASCIIAndUnderScore", "The only characters allowed are [aA-zZ]", value => /^[a-zA-Z]+$/.test(value)),
 		gender: string().oneOf(Object.keys(GenderEnum), "Gender is not good.").required("Gender is required."),
 		sexuality: string().oneOf(Object.keys(SexualityEnum), "Sexuality is not good.").required("Sexuality is required."),

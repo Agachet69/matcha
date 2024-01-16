@@ -13,10 +13,6 @@ const EditUser = () => {
   const [formUser, setFormUser] = useState(user);
   const [tags, setTags] = useState(user.tags);
 
-  useEffect(() => {
-    console.log(tags);
-  }, [tags]);
-
   const [editStatus, setEditStatus] = useState({
     username: false,
     lastName: false,

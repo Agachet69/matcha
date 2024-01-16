@@ -1,21 +1,26 @@
-import { useDispatch, useSelector } from "react-redux"
-import UserCard from "../components/UserCard"
-import { initialiseUser, selectUser } from "../store/slices/userSlice"
-import '../styles/chat.scss'
-import { Age, FemaleIcon, MaleIcon, SearchIcon, SendIcon, UserIcon } from "../components/icons/Icons"
-import { useNavigate, useParams } from "react-router-dom"
-import { enqueueSnackbar } from "notistack"
-import { getActions } from "../utils/SnackBarsManager"
-import { getToken } from '../store/slices/authSlice';
-import { useEffect, useState } from "react"
-import axios from "axios"
-import GenderEnum from "../Enum/GenderEnum"
-import { useFormik } from "formik"
-import MessageSchema from "../schemas/MessageSchema"
-import printVarsHook from "../components/printVarsHook"
-import { useSocket } from "../utils/PrivateRoutes"
-import { ParseDate } from "../utils/ParseDate"
-
+import { useDispatch, useSelector } from "react-redux";
+import UserCard from "../components/UserCard";
+import { initialiseUser, selectUser } from "../store/slices/userSlice";
+import "../styles/chat.scss";
+import {
+  Age,
+  FemaleIcon,
+  MaleIcon,
+  SearchIcon,
+  SendIcon,
+  UserIcon,
+} from "../components/icons/Icons";
+import { useNavigate, useParams } from "react-router-dom";
+import { enqueueSnackbar } from "notistack";
+import { getActions } from "../utils/SnackBarsManager";
+import { getToken } from "../store/slices/authSlice";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import GenderEnum from "../Enum/GenderEnum";
+import { useFormik } from "formik";
+import MessageSchema from "../schemas/MessageSchema";
+import { useSocket } from "../utils/PrivateRoutes";
+import { ParseDate } from "../utils/ParseDate";
 
 const user_image_list = [
     "https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHdvbWVufGVufDB8fDB8fHww",
@@ -26,46 +31,127 @@ const user_image_list = [
 ]
 
 const Chat = () => {
-    const [disabled, setDisabled] = useState(false)
+  const [disabled, setDisabled] = useState(false);
 
-    const socket = useSocket()
-    const me = useSelector(selectUser)
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+  const socket = useSocket();
+  const me = useSelector(selectUser);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-    const { id } = useParams()
+  const { id } = useParams();
 
-    const token = useSelector(getToken)
+  const token = useSelector(getToken);
 
-    const [user, setUser] = useState(null)
-    const [messages, setMessages] = useState([])
+  const [user, setUser] = useState(null);
+  const [messages, setMessages] = useState([]);
 
-    const formik = useFormik({
-        validationSchema: MessageSchema(),
-        initialValues: {
-            message: '',
+  const formik = useFormik({
+    validationSchema: MessageSchema(),
+    initialValues: {
+      message: "",
+    },
+    onSubmit: () => sendMessage(),
+  });
+
+  const getUser = () => {
+    axios
+      .get(`http://localhost:8000/users/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.access_token}`,
         },
-        onSubmit: () => sendMessage(),
-    });
+      })
+      .then(({ data }) => {
+        setUser(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-    const getUser = () => {
-        axios.get(`http://localhost:8000/users/${id}`, {
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.access_token}` }
-        }).then(({ data }) => {
-            setUser(data)
-        }).catch((error) => {
-            console.log(error)
-        })
-    }
+  const getAllMessages = () => {
+    axios
+      .get(`http://localhost:8000/messages/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.access_token}`,
+        },
+      })
+      .then(({ data }) => {
+        setMessages(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-    const getAllMessages = () => {
-        axios.get(`http://localhost:8000/messages/${id}`, {
-            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token.access_token}` }
-        }).then(({ data }) => {
-            setMessages(data)
-        }).catch((error) => {
-            console.log(error)
+  useEffect(() => {
+    const elem = document.getElementById("messageList");
+    if (elem) elem.scrollTop = elem.scrollHeight;
+  }, [messages]);
+
+  const onUpdateStatus = ({ user_id, status }) => {
+    if (user_id == id) getUser();
+  };
+
+  useEffect(() => {
+    if (socket) socket.on("update-status", onUpdateStatus);
+
+    return () => {
+      if (socket) socket.off("update-status", onUpdateStatus);
+    };
+  }, [socket]);
+
+  const onUpdateMessages = () => {
+    getAllMessages();
+  };
+
+  useEffect(() => {
+    if (socket) socket.on("update-messages", onUpdateMessages);
+
+    return () => {
+      if (socket) socket.off("update-messages", onUpdateMessages);
+    };
+  }, [socket]);
+
+  useEffect(() => {
+    if (token && id) getUser();
+  }, [token, id]);
+
+  useEffect(() => {
+    if (token && id) getAllMessages();
+  }, [token, id]);
+
+  useEffect(() => {
+    console.log(user);
+  }, [user]);
+
+  const sendMessage = () => {
+    if (!disabled) {
+      setDisabled(true);
+
+      setTimeout(() => {
+        setDisabled(false);
+      }, [1000]);
+
+      axios
+        .post(
+          `http://localhost:8000/messages/${id}`,
+          { data: formik.values.message },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token.access_token}`,
+            },
+          }
+        )
+        .then((response) => {
+          setMessages((prev) => [...prev, response.data]);
+          formik.resetForm();
         })
+        .catch((error) => {
+          console.error(error);
+        });
     }
 
     useEffect(() => {

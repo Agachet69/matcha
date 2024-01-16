@@ -25,6 +25,7 @@
       flex-direction: column;
       z-index: 1;
       gap: 15px;
+
       input[type="file"] {
         display: none;
       }
@@ -162,6 +163,23 @@
         justify-content: center;
         font-size: 21px;
       }
+
+      .statusUser {
+        position: absolute;
+        right: 16px;
+        bottom: 20px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+      }
+
+      .online {
+        background-color: #32cd32;
+      }
+
+      .offline {
+        background-color: red;
+      }
     }
 
     .topContent {
@@ -210,10 +228,10 @@
 
             .iconAddImg {
               &:hover {
-                background-color: white;
+                background-color: rgba(219, 219, 219, 0.871);
                 transition: 0.3s;
               }
-              background-color: rgba(255, 255, 255, 0.871);
+              background-color: #6b6b6b;
               padding: 18px;
               border-radius: 50%;
               cursor: pointer;
@@ -396,9 +414,11 @@
     }
   }
 
-  .titleProfil {
-    font-size: 18px;
-    font-weight: 600;
+  .otherProfilBio {
+    padding: 0px 45px;
+    font-family: Inter;
+    font-style: italic;
+    font-size: 14px;
   }
 
   .socialInfosContainer {
@@ -407,7 +427,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 20px 45px;
-
+    cursor: pointer;
+    
     .borderR {
       border-right: 1px solid #ff4ca8;
 
@@ -420,6 +441,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       align-self: stretch;
       flex: 1;
       font-family: Montserrat;
@@ -439,7 +461,121 @@
 
       p {
         font-size: 12px;
-        color: rgba(0, 0, 0, 0.603);
+        color: rgb(255, 255, 255);
+        text-align: center;
+      }
+    }
+  }
+
+  .otherProfilTitlesInfos {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // padding: 0px 220px;
+    gap: 30px;
+
+    .titleProfil {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    svg {
+      height: 20px;
+    }
+    // p {
+    //   padding: 2px 15px;
+    //   border: 1px solid #ff4ca8;
+    //   border-radius: 100px;
+    //   background-color: #13131300;
+    //   font-size: 14px;
+    // }
+
+    .iconChat {
+      &:hover {
+        svg {
+          color: #ff4ca8;
+          transition: 0.3s;
+        }
+      }
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      padding: 5px 5px;
+      transition: 0.3s;
+      cursor: pointer;
+      svg {
+        transform:scaleX(-1);
+        height: 18px;
+        transition: 0.3s;
+      }
+    }
+
+    .otherProfilMore {
+      position: absolute;
+      top: 104px;
+      right: 10%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      transform: translateY(-50%);
+      svg {
+        height: 22px;
+        cursor: pointer;
+      }
+
+      .ellipsMenu {
+        position: relative;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        height: 200px;
+        width: 400px;
+        overflow: hidden;
+
+        svg {
+          &:hover {
+            color: $pink;
+          }
+        }
+
+        .ellipsMenuContent {
+          position: absolute;
+          left: 50px;
+          top: 20px;
+          display: flex;
+          flex-direction: column;
+          width: 150px;
+          border: 1px solid grey;
+          overflow: hidden;
+          border-radius: 15px;
+          border-top-right-radius: 0px;
+          p {
+            &:hover {
+              background-color: grey; 
+            }
+            user-select: none;
+            padding: 10px 20px;
+            font-size: 12px;
+            text-align: center;
+            background-color: #1e1e1e;
+            cursor: pointer;
+          }
+        }
+
+        .active {
+          opacity: 1;
+          transition: opacity 0.4s
+        }
+
+        .inactive {
+          opacity: 0;
+          z-index: 0;
+          transition: 0.4s;
+        }
       }
     }
   }

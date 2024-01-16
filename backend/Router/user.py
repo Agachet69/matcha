@@ -102,6 +102,7 @@ def update_tags(tags: List[TagCreate], current_user= Depends(get_current_user), 
   db.refresh(user)
   
   return user
+
 @router.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def get_one_user(
     current_user: UserSchema = Depends(get_current_user), user: UserSchema = Depends(get_user)
@@ -120,7 +121,6 @@ async def search(
     db=Depends(get_db)
 ):
     user_list = Crud.user.search(db, current_user, search_params)
-    
     id_arr = [client["auth"]["user_id"] for client in connected_clients] + [client["user_id"] for client in disconnect_clients]
     status_dict = {}
     for user in user_list:
@@ -130,6 +130,7 @@ async def search(
             status_dict[user.id] = "OFFLINE"
     
     for user in user_list:
+        print(user)
         user.status = status_dict.get(user.id, "UNKNOWN")
 
     return user_list
