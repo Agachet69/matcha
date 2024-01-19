@@ -6,7 +6,8 @@
   .header {
     position: fixed;
     z-index: 20;
-    top: 1rem;
+    // top: 1rem;
+    top: 0px;
     margin-inline: auto;
 
     width: 100%;
@@ -34,15 +35,12 @@
       }
     }
 
-
     .other {
       height: 45px;
-
       display: flex;
-
+      align-items: center;
       padding: 5px 10px;
       gap: 1rem;
-      // margin-block: auto;
 
       .limiter {
         border: 1px #00000055 solid;
@@ -58,6 +56,10 @@
         transition: 0.5s;
         &:hover {
           color: #ff4ca8;
+        }
+
+        svg {
+          height: 25px;
         }
       }
 
@@ -78,7 +80,7 @@
           display: flex;
           // align-items: center;
           justify-content: center;
-          height: 100%;
+          height: 35px;
           aspect-ratio: 1/1;
           background-color: #00000055;
           border-radius: 50%;
@@ -97,8 +99,6 @@
   .content {
     margin-top: 75px;
     margin-bottom: auto;
-    // margin-bottom: 30vh;
-    // min-height: 55vh;
   }
 
   .wave-container {
@@ -106,7 +106,6 @@
     position: absolute;
 
     height: 100vh;
-    // width: 100vw;
 
     overflow: hidden;
 

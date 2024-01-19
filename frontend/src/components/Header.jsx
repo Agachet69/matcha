@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import "../styles/header.scss";
 import { BellIcon, ChatIcon, Logout, UserIcon } from "./icons/Icons";
 import { setToken } from "../store/slices/authSlice";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { selectUser } from "../store/slices/userSlice";
 import { Badge } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -14,15 +14,21 @@ const Header = ({ children, connected = true }) => {
   const user = useSelector(selectUser);
   const [profilPic, setProfilPic] = useState(null);
   const modals = useSelector(selectAllModals);
+  const location = useLocation();
 
   useEffect(() => {
     setProfilPic(user.photos.filter((photo) => photo.main === true)[0]);
   }, [user]);
 
+  function navHome() {
+    if (location.pathname !== '/home')
+      navigate('/')
+  }
+
   return (
     <div className="container">
       <div className="header">
-        <div className="logo" onClick={() => navigate("/")}>
+        <div className="logo" onClick={navHome}>
           Matcha ❤
         </div>
 

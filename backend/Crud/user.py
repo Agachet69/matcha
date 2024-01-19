@@ -32,12 +32,11 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             .where(self.model.id != current_user.id)
             .filter(~User.id.in_([block.user_target_id for block in current_user.blocked]))
             .filter(~User.id.in_([block.user_id for block in current_user.blocked_by]))
-            .filter(User.photos.any(Photo.main.is_(True)))
+            # .filter(User.photos.any(Photo.main.is_(True)))
         )
 
         if age_limit := getattr(search_param, 'age_limit', None):
             if age_limit.min is not None and age_limit.max is not None:
-                print('ageeeeeeee')
                 query = query.where(self.model.age >= age_limit.min, self.model.age <= age_limit.max)
         if fame_rate_limit := getattr(search_param, 'fame_rate_limit', None):
             if fame_rate_limit.min is not None and fame_rate_limit.max is not None:
@@ -63,13 +62,11 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
             query = query.where(self.model.gender == (GenderEnum.MALE if current_user.gender == GenderEnum.MALE else GenderEnum.FEMALE))
 
 
-        query = query.where(~or_(
-            User.id.in_([like.user_target_id for like in current_user.likes]),
-            User.id.in_([match.user_A_id if match.user_A_id != current_user.id else match.user_B_id for match in current_user.matches])
-        ))
+        # query = query.where(~or_(
+            # User.id.in_([like.user_target_id for like in current_user.likes]),
+            # User.id.in_([match.user_A_id if match.user_A_id != current_user.id else match.user_B_id for match in current_user.matches])
+        # ))
         result = db.execute(query).scalars().all()
-        print(result)
-        print(query)
         return result
     
     def like(self, db: Session, user_from: User, user_target: User):

@@ -21,7 +21,7 @@ const Home = () => {
   const dispatch = useDispatch();
   const socket = useSocket();
   const navigate = useNavigate();
-  const [openSearchParm, setOpenSearchParm] = useState(false);
+  const [openSearchParm, setOpenSearchParm] = useState(true);
 
   const getAllUsers = () => {
     axios
@@ -99,10 +99,6 @@ const Home = () => {
       });
   };
 
-  // useEffect(() => {
-  //     getAllUsers()
-  // }, [])
-
   const onUpdateStatus = ({ user_id, status }) => {
     if (user_id != me.id) searchFormik.submitForm();
   };
@@ -138,7 +134,7 @@ const Home = () => {
     <div className="main">
       <form className="search-container" onSubmit={searchFormik.onSubmit}>
         <div className="title-container">
-          <div className="title">Search Params</div>
+          <div className="title">Search an user</div>
           <div className="icons">
             <div className="container">
               <div
@@ -305,7 +301,7 @@ const Home = () => {
             <div className="error">Need at least one param.</div>
           )}
 
-        {allUsers.map((user, index) => (
+        {/* {allUsers.map((user, index) => (
           <UserCard
             me={me}
             user={user}
@@ -313,11 +309,27 @@ const Home = () => {
             onLikeUser={onLikeUser}
             onBlockUser={onBlockUser}
           />
-        ))}
+        ))} */}
       </form>
-      <button onClick={() => onSearch()}>OUIIIIIIIIIII</button>
+      {allUsers.length <= 0 ? (
+        <div> </div>
+      ) : (
+        <div className="searchResult">
+          <h3> Result of your research</h3>
+          {allUsers.map((user, index) => (
+            <UserCard
+              me={me}
+              user={user}
+              key={user.id}
+              onLikeUser={onLikeUser}
+              onBlockUser={onBlockUser}
+            />
+          ))}
+        </div>
+      )}
+      {/* <button onClick={() => onSearch()}>OUIIIIIIIIIII</button> */}
 
-      <div className="search-container">
+      {/* <div className="search-container">
         <div className="title">My Notifs</div>
 
         {me != null &&
@@ -327,186 +339,9 @@ const Home = () => {
               <div className="type">{notif.type}</div>
             </div>
           ))}
-      </div>
+      </div> */}
     </div>
   );
 };
-
-{
-  /* return (
-    <div className="main">
-      <form className="search-container" onSubmit={searchFormik.onSubmit}>
-        <div className="title-container">
-          <div className="title">Search Params</div>
-          <div className="icons">
-            <div className="container">
-              <div
-                className="icon"
-                onClick={() => setOpenSearchParm((prev) => !prev)}
-              >
-                <CogIcon />
-              </div>
-              <div
-                className={"sub-icon " + (openSearchParm ? "open" : "close")}
-              >
-                <TriangleIcon />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          className={"param-container " + (openSearchParm ? "open" : "close")}
-        >
-          <div className="item">
-            <div className="title">Age Limit</div>
-            <input
-              type="checkbox"
-              value={Object.keys(searchFormik.values).includes("age_limit")}
-              onChange={() =>
-                searchFormik.setFieldValue(
-                  "age_limit",
-                  Object.keys(searchFormik.values).includes("age_limit")
-                    ? undefined
-                    : { min: 18, max: 25 }
-                )
-              }
-            />
-            <Slider
-              min={18}
-              max={99}
-              disabled={!Object.keys(searchFormik.values).includes("age_limit")}
-              value={
-                Object.keys(searchFormik.values).includes("age_limit")
-                  ? [
-                      searchFormik.values.age_limit.min,
-                      searchFormik.values.age_limit.max,
-                    ]
-                  : 0
-              }
-              onChange={(e) =>
-                Object.keys(searchFormik.values).includes("age_limit") &&
-                searchFormik.setFieldValue("age_limit", {
-                  min: e.target.value[0],
-                  max: e.target.value[1],
-                })
-              }
-              valueLabelDisplay="auto"
-            />
-          </div>
-          <div className="item">
-            <div className="title">Fame Limit</div>
-            <input
-              type="checkbox"
-              value={Object.keys(searchFormik.values).includes(
-                "fame_rate_limit"
-              )}
-              onChange={() =>
-                searchFormik.setFieldValue(
-                  "fame_rate_limit",
-                  Object.keys(searchFormik.values).includes("fame_rate_limit")
-                    ? undefined
-                    : { min: 0, max: 128 }
-                )
-              }
-            />
-            <Slider
-              min={0}
-              max={999}
-              disabled={
-                !Object.keys(searchFormik.values).includes("fame_rate_limit")
-              }
-              value={
-                Object.keys(searchFormik.values).includes("fame_rate_limit")
-                  ? [
-                      searchFormik.values.fame_rate_limit.min,
-                      searchFormik.values.fame_rate_limit.max,
-                    ]
-                  : 0
-              }
-              onChange={(e) =>
-                Object.keys(searchFormik.values).includes("fame_rate_limit") &&
-                searchFormik.setFieldValue("fame_rate_limit", {
-                  min: e.target.value[0],
-                  max: e.target.value[1],
-                })
-              }
-              valueLabelDisplay="auto"
-            />
-          </div>
-          <div className="item">
-            <div className="title">{"Location Limit (m)"}</div>
-            <input
-              type="checkbox"
-              value={Object.keys(searchFormik.values).includes(
-                "location_limit"
-              )}
-              onChange={() =>
-                searchFormik.setFieldValue(
-                  "location_limit",
-                  Object.keys(searchFormik.values).includes("location_limit")
-                    ? undefined
-                    : { min: 0, max: 50 }
-                )
-              }
-            />
-            <Slider
-              min={0}
-              max={500}
-              disabled={
-                !Object.keys(searchFormik.values).includes("location_limit")
-              }
-              value={
-                Object.keys(searchFormik.values).includes("location_limit")
-                  ? [
-                      searchFormik.values.location_limit.min,
-                      searchFormik.values.location_limit.max,
-                    ]
-                  : 0
-              }
-              onChange={(e) =>
-                Object.keys(searchFormik.values).includes("location_limit") &&
-                searchFormik.setFieldValue("location_limit", {
-                  min: e.target.value[0],
-                  max: e.target.value[1],
-                })
-              }
-              valueLabelDisplay="auto"
-            />
-          </div>
-        </div>
-        {!Object.keys(searchFormik.values).length &&
-          searchFormik.isSubmitting && (
-            <div className="error">Need at least one param.</div>
-          )}
-
-        {allUsers.map((user, index) => (
-          <UserCard
-            me={me}
-            user={user}
-            key={user.id}
-            onLikeUser={onLikeUser}
-            onClick={navOtherProfil}
-          />
-        ))}
-      </form>
-      <button onClick={() => onSearch()}>OUIIIIIIIIIII</button>
-
-      <div className="search-container">
-        <div className="title">My Notifs</div>
-
-        {me != null &&
-          me.notifs.map((notif) => (
-            <div className="notif-item">
-              <div className="icon"></div>
-              <div className="type">{notif.type}</div>
-            </div>
-          ))}
-      </div>
-    </div>
-  ); */
-}
-{
-  /* }; */
-}
 
 export default Home;

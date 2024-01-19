@@ -33,7 +33,7 @@
 }
 
 .loginContainer main p {
-  color: #BBBBBB;
+  color: #bbbbbb;
 }
 
 .loginContainer main section {
@@ -50,15 +50,15 @@
   // gap: 30px;
 }
 
-.loginInput {
+.registerInput {
   display: flex;
   align-items: center;
   position: relative;
   width: 100%;
-  backdrop-filter: blur(10px);
+  // backdrop-filter: blur(10px);
 }
 
-.loginInput .icon {
+.registerInput .icon {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -66,15 +66,15 @@
   height: 20px;
   width: 20px;
   z-index: 0;
-  color: #BBBBBB;
+  color: black;
   transition: 0.3s;
 }
 
-.loginInput label {
+.registerInput label {
   position: absolute;
-  left: 10px;
+  left: 18px;
   top: 50%;
-  color: #BBBBBB;
+  color: black;
   font-size: 16px;
   transform: translateY(-50%);
   transition: 0.3s;
@@ -85,57 +85,55 @@
   margin-left: 10px;
   color: red;
   margin-top: 0.2rem;
-  // position: absolute;
-  // left: 10px;
-  // bottom: 0;
-  // top: 50%;
-  // color: #BBBBBB;
-  // font-size: 16px;
-  // transform: translateY(-50%);
-  // transition: 0.3s;
+  mix-blend-mode: difference;
 }
 
-.loginInput input {
+.registerInput input {
   font-family: Montserrat;
   font-size: 16px;
   padding: 15px 20px;
   width: 100%;
-  background-color: #663d6111;
-  color: #BBBBBB;
+  background-color: #ffffff;
+  color: black;
   position: relative;
-  z-index: 1;
+  // z-index: 1;
   border-radius: 10px;
-  border: 1px solid #FFFFFF50;
+  border: 1px solid #ffffff50;
   transition: 0.3s;
 }
 
-.loginInput input:focus {
+.registerInput input[type="text"] + label,
+.registerInput input[type="number"] + label {
+  cursor: text;
+}
+
+.registerInput input:focus {
   outline: 0;
   border: 1px solid #ff4ca8;
-  background-color: transparent;
+  // background-color: transparent;
   transition: 0.3s;
 }
 
-.loginInput input:hover {
+.registerInput input:hover {
   border: 1px solid #ff4ca8;
   transition: 0.3s;
 }
 
-.loginInput input:not(:placeholder-shown) + label {
-  top: -10px;
+.registerInput input:not(:placeholder-shown) + label {
+  top: -12px;
+  transition: 0.3s;
+  color: #ff4ca8;
+}
+
+.registerInput input:focus + label {
+  top: -12px;
   transition: 0.3s;
 }
 
-.loginInput input:focus + label {
-  top: -10px;
-  transition: 0.3s;
-  // color: #616161;
-}
-
-.loginInput input:hover ~ label,
-.loginInput input:hover ~ .icon
-.loginInput input:focus ~ .icon
-.loginInput input:focus ~ label {
+.registerInput input:hover ~ label,
+.registerInput input:hover ~ .icon,
+.registerInput input:focus ~ .icon,
+.registerInput input:focus ~ label {
   color: #ff4ca8;
   transition: 0.3s;
 }
@@ -168,9 +166,13 @@
 .dosLoginInput {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   width: 100%;
+  gap: 30px;
+
   .dosInput {
     width: 45%;
+    flex: 1 0 200px;
 
     .Input {
       display: flex;
@@ -179,93 +181,129 @@
 }
 
 .selector {
-  //   background-color: red;
   display: flex;
-  justify-content: space-around;
-  position: relative;
-  margin-top: 1rem;
+  flex-direction: column;
+  // position: relative;
+  // margin-top: 1rem;
+  // gap: 30px;
+  // flex-wrap: wrap;
 
-  label {
-    position: absolute;
-    left: 10px;
-    top: -50%;
-    color: #BBBBBB;
-    font-size: 16px;
+  .allButtons {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 20px;
+    flex-wrap: wrap;
+
+    label {
+      // position: absolute;
+      left: 10px;
+      top: -50%;
+      color: #bbbbbb;
+      font-size: 16px;
+    }
+
+    .selectorItem {
+      flex: 1 0 200px;
+      font-family: Montserrat;
+      font-size: 16px;
+      padding: 15px 20px;
+      color: black;
+      position: relative;
+      z-index: 1;
+      border-radius: 10px;
+      border: 1px solid white;
+      cursor: pointer;
+      backdrop-filter: blur(10px);
+
+      &.selected {
+        color: white;
+        background-color: #ff4ca8;
+        border-color: #ff4ca8;
+      }
+
+      &:hover {
+        border-color: #ff4ca8;
+        // color: #ff4ca8;
+      }
+    }
   }
+}
 
-  .selectorItem {
+.registerTextarea {
+  position: relative;
+
+  textarea {
     font-family: Montserrat;
     font-size: 16px;
     padding: 15px 20px;
-    // width: 100%;
-    background-color: #663d6111;
-    color: #BBBBBB;
+    width: 100%;
+    background-color: white;
     position: relative;
-    z-index: 1;
     border-radius: 10px;
-    border: 1px solid #FFFFFF50;
+    resize: none;
+    border: 1px solid #ffffff50;
     transition: 0.3s;
-    cursor: pointer;
-    backdrop-filter: blur(10px);
 
-    &.selected {
-      border: 2px solid #ff4ca8;
+    &:focus {
+      outline: 0;
+      border: 1px solid #ff4ca8;
+      transition: 0.3s;
     }
-
     &:hover {
-      border-color: #ff4ca8;
-      color: #ff4ca8;
+      border: 1px solid #ff4ca8;
+      transition: 0.3s;
+    }
+    &:not(:placeholder-shown) + label {
+      top: -10px;
+      transition: 0.3s;
     }
   }
+
+  label {
+    position: absolute;
+    top: 12px;
+    left: 20px;
+    color: black;
+    cursor: text;
+    transition: 0.3s;
+  }
 }
 
-.loginInput textarea {
-  font-family: Montserrat;
-  font-size: 16px;
-  padding: 15px 20px;
-  width: 100%;
-  background-color: #663d6111;
-  color: #BBBBBB;
-  position: relative;
-  z-index: 1;
-  border-radius: 10px;
-  border: 1px solid #FFFFFF50;
+.registerTextarea textarea:not(:placeholder-shown) + label {
+  top: -24px;
   transition: 0.3s;
-
-  &:focus {
-    outline: 0;
-    border: 1px solid #ff4ca8;
-    background-color: transparent;
-    transition: 0.3s;
-  }
-  &:hover {
-    border: 1px solid #ff4ca8;
-    transition: 0.3s;
-  }
-  &:not(:placeholder-shown) + label {
-    top: -10px;
-    transition: 0.3s;
-  }
+  color: #ff4ca8;
 }
 
+.registerTextarea textarea:focus + label {
+  top: -24px;
+  transition: 0.3s;
+}
+
+.registerTextarea textarea:hover ~ label,
+.registerTextarea textarea:hover ~ .icon,
+.registerTextarea textarea:focus ~ .icon,
+.registerTextarea textarea:focus ~ label {
+  color: #ff4ca8;
+  transition: 0.3s;
+}
 
 .photoContainer {
-    // background-color: red;
-    margin-inline: auto;
-    width: 50%;
-    aspect-ratio: 1/1;
-    cursor: pointer;
+  // background-color: red;
+  margin-inline: auto;
+  width: 50%;
+  aspect-ratio: 1/1;
+  cursor: pointer;
 
-    background-image: radial-gradient(50% 50%,#202020 80%,#0000 81%);
-    background-size: 5% 5%;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
+  background-image: radial-gradient(50% 50%, #202020 80%, #0000 81%);
+  background-size: 5% 5%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 
-    img {
-        width: 100%;
-        height: auto;
-    }
-
-
+  img {
+    width: 100%;
+    height: auto;
+  }
 }

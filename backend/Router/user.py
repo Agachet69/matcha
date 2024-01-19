@@ -130,8 +130,7 @@ async def search(
             status_dict[user.id] = "OFFLINE"
     
     for user in user_list:
-        print(user)
-        user.status = status_dict.get(user.id, "UNKNOWN")
+      user.status = status_dict.get(user.id, "UNKNOWN")
 
     return user_list
 
@@ -236,7 +235,7 @@ async def like(
 
     return current_user
 
-@router.post("/del_notif/{notif_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
+@router.delete("/del_notif/{notif_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def del_notif(notif_id: int, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
     if not (notif := next(notif for notif in current_user.notifs if notif.id == notif_id)):
         raise HTTPException(status_code=404, detail="Notification not found")

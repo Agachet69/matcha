@@ -10,8 +10,8 @@ import {
 import { deleteUserPhoto, selectUser } from "../store/slices/userSlice";
 import axios from "axios";
 import { getToken } from "../store/slices/authSlice";
-import { useEffect, useState } from "react";
-import { FemaleIcon, MaleIcon } from "./icons/Icons";
+import { useCallback, useEffect, useState } from "react";
+import { FemaleIcon, MaleIcon, Trash } from "./icons/Icons";
 import { useNavigate } from "react-router-dom";
 import { getAuthorizedInstance } from "../utils/Instance";
 
@@ -42,16 +42,48 @@ const Modals = ({ children }) => {
     }
   }
 
+  async function deleteNotif(id) {
+    try {
+      const res = await instance.delete('/users/del_notif/' + id)
+      console.log(res);
+    }
+    catch (err) {
+      console.error(err);
+    }
+  }
+
   const mainPic = (currentUser) => {
-    const res = currentUser.photos.find((photo) => photo.main === true);
-    if (res) return res.path;
+    if (currentUser) {
+      const res = currentUser.photos.find((photo) => photo.main === true);
+      if (res) return res.path;
+      return null;
+    }
     return null;
   };
 
+  const getLikedUsers = useCallback(() => {
+    setAllUsers([]);
+    user.liked_by.map((liked) => {
+      instance
+        .get("/users/" + liked.user_id)
+        .then((res) => setAllUsers((prevState) => [...prevState, res.data]));
+    });
+  }, [user.liked_by]);
+
+  const getNotifUsers = useCallback(() => {
+    setAllUsers([]);
+    user.notifs.map((notif) => {
+      instance
+        .get("/users/" + notif.data_user_id)
+        .then((res) => setAllUsers((prevState) => [...prevState, res.data]));
+    });
+  }, [user.notifs, setAllUsers]);
+
   useEffect(() => {
     console.log(allModals);
-    // if (allModals.likedUser) getLikedUsers();
-  }, [allModals]);
+    if (allModals.likedUser) getLikedUsers();
+    if (allModals.notif) getNotifUsers();
+  }, [allModals, getLikedUsers, getNotifUsers]);
 
   useEffect(() => {
     const cleanup = () => {
@@ -59,15 +91,6 @@ const Modals = ({ children }) => {
     };
     return cleanup;
   }, [navigate, dispatch]);
-
-  function getLikedUsers() {
-    setAllUsers([]);
-    user.liked_by.map((liked) => {
-      instance
-        .get("/users/" + liked.user_id)
-        .then((res) => setAllUsers((prevState) => [...prevState, res.data]));
-    });
-  }
 
   if (allModals.deleteMainPic)
     return (
@@ -232,33 +255,26 @@ const Modals = ({ children }) => {
         <main className="overlayModal">
           {user.notifs.length > 0 ? (
             <section className="listModal">
-              <h3> mes notifications </h3>
+              <h3> Mes notifications </h3>
               <div className="listContainer">
                 {user.notifs.map((notif, index) => {
                   return (
-                    <div
-                      className="userLiked"
-                      key={index}
-                      // onClick={() =>
-                      //   navigate("/profil/see", {
-                      //     state: userSeen,
-                      //   })
-                      // }
-                    >
+                    <div className="notification" key={index}>
                       <div className="leftContent">
                         <div className="profilPic">
-                          {/* {mainPic(userSeen) && (
+                          {mainPic(allUsers[index]) && (
                             <img
-                              src={`http://localhost:8000/${mainPic(userSeen)}`}
+                              src={`http://localhost:8000/${mainPic(
+                                allUsers[index]
+                              )}`}
                               alt="photo de profil"
                             />
-                          )} */}
-                          <p> img</p>
+                          )}
                         </div>
                         <p>{notif.data}</p>
                       </div>
-                      <div className="rightContent">
-                          <p> delete</p>
+                      <div className="rightContent" onClick={() => deleteNotif(notif.id)}>
+                        <Trash />
                       </div>
                     </div>
                   );
@@ -271,7 +287,9 @@ const Modals = ({ children }) => {
               </div>
             </section>
           ) : (
-            <section>Pas de notif</section>
+            <section className="notNotif">
+              Pas de notifications en attente...
+            </section>
           )}
 
           <div

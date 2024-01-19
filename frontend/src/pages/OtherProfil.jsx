@@ -20,9 +20,10 @@ import {
   ChatIcon,
 } from "../components/icons/Icons";
 import Relation from "../components/otherProfil/Relation";
-import { useSelector } from "react-redux";
-import { selectUser } from "../store/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { initialiseUser, selectUser } from "../store/slices/userSlice";
 import Profil from "./Profil";
+import { getAuthorizedInstance } from "../utils/Instance";
 
 const OtherProfil = () => {
   const location = useLocation();
@@ -34,6 +35,8 @@ const OtherProfil = () => {
   const [translateXValue, setTranslateXValue] = useState(0);
   const [mainSeen, setMainSeen] = useState(null);
   const backPicRef = useRef();
+  const dispatch = useDispatch();
+  const instance = getAuthorizedInstance(token.access_token)
 
   useEffect(() => {
     if (backPicRef.current)
@@ -47,8 +50,19 @@ const OtherProfil = () => {
       );
     // else navigate("/");
 
-    console.log(userSeen)
+    console.log(userSeen);
   }, [userSeen, navigate]);
+
+  const onBlockUser = () => {
+    instance
+      .post(
+        `/users/block/${userSeen.id}`,
+      )
+      .then(({ data }) => {
+        dispatch(initialiseUser(data));
+        console.log('bloqué');
+      });
+  };
 
   function nextPhoto() {
     setTranslateXValue((prevTranslateX) => prevTranslateX - 100);
@@ -112,7 +126,7 @@ const OtherProfil = () => {
             <div className="backPic" ref={backPicRef}>
               {userSeen.photos
                 .filter((photo) => photo.main === false)
-                .map((photo, index) => {
+                .map((photo, index, array) => {
                   return (
                     <div className="oneBackPic" key={photo.id}>
                       <img src={`http://localhost:8000/${photo.path}`} />
@@ -121,7 +135,7 @@ const OtherProfil = () => {
                           <ArrowLeft />
                         </div>
                       )}
-                      {index + 1 !== 4 && (
+                      {index + 1 !== 4 && index + 1 < array.length && (
                         <div className="rightArrow" onClick={nextPhoto}>
                           <ArrowRight />
                         </div>
@@ -181,7 +195,7 @@ const OtherProfil = () => {
           )}
           <div className="otherProfilMore">
             <div className="ellipsMenu">
-              <div  onClick={() => setSeenMenuEllips((prevState) => !prevState)}>
+              <div onClick={() => setSeenMenuEllips((prevState) => !prevState)}>
                 <EllipsisVerticalIcon />
               </div>
               <div
@@ -192,7 +206,7 @@ const OtherProfil = () => {
                 }
               >
                 <p> Report as fake account</p>
-                <p> Block this user</p>
+                <p onClick={onBlockUser}> Block this user</p>
               </div>
             </div>
           </div>
@@ -208,12 +222,11 @@ const OtherProfil = () => {
             <p>fame rating</p>
           </div>
           <div className="socialInfos borderR">
-            {
-              mainSeen ?
+            {mainSeen ? (
               <Relation userSeen={userSeen} />
-              :
+            ) : (
               <p> Cet utilisateur n&apos;a pas de photo de profil</p>
-            }
+            )}
           </div>
           <div className="socialInfos">
             <div className="socialTitleSvg">
@@ -258,11 +271,11 @@ const OtherProfil = () => {
                   <p> Pas d&apos;interêts enregistré.</p>
                 )}
               </div>
-              {
-                userSeen.status === "OFFLINE" ?
+              {userSeen.status === "OFFLINE" ? (
                 <p> Dernière connexion le {lastConnexion()}.</p>
-                :<p>En ligne.</p>
-              }
+              ) : (
+                <p>En ligne.</p>
+              )}
             </form>
           </div>
         )}

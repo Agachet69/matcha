@@ -21,6 +21,7 @@ import { useFormik } from "formik";
 import MessageSchema from "../schemas/MessageSchema";
 import { useSocket } from "../utils/PrivateRoutes";
 import { ParseDate } from "../utils/ParseDate";
+import { getAuthorizedInstance } from "../utils/Instance";
 
 const user_image_list = [
   "https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHdvbWVufGVufDB8fDB8fHww",
@@ -32,18 +33,16 @@ const user_image_list = [
 
 const Chat = () => {
   const [disabled, setDisabled] = useState(false);
-
   const socket = useSocket();
   const me = useSelector(selectUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
   const { id } = useParams();
-
   const token = useSelector(getToken);
-
+  const instance = getAuthorizedInstance(token.access_token);
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [userList, setUserList] = useState([]);
 
   const formik = useFormik({
     validationSchema: MessageSchema(),
@@ -177,6 +176,23 @@ const Chat = () => {
     }
   }, [socket]);
 
+  useEffect(() => {
+    console.log("coucou");
+    userData();
+  }, []);
+
+  const userData = async () => {
+    const userLists = me.matches.map(async (match) => {
+      const userId =
+        match.user_A_id === me.id ? match.user_B_id : match.user_A_id;
+      const user = await instance.get("/users/" + userId);
+      return user.data;
+    });
+    const users = await Promise.all(userLists);
+    setUserList(users);
+    console.log(userLists);
+  };
+
   if (id == undefined)
     return (
       <div className="main">
@@ -188,7 +204,7 @@ const Chat = () => {
           <input type="text" placeholder="search" />
         </div>
         <div className="userList">
-          {me.matches.map((match) => (
+          {me.matches.map((match, index) => (
             <UserCard
               key={match.id}
               selector
@@ -196,7 +212,7 @@ const Chat = () => {
               onClick={(id) => {
                 navigate(`/chat/${id}`);
               }}
-              user={match.user_A_id == me.id ? match.user_B : match.user_A}
+              user={userList[index]}
               onLikeUser={() => {}}
             />
           ))}
@@ -220,7 +236,7 @@ const Chat = () => {
           <div
             className="userInfo"
             onClick={() => {
-              alert("go to profile");
+              navigate("/profil/see", { state: user });
             }}
           >
             <img
@@ -231,16 +247,19 @@ const Chat = () => {
             <div className="userInfo-content">
               <div className="image">
                 <img
-                  src={user_image_list[user.id % user_image_list.length]}
+                  src={
+                    user.photos.find((photo) => photo.main)
+                      ? `http://localhost:8000/${
+                          user.photos.find((photo) => photo.main).path
+                        }`
+                      : null
+                  }
                   alt=""
                 />
               </div>
               <div className="name">{user.username}</div>
               <div className="limiter" />
               <div className="info">
-                <div className="icon">
-                  <UserIcon />
-                </div>
                 <div className="text">{user.firstName}</div>
                 <div className="text">{user.lastName}</div>
               </div>
