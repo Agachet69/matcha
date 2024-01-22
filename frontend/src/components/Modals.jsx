@@ -8,7 +8,7 @@ import {
   resetAllModals,
   selectAllModals,
 } from "../store/slices/modalSlice";
-import { deleteUserPhoto, selectUser } from "../store/slices/userSlice";
+import { deleteUserNotif, deleteUserPhoto, selectUser } from "../store/slices/userSlice";
 import axios from "axios";
 import { getToken } from "../store/slices/authSlice";
 import { useCallback, useEffect, useState } from "react";
@@ -47,6 +47,7 @@ const Modals = ({ children }) => {
   async function deleteNotif(id) {
     try {
       const res = await instance.delete("/users/del_notif/" + id);
+      dispatch(deleteUserNotif(id))
       console.log(res);
     } catch (err) {
       console.error(err);

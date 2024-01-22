@@ -59,11 +59,9 @@
       .activeBioTags {
         svg {
           transform: rotate(90deg);
-          // transition: transform .1s;
         }
 
         max-height: 450px !important;
-        // transition: max-height 0.5s;
       }
 
       .myTextInput {
@@ -221,6 +219,10 @@
       width: 100%;
 
       button {
+        &:hover {
+          background-color: #ff309b;
+          transition: 0.3s;
+        }
         display: flex;
         align-items: center;
         justify-content: center;
@@ -233,6 +235,7 @@
         font-size: 14px;
         line-height: 16px;
         letter-spacing: 0.75px;
+        transition: 0.3s;
 
         svg {
           height: 18px;

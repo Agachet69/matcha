@@ -1,8 +1,8 @@
+import "../../styles/profil/editUser.scss";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/slices/userSlice";
-import { useEffect, useState } from "react";
-import { ArrowRight, Send } from "../icons/Icons";
-import "../../styles/profil/editUser.scss";
+import { useState } from "react";
+import { ArrowRight } from "../icons/Icons";
 import { getAuthorizedInstance } from "../../utils/Instance";
 import { getToken } from "../../store/slices/authSlice";
 import { useFormik } from "formik";
@@ -63,15 +63,6 @@ const EditUser = () => {
       );
   }
 
-  // async function sendTagUpdate() {
-  //   const res = await instance.put("/users/tags", tags);
-  //   console.log("oho");
-  //   setEditStatus((prevState) => ({
-  //     ...prevState,
-  //     tags: !editStatus.tags,
-  //   }));
-  // }
-
   return (
     <div className="editUserContainer">
       <h3> Profile information </h3>
@@ -96,23 +87,7 @@ const EditUser = () => {
               <ArrowRight />
             </div>
             <div className="DisplayInputContainer">
-              <input
-                type="text"
-                // onChange={(e) =>
-                //   setFormUser((prevstate) => ({
-                //     ...prevstate,
-                //     username: e.target.value,
-                //   }))
-                // }
-                // defaultValue={formUser.username}
-                // name="username"
-                // id="username"
-                // onChange={formik.handleChange}
-                // onBlur={formik.handleBlur}
-                // defaultValue={formik.initialValues.username}
-                // disabled={!editStatus.username}
-                {...formik.getFieldProps("username")}
-              />
+              <input type="text" {...formik.getFieldProps("username")} />
             </div>
             {!!formik.errors.username && formik.touched.username && (
               <div className="error">{formik.errors.username}</div>
@@ -139,22 +114,7 @@ const EditUser = () => {
               <ArrowRight />
             </div>
             <div className="DisplayInputContainer">
-              <input
-                type="text"
-                // onChange={(e) =>
-                //   setFormUser((prevstate) => ({
-                //     ...prevstate,
-                //     firstName: e.target.value,
-                //   }))
-                // }
-                // id="firstName"
-                // name="firstName"
-                // onChange={formik.handleChange}
-                // onBlur={formik.handleBlur}
-                // defaultValue={formik.initialValues.firstName}
-                // disabled={!editStatus.firstName}
-                {...formik.getFieldProps("firstName")}
-              />
+              <input type="text" {...formik.getFieldProps("firstName")} />
             </div>
             {formik.touched.firstName && formik.errors.firstName ? (
               <div className="error">{formik.errors.firstName}</div>
@@ -181,24 +141,7 @@ const EditUser = () => {
               <ArrowRight />
             </div>
             <div className="DisplayInputContainer">
-              <input
-                type="text"
-                // onChange={(e) =>
-                //   setFormUser((prevstate) => ({
-                //     ...prevstate,
-                //     lastName: e.target.value,
-                //   }))
-                // }
-                // defaultValue={formUser.lastName}
-                // disabled={!editStatus.lastName}
-                // id="lastName"
-                // name="lastName"
-                // onChange={formik.handleChange}
-                // onBlur={formik.handleBlur}
-                // defaultValue={formik.initialValues.lastName}
-                // disabled={!editStatus.lastName}
-                {...formik.getFieldProps("lastName")}
-              />
+              <input type="text" {...formik.getFieldProps("lastName")} />
             </div>
             {formik.touched.lastName && formik.errors.lastName ? (
               <div className="error">{formik.errors.lastName}</div>
@@ -223,22 +166,7 @@ const EditUser = () => {
               <ArrowRight />
             </div>
             <div className="DisplayInputContainer">
-              <input
-                type="text"
-                // onChange={(e) =>
-                //   setFormUser((prevstate) => ({
-                //     ...prevstate,
-                //     email: e.target.value,
-                //   }))
-                // }
-                // id="email"
-                // name="email"
-                // onChange={formik.handleChange}
-                // onBlur={formik.handleBlur}
-                // defaultValue={formik.initialValues.email}
-                // disabled={!editStatus.email}
-                {...formik.getFieldProps("email")}
-              />
+              <input type="text" {...formik.getFieldProps("email")} />
             </div>
             {formik.touched.email && formik.errors.email ? (
               <div className="error">{formik.errors.email}</div>
@@ -259,27 +187,11 @@ const EditUser = () => {
                 }))
               }
             >
-              {/* <p>{formik.value.age}</p> */}
               <p>{formUser.age}</p>
               <ArrowRight />
             </div>
             <div className="DisplayInputContainer">
-              <input
-                type="number"
-                // onChange={(e) =>
-                //   setFormUser((prevstate) => ({
-                //     ...prevstate,
-                //     age: e.target.value,
-                //   }))
-                // }
-                // id="age"
-                // name="age"
-                // onChange={formik.handleChange}
-                // onBlur={formik.handleBlur}
-                // defaultValue={formUser.age}
-                // disabled={!editStatus.age}
-                {...formik.getFieldProps("age")}
-              />
+              <input type="number" {...formik.getFieldProps("age")} />
             </div>
             {formik.touched.age && formik.errors.age ? (
               <div className="error"> {formik.errors.age} </div>
@@ -354,12 +266,6 @@ const EditUser = () => {
                 id="hetero"
                 value="HETEROSEXUAL"
                 checked={formik.values.sexuality === "HETEROSEXUAL"}
-                // onChange={(e) =>
-                //   setFormUser((prevstate) => ({
-                //     ...prevstate,
-                //     sexuality: e.target.value,
-                //   }))
-                // }
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
@@ -370,12 +276,6 @@ const EditUser = () => {
                 id="homo"
                 value="HOMOSEXUAL"
                 checked={formik.values.sexuality === "HOMOSEXUAL"}
-                // onChange={(e) =>
-                //   setFormUser((prevstate) => ({
-                //     ...prevstate,
-                //     sexuality: e.target.value,
-                //   }))
-                // }
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
@@ -386,12 +286,6 @@ const EditUser = () => {
                 id="bi"
                 value="BISEXUAL"
                 checked={formik.values.sexuality === "BISEXUAL"}
-                // onChange={(e) =>
-                //   setFormUser((prevstate) => ({
-                //     ...prevstate,
-                //     sexuality: e.target.value,
-                //   }))
-                // }
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
@@ -423,7 +317,7 @@ const EditUser = () => {
                   </p>
                 ))
               ) : (
-                <p> Ajouter </p>
+                <p> Add </p>
               )}
               <ArrowRight />
             </div>
@@ -521,17 +415,11 @@ const EditUser = () => {
                 }))
               }
             >
-              <p>Modifier</p>
+              <p>Edit..</p>
               <ArrowRight />
             </div>
             <textarea
               value={formik.values.bio}
-              // onChange={(e) =>
-              //   setFormUser((prevstate) => ({
-              //     ...prevstate,
-              //     bio: e.target.value,
-              //   }))
-              // }
               {...formik.getFieldProps("bio")}
             ></textarea>
             {formik.touched.bio && formik.errors.bio ? (
@@ -540,7 +428,7 @@ const EditUser = () => {
           </div>
         </div>
         <div className="sendButton">
-          <button type="submit">Submit</button>
+          <button type="submit">Submit changes</button>
         </div>
       </form>
     </div>

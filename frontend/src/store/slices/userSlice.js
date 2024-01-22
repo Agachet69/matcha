@@ -38,10 +38,21 @@ export const userSlice = createSlice({
         (photo) => photo.main === false
       );
       state.myUser.photos = state.myUser.photos.concat(action.payload);
-    }
+    },
+    deleteUserNotif: (state, action) => {
+      state.myUser.notifs = state.myUser.notifs.filter(
+        (notif) => notif.id !== action.payload
+      );
+    },
   },
 });
 
-export const { initialiseUser, deleteUserPhoto, addUserPhoto, editMainPic } = userSlice.actions;
+export const {
+  initialiseUser,
+  deleteUserPhoto,
+  addUserPhoto,
+  editMainPic,
+  deleteUserNotif,
+} = userSlice.actions;
 export const selectUser = (state) => state.user.myUser;
 export default userSlice.reducer;
