@@ -16,6 +16,7 @@ import {
   Fire,
   Eye,
   Sparkless,
+  CheckBadgeIcon,
 } from "../components/icons/Icons";
 import axios from "axios";
 import { MainPic } from "../components/MainPic";
@@ -23,10 +24,11 @@ import { ValidImg } from "../utils/ValidImg";
 import {
   editDeletePic,
   editLikedUser,
+  editMatch,
   editViewUser,
   selectAllModals,
   // selectModalMainPic,
-  selectModalPic,
+  // selectModalPic,
 } from "../store/slices/modalSlice";
 // import Modals from "../components/Modals";
 import EditUser from "../components/profil/EditUser";
@@ -44,7 +46,7 @@ const Profil = () => {
 
   useEffect(() => {
     console.log(user);
-  }, [])
+  }, []);
 
   useEffect(() => {
     backPicRef.current.style.transform = `translateX(${translateXValue}%)`;
@@ -136,26 +138,32 @@ const Profil = () => {
                     )}
                     {!deleteBack.deletePic && (
                       <div className="buttonsImg">
-                        <button onClick={() => dispatch(editDeletePic(deleteBack.deletePic))}>
+                        <button
+                          onClick={() =>
+                            dispatch(editDeletePic(deleteBack.deletePic))
+                          }
+                        >
                           <Trash />
                         </button>
                       </div>
                     )}
                     {deleteBack.deletePic && (
                       <div className="deleteBackPhoto">
-                        <h3> Supprimer cette photo ?</h3>
+                        <h3> Delete this photo?</h3>
                         <div className="choices">
                           <button
                             className="del"
                             onClick={() => deleteImg(photo.id)}
                           >
-                            Supprimer
+                            Delete
                           </button>
                           <button
                             className="cancel"
-                            onClick={() => dispatch(editDeletePic(deleteBack.deletePic))}
+                            onClick={() =>
+                              dispatch(editDeletePic(deleteBack.deletePic))
+                            }
                           >
-                            Annuler
+                            Cancel
                           </button>
                         </div>
                       </div>
@@ -177,7 +185,7 @@ const Profil = () => {
                       onChange={myAddingImg}
                     />
                     <label htmlFor="pict" className="addImgTxt">
-                      <p> Ajouter une photo </p>
+                      <p> Add a photo </p>
                       <p className="numberImg">{nbBackPhotos()} / 4</p>
                     </label>
                   </div>
@@ -209,14 +217,19 @@ const Profil = () => {
         {user.firstName} {user.lastName}{" "}
       </h3>
       <p> Qui à vue ton profil </p>
+      {/* <Fire /> */}
+      <p>Fame-rate {user.fame_rate} </p>
       <p> Modifier sa position </p>
       <div className="socialInfosContainer">
-        <div className="socialInfos borderR">
+        <div
+          className="socialInfos borderR"
+          onClick={() => dispatch(editMatch(deleteBack.match))}
+        >
           <div className="socialTitleSvg">
-            <h4> 13 </h4>
-            <Fire />
+            <h4> {user.matches.length} </h4>
+            <CheckBadgeIcon />
           </div>
-          <p>fame rating</p>
+          <p>match</p>
         </div>
         <div
           className="socialInfos borderR"
@@ -228,12 +241,15 @@ const Profil = () => {
           </div>
           <p>crush</p>
         </div>
-        <div className="socialInfos" onClick={() => dispatch(editViewUser(deleteBack.viewUser))}>
+        <div
+          className="socialInfos"
+          onClick={() => dispatch(editViewUser(deleteBack.viewUser))}
+        >
           <div className="socialTitleSvg">
             <h4> 13 </h4>
             <Eye />
           </div>
-          <p>vues</p>
+          <p>views</p>
         </div>
       </div>
       {!user && <div> Loader </div>}

@@ -36,7 +36,7 @@ const OtherProfil = () => {
   const [mainSeen, setMainSeen] = useState(null);
   const backPicRef = useRef();
   const dispatch = useDispatch();
-  const instance = getAuthorizedInstance(token.access_token)
+  const instance = getAuthorizedInstance(token.access_token);
 
   useEffect(() => {
     if (backPicRef.current)
@@ -48,20 +48,13 @@ const OtherProfil = () => {
       setMainSeen(
         userSeen.photos.filter((photo) => photo.main === true)[0]?.path
       );
-    // else navigate("/");
-
-    console.log(userSeen);
   }, [userSeen, navigate]);
 
   const onBlockUser = () => {
-    instance
-      .post(
-        `/users/block/${userSeen.id}`,
-      )
-      .then(({ data }) => {
-        dispatch(initialiseUser(data));
-        console.log('bloqué');
-      });
+    instance.post(`/users/block/${userSeen.id}`).then(({ data }) => {
+      dispatch(initialiseUser(data));
+      console.log("bloqué");
+    });
   };
 
   function nextPhoto() {
@@ -216,7 +209,7 @@ const OtherProfil = () => {
         <div className="socialInfosContainer">
           <div className="socialInfos borderR">
             <div className="socialTitleSvg">
-              <h4> 13 </h4>
+              <h4> {userSeen.fame_rate} </h4>
               <Fire />
             </div>
             <p>fame rating</p>
@@ -259,7 +252,7 @@ const OtherProfil = () => {
                   <p> attracted to both men and women. </p>
                 )}
               </div>
-              <div className="inputContainer">
+              <div className="tagsListContainer">
                 {userSeen.tags.length > 0 ? (
                   userSeen.tags.map((tag, index) => (
                     <p key={index} className="tagName">
@@ -271,10 +264,8 @@ const OtherProfil = () => {
                   <p> Pas d&apos;interêts enregistré.</p>
                 )}
               </div>
-              {userSeen.status === "OFFLINE" ? (
+              {userSeen.status === "OFFLINE" && (
                 <p> Dernière connexion le {lastConnexion()}.</p>
-              ) : (
-                <p>En ligne.</p>
               )}
             </form>
           </div>

@@ -13,37 +13,21 @@ import SearchSchema from "../schemas/SearchSchema";
 import { useFormik } from "formik";
 import TagEnum from "../Enum/TagEnum";
 import { useNavigate } from "react-router-dom";
+import {
+  editBlockUser,
+  editConcernUser,
+  selectAllModals,
+} from "../store/slices/modalSlice";
 
 const Home = () => {
-  const [allUsers, setAllUsers] = useState(Array());
+  const [allUsers, setAllUsers] = useState(null);
   const me = useSelector(selectUser);
   const token = useSelector(getToken);
   const dispatch = useDispatch();
   const socket = useSocket();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const allModals = useSelector(selectAllModals);
   const [openSearchParm, setOpenSearchParm] = useState(true);
-
-  const getAllUsers = () => {
-    axios
-      .get("http://localhost:8000/users/", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token.access_token}`,
-        },
-      })
-      .then(({ data }) => {
-        setAllUsers(data.filter((user) => user.id != me.id));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const navOtherProfil = (user) => {
-    navigate("/profil/see", {
-      state: user,
-    });
-  };
 
   const onSearch = (value) => {
     const headers = {
@@ -80,23 +64,9 @@ const Home = () => {
       });
   };
 
-  const onBlockUser = (user_id) => {
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token.access_token}`,
-    };
-    axios
-      .post(
-        `http://localhost:8000/users/block/${user_id}`,
-        {},
-        {
-          headers: headers,
-        }
-      )
-      .then(({ data }) => {
-        dispatch(initialiseUser(data));
-        onSearch(searchFormik.values);
-      });
+  const onBlockUser = (user) => {
+    dispatch(editBlockUser(allModals.blockUser));
+    dispatch(editConcernUser(user));
   };
 
   const onUpdateStatus = ({ user_id, status }) => {
@@ -311,35 +281,35 @@ const Home = () => {
           />
         ))} */}
       </form>
-      {allUsers.length <= 0 ? (
+      {allUsers && allUsers.length <= 0 ? (
         <div> </div>
       ) : (
         <div className="searchResult">
-          <h3> Result of your research</h3>
-          {allUsers.map((user, index) => (
-            <UserCard
-              me={me}
-              user={user}
-              key={user.id}
-              onLikeUser={onLikeUser}
-              onBlockUser={onBlockUser}
-            />
-          ))}
+          {allUsers && <h3> Result of your research</h3>}
+          <div className="resultCardContainer">
+            {allUsers &&
+              allUsers.map((user, index) => (
+                <UserCard
+                  me={me}
+                  user={user}
+                  key={user.id}
+                  onLikeUser={onLikeUser}
+                  onBlockUser={onBlockUser}
+                />
+              ))}
+          </div>
         </div>
       )}
-      {/* <button onClick={() => onSearch()}>OUIIIIIIIIIII</button> */}
-
-      {/* <div className="search-container">
-        <div className="title">My Notifs</div>
-
-        {me != null &&
-          me.notifs.map((notif) => (
-            <div className="notif-item">
-              <div className="icon"></div>
-              <div className="type">{notif.type}</div>
-            </div>
-          ))}
-      </div> */}
+      {!allUsers && <h3 className="launchSearch"> Find your soul mate !</h3>}
+      {allUsers && allUsers.length <= 0 && (
+        <div  className="findNothing">
+          <h3>
+            {" "}
+            The search didn&apos;t produce any results, please broaden your
+            criteria ❤{" "}
+          </h3>
+        </div>
+      )}
     </div>
   );
 };

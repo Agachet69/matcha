@@ -6,6 +6,9 @@ const initialState = {
   likedUser: false,
   viewUser: false,
   notif: false,
+  blockUser: false,
+  match: null,
+  user: null,
 };
 
 export const modalSlice = createSlice({
@@ -27,12 +30,23 @@ export const modalSlice = createSlice({
     editNotif: (state, action) => {
       return { ...initialState, notif: !action.payload };
     },
+    editBlockUser: (state, action) => {
+      return { ...initialState, blockUser: !action.payload };
+    },
+    editMatch: (state, action) => {
+      return { ...initialState, match: !action.payload };
+    },
+    editConcernUser: (state, action) => {
+      return { ...state, user: action.payload };
+    },
     resetAllModals: (state) => {
       state.likedUser = false;
       state.deletePic = false;
       state.deleteMainPic = false;
       state.viewUser = false;
       state.notif = false;
+      state.blockUser = false;
+      state.match = false;
     },
   },
 });
@@ -43,6 +57,9 @@ export const {
   editLikedUser,
   editViewUser,
   editNotif,
+  editBlockUser,
+  editConcernUser,
+  editMatch,
   resetAllModals,
 } = modalSlice.actions;
 export const selectModalMainPic = (state) => state.modal.deleteMainPic;

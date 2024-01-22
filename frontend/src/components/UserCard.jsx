@@ -1,75 +1,59 @@
 import { Tooltip } from "@mui/material";
 import GenderEnum from "../Enum/GenderEnum";
-import {
-  Age,
-  ChatIcon,
-  CogIcon,
-  FemaleIcon,
-  HeartIcon,
-  MaleIcon,
-  NoSymbol,
-  Star4,
-  UserIcon,
-} from "./icons/Icons";
+import { ChatIcon, HeartIcon, NoSymbol, Sparkless } from "./icons/Icons";
 import "../styles/userCard.scss";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
-
-const user_image_list = [
-  "https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHdvbWVufGVufDB8fDB8fHww",
-  "https://images.unsplash.com/photo-1557862921-37829c790f19?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFufGVufDB8fDB8fHww",
-  "https://plus.unsplash.com/premium_photo-1679440415182-c362deb2fd40?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjV8fHdvbWVufGVufDB8fDB8fHww",
-  "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bWFufGVufDB8fDB8fHww",
-  "https://images.unsplash.com/photo-1560087637-bf797bc7796a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjZ8fHdvbWVufGVufDB8fDB8fHww",
-];
 
 const UserCard = ({
   user,
   me,
   onLikeUser,
   selector = false,
-  onClick,
   onBlockUser = undefined,
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(user);
-  console.log(location.pathname.startsWith("/chat"));
-  // console.log(user.photos.find((photo) => photo.main));
 
   function navigateChat() {
     if (location.pathname.startsWith("/chat")) navigate(`/chat/${user.id}`);
   }
 
+  function navigateProfilSee() {
+    if (!location.pathname.startsWith("/chat"))
+      navigate(`/profil/see`, { state: user });
+  }
+
+  const isLiked = () => {
+    return me.likes.find((like) => like.user_target_id == user.id);
+  };
+
+  const isMatched = () => {
+    return me.matches.find(
+      (match) => match.user_A_id == user.id || match.user_B_id == user.id
+    );
+  };
+
   return (
     <div
-      className="user-card-item"
-      onWheel={(e) => {
-        e.currentTarget.scrollLeft += e.deltaY;
-      }}
-      onClick={() => navigateChat()}
+      className={
+        user.gender == GenderEnum.MALE
+          ? "user-card-item male"
+          : "user-card-item female"
+      }
+      // onWheel={(e) => {
+      //   console.log('ok');
+      //   e.currentTarget.scrollLeft += e.deltaY;
+      // }}
+      onClick={navigateChat}
     >
       {user && user.photos ? (
         <div className="mainContentCard">
-          {/* <img
-            src={
-              user.photos.find((photo) => photo.main)
-                ? `http://localhost:8000/${
-                    user.photos.find((photo) => photo.main).path
-                  }`
-                : null
-            }
-            className="background"
-            alt=""
-          /> */}
-          <div className="item-content">
+          <div className="leftContent" onClick={navigateProfilSee}>
             <div
               className={
                 user.status === "ONLINE" ? "image online" : "image offline"
               }
-              onClick={() => {
-                navigate(`/profil/see`, { state: user });
-              }}
             >
               <img
                 src={
@@ -82,88 +66,60 @@ const UserCard = ({
                 alt=""
               />
             </div>
-            <div
-              className="name"
-              onClick={() => {
-                navigate(`/profil/see`, { state: user });
-              }}
-            >
-              {user.username}
-            </div>
-            {/* <div className="limiter" /> */}
-            {/* <div
-              className="info"
-              onClick={() => {
-                navigate(`/profil/see`, { state: user });
-              }}
-            > */}
-            {/* <div className="icon">
-            <UserIcon />
-          </div> */}
-            {/* <div className="text">{user.firstName}</div> */}
-            {/* <div className="text">{user.lastName}</div> */}
-            {/* </div> */}
+            <Tooltip title="Username">
+              <div className="name">{user.username}</div>
+            </Tooltip>
             <div className="limiter" />
-            <div className="info">
-              {/* <div className="icon">
-                <Age />
-              </div> */}
-              <div className="text">{user.age}y</div>
-            </div>
-            <div className="limiter" />
-            <div className="info">
-              <div className="icon">
-                <Star4 />
+            <Tooltip title="age">
+              <div className="info">
+                <p>{user.age}y</p>
               </div>
-              <div className="text">{user.fame_rate}</div>
-            </div>
+            </Tooltip>
             <div className="limiter" />
             <div className="info">
-              <div className="icon">
-                {user.gender == GenderEnum.MALE ? <MaleIcon /> : <FemaleIcon />}
-              </div>
+              <Tooltip title="Fame rating">
+                <div className="icon">
+                  <Sparkless />
+                  <p> {user.fame_rate} </p>
+                </div>
+              </Tooltip>
             </div>
-            <div className="limiter" />
-            {/* <div className="info">
-              <div className="text">{user.status}</div>
-            </div> */}
+          </div>
+          <div className="rightContent">
             {!selector && (
               <div className="actions">
-                <Tooltip title="chat">
-                  {me.matches.find(
-                    (match) =>
-                      match.user_A_id == user.id || match.user_B_id == user.id
-                  ) != undefined && (
+                {me.matches.find(
+                  (match) =>
+                    match.user_A_id == user.id || match.user_B_id == user.id
+                ) != undefined && (
+                  <Tooltip title="Chat">
                     <div
-                      className="like"
+                      className="chat"
                       onClick={() => {
                         navigate(`/chat/${user.id}`);
                       }}
                     >
                       <ChatIcon />
                     </div>
-                  )}
-                </Tooltip>
+                  </Tooltip>
+                )}
                 <Tooltip
                   title={
-                    me.likes.find((like) => like.user_target_id == user.id)
-                      ? "Un-like"
-                      : me.matches.find(
-                          (match) =>
-                            match.user_A_id == user.id ||
-                            match.user_B_id == user.id
-                        )
-                      ? "un-match"
-                      : "Like"
+                    isLiked() ? "Un-like" : isMatched() ? "Un-match" : "Like"
                   }
                 >
-                  <div className="like" onClick={() => onLikeUser(user.id)}>
+                  <div
+                    className={
+                      isLiked() ? "like" : isMatched() ? "unMatch" : "unLike"
+                    }
+                    onClick={() => onLikeUser(user.id)}
+                  >
                     <HeartIcon />
                   </div>
                 </Tooltip>
                 {onBlockUser && (
                   <Tooltip title={"Block"}>
-                    <div className="like" onClick={() => onBlockUser(user.id)}>
+                    <div className="block" onClick={() => onBlockUser(user)}>
                       <NoSymbol />
                     </div>
                   </Tooltip>

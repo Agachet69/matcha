@@ -1,3 +1,5 @@
+@import "./var.scss";
+
 .container {
   width: 100%;
   height: fit-content;
@@ -9,8 +11,8 @@
     background: rgba(255, 255, 255, 0.2);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
+    // backdrop-filter: blur(5px);
+    // -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     margin-inline: auto;
     width: 90%;
@@ -106,7 +108,7 @@
       gap: 1rem;
 
       &.open {
-        overflow:visible;
+        overflow: visible;
         max-height: 1000px;
       }
 
@@ -139,12 +141,46 @@
         }
       }
     }
+
+    .error {
+      mix-blend-mode: difference;
+    }
   }
 
   .searchResult {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 15px;
-    padding: 0px 60px;
+    padding: 0px 60px 20px 60px;
+
+    .resultCardContainer {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+  }
+
+  .launchSearch {
+    display: flex;
+    justify-content: center;
+    color: $pink;
+    mix-blend-mode: difference;
+    font-family: Montserrat;
+    font-size: 30px;
+  }
+
+  .findNothing {
+    display: flex;
+    justify-content: center;
+    color: $pink;
+    mix-blend-mode: difference;
+    font-family: Montserrat;
+    font-size: 30px;
+
+    h3 {
+      width: 80%;
+    }
   }
 }

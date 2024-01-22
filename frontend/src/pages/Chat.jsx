@@ -15,13 +15,13 @@ import { enqueueSnackbar } from "notistack";
 import { getActions } from "../utils/SnackBarsManager";
 import { getToken } from "../store/slices/authSlice";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import GenderEnum from "../Enum/GenderEnum";
 import { useFormik } from "formik";
 import MessageSchema from "../schemas/MessageSchema";
 import { useSocket } from "../utils/PrivateRoutes";
 import { ParseDate } from "../utils/ParseDate";
 import { getAuthorizedInstance } from "../utils/Instance";
+import Loader from "../components/utils/Loader";
 
 const user_image_list = [
   "https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHdvbWVufGVufDB8fDB8fHww",
@@ -42,7 +42,8 @@ const Chat = () => {
   const instance = getAuthorizedInstance(token.access_token);
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [userList, setUserList] = useState([]);
+  const [userList, setUserList] = useState(null);
+  const [searchbarValue, setSearchbarValue] = useState("");
 
   const formik = useFormik({
     validationSchema: MessageSchema(),
@@ -53,13 +54,8 @@ const Chat = () => {
   });
 
   const getUser = () => {
-    axios
-      .get(`http://localhost:8000/users/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token.access_token}`,
-        },
-      })
+    instance
+      .get(`/users/${id}`)
       .then(({ data }) => {
         setUser(data);
       })
@@ -69,13 +65,8 @@ const Chat = () => {
   };
 
   const getAllMessages = () => {
-    axios
-      .get(`http://localhost:8000/messages/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token.access_token}`,
-        },
-      })
+    instance
+      .get(`/messages/${id}`)
       .then(({ data }) => {
         setMessages(data);
       })
@@ -83,6 +74,32 @@ const Chat = () => {
         console.log(error);
       });
   };
+
+  const getAllUsers = async () => {
+    const result = await Promise.all(
+      me.matches.map(async (match) => {
+        const currentUserId =
+          match.user_A_id === me.id ? match.user_B_id : match.user_A_id;
+        const userToList = await instance.get(`/users/${currentUserId}`);
+        return userToList.data;
+      })
+    );
+    return result;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const usersData = await getAllUsers();
+        console.log(usersData);
+        setUserList(usersData);
+        console.log(userList);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [me]);
 
   useEffect(() => {
     const elem = document.getElementById("messageList");
@@ -121,9 +138,9 @@ const Chat = () => {
     if (token && id) getAllMessages();
   }, [token, id]);
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
+  // useEffect(() => {
+  //   console.log(user);
+  // }, [user]);
 
   const sendMessage = () => {
     if (!disabled) {
@@ -133,17 +150,8 @@ const Chat = () => {
         setDisabled(false);
       }, [1000]);
 
-      axios
-        .post(
-          `http://localhost:8000/messages/${id}`,
-          { data: formik.values.message },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token.access_token}`,
-            },
-          }
-        )
+      instance
+        .post(`/messages/${id}`, { data: formik.values.message })
         .then((response) => {
           setMessages((prev) => [...prev, response.data]);
           formik.resetForm();
@@ -155,16 +163,8 @@ const Chat = () => {
   };
 
   const onDeleteNewNotifMessage = ({ notif_id }) =>
-    axios
-      .post(
-        `http://localhost:8000/users/del_notif/${notif_id}`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token.access_token}`,
-          },
-        }
-      )
+    instance
+      .post(`/users/del_notif/${notif_id}`)
       .then(({ data }) => dispatch(initialiseUser({ ...data })));
 
   useEffect(() => {
@@ -176,47 +176,60 @@ const Chat = () => {
     }
   }, [socket]);
 
-  useEffect(() => {
-    console.log("coucou");
-    userData();
-  }, []);
+  function searchBarInput(e) {
+    setSearchbarValue(e.target.value);
+  }
 
-  const userData = async () => {
-    const userLists = me.matches.map(async (match) => {
-      const userId =
-        match.user_A_id === me.id ? match.user_B_id : match.user_A_id;
-      const user = await instance.get("/users/" + userId);
-      return user.data;
-    });
-    const users = await Promise.all(userLists);
-    setUserList(users);
-    console.log(userLists);
-  };
+  // useEffect(() => {
+  //   if (userList) {
+  //     setUserList(
+  //       userList.filter((user) =>
+  //         user.username.toLowerCase().includes(searchbarValue.toLowerCase())
+  //       )
+  //     );
+  //   }
+  // }, [searchbarValue]);
+
+
 
   if (id == undefined)
     return (
       <div className="main">
-        <div className="searchbar">
-          <div className="icon">
-            <SearchIcon />
+        {userList && userList.length > 0 && (
+          <div className="searchbar">
+            <input type="text" placeholder="search" onChange={searchBarInput} />
+            <div className="icon">
+              <SearchIcon />
+            </div>
           </div>
-
-          <input type="text" placeholder="search" />
-        </div>
-        <div className="userList">
-          {me.matches.map((match, index) => (
-            <UserCard
-              key={match.id}
-              selector
-              me={me}
-              onClick={(id) => {
-                navigate(`/chat/${id}`);
-              }}
-              user={userList[index]}
-              onLikeUser={() => {}}
-            />
-          ))}
-        </div>
+        )}
+        {userList && userList.length <= 0 && (
+          <div className="nothing">
+            <h2> You don&apos;t have a match yet</h2>
+            <button onClick={() => navigate("/")}>
+              {" "}
+              Find your soul mate ❤
+            </button>
+          </div>
+        )}
+        {!userList && (
+          <div className="loaderChat">
+            <Loader />
+          </div>
+        )}
+        {userList && userList.length > 0 && (
+          <div className="userListContainer">
+            {userList.map((user) => (
+              <UserCard
+                key={user.id}
+                selector
+                me={me}
+                user={user}
+                onLikeUser={() => {}}
+              />
+            ))}
+          </div>
+        )}
       </div>
     );
   if (

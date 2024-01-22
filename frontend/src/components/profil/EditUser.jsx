@@ -5,6 +5,8 @@ import { ArrowRight, Send } from "../icons/Icons";
 import "../../styles/profil/editUser.scss";
 import { getAuthorizedInstance } from "../../utils/Instance";
 import { getToken } from "../../store/slices/authSlice";
+import { useFormik } from "formik";
+import EditUserSchema from "../../schemas/EditUserSchema";
 
 const EditUser = () => {
   const user = useSelector(selectUser);
@@ -12,8 +14,7 @@ const EditUser = () => {
   const instance = getAuthorizedInstance(token.access_token);
   const [formUser, setFormUser] = useState(user);
   const [tags, setTags] = useState(user.tags);
-
-  const [editStatus, setEditStatus] = useState({
+  const initialStatusState = {
     username: false,
     lastName: false,
     firstName: false,
@@ -23,11 +24,26 @@ const EditUser = () => {
     sexuality: false,
     tags: false,
     bio: false,
+  };
+  const [editStatus, setEditStatus] = useState(initialStatusState);
+
+  const formik = useFormik({
+    validationSchema: EditUserSchema(),
+    initialValues: formUser,
+    onSubmit: (values) => {
+      sendUserUpdated(values);
+    },
   });
 
-  async function sendUserUpdated() {
-    const res = await instance.put("/users", formUser);
-    console.log(res.data);
+  async function sendUserUpdated(value) {
+    try {
+      await instance.put("/users/tags", tags);
+      const res = await instance.put("/users", value);
+      setFormUser(res.data);
+      setEditStatus(initialStatusState);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   function EditTag(e) {
@@ -47,15 +63,19 @@ const EditUser = () => {
       );
   }
 
-  async function sendTagUpdate() {
-    const res = await instance.put("/users/tags", tags);
-    console.log(res);
-  }
+  // async function sendTagUpdate() {
+  //   const res = await instance.put("/users/tags", tags);
+  //   console.log("oho");
+  //   setEditStatus((prevState) => ({
+  //     ...prevState,
+  //     tags: !editStatus.tags,
+  //   }));
+  // }
 
   return (
     <div className="editUserContainer">
-      <h3> Information de profil</h3>
-      <form>
+      <h3> Profile information </h3>
+      <form onSubmit={formik.handleSubmit}>
         <div className="inputContainer">
           <label className="labelContainer"> Username</label>
           <div
@@ -78,16 +98,25 @@ const EditUser = () => {
             <div className="DisplayInputContainer">
               <input
                 type="text"
-                onChange={(e) =>
-                  setFormUser((prevstate) => ({
-                    ...prevstate,
-                    username: e.target.value,
-                  }))
-                }
-                defaultValue={formUser.username}
-                disabled={!editStatus.username}
+                // onChange={(e) =>
+                //   setFormUser((prevstate) => ({
+                //     ...prevstate,
+                //     username: e.target.value,
+                //   }))
+                // }
+                // defaultValue={formUser.username}
+                // name="username"
+                // id="username"
+                // onChange={formik.handleChange}
+                // onBlur={formik.handleBlur}
+                // defaultValue={formik.initialValues.username}
+                // disabled={!editStatus.username}
+                {...formik.getFieldProps("username")}
               />
             </div>
+            {!!formik.errors.username && formik.touched.username && (
+              <div className="error">{formik.errors.username}</div>
+            )}
           </div>
         </div>
         <div className="inputContainer">
@@ -112,16 +141,24 @@ const EditUser = () => {
             <div className="DisplayInputContainer">
               <input
                 type="text"
-                onChange={(e) =>
-                  setFormUser((prevstate) => ({
-                    ...prevstate,
-                    firstName: e.target.value,
-                  }))
-                }
-                defaultValue={formUser.firstName}
-                disabled={!editStatus.firstName}
+                // onChange={(e) =>
+                //   setFormUser((prevstate) => ({
+                //     ...prevstate,
+                //     firstName: e.target.value,
+                //   }))
+                // }
+                // id="firstName"
+                // name="firstName"
+                // onChange={formik.handleChange}
+                // onBlur={formik.handleBlur}
+                // defaultValue={formik.initialValues.firstName}
+                // disabled={!editStatus.firstName}
+                {...formik.getFieldProps("firstName")}
               />
             </div>
+            {formik.touched.firstName && formik.errors.firstName ? (
+              <div className="error">{formik.errors.firstName}</div>
+            ) : null}
           </div>
         </div>
         <div className="inputContainer">
@@ -146,16 +183,26 @@ const EditUser = () => {
             <div className="DisplayInputContainer">
               <input
                 type="text"
-                onChange={(e) =>
-                  setFormUser((prevstate) => ({
-                    ...prevstate,
-                    lastName: e.target.value,
-                  }))
-                }
-                defaultValue={formUser.lastName}
-                disabled={!editStatus.lastName}
+                // onChange={(e) =>
+                //   setFormUser((prevstate) => ({
+                //     ...prevstate,
+                //     lastName: e.target.value,
+                //   }))
+                // }
+                // defaultValue={formUser.lastName}
+                // disabled={!editStatus.lastName}
+                // id="lastName"
+                // name="lastName"
+                // onChange={formik.handleChange}
+                // onBlur={formik.handleBlur}
+                // defaultValue={formik.initialValues.lastName}
+                // disabled={!editStatus.lastName}
+                {...formik.getFieldProps("lastName")}
               />
             </div>
+            {formik.touched.lastName && formik.errors.lastName ? (
+              <div className="error">{formik.errors.lastName}</div>
+            ) : null}
           </div>
         </div>
         <div className="inputContainer">
@@ -178,21 +225,28 @@ const EditUser = () => {
             <div className="DisplayInputContainer">
               <input
                 type="text"
-                onChange={(e) =>
-                  setFormUser((prevstate) => ({
-                    ...prevstate,
-                    email: e.target.value,
-                  }))
-                }
-                defaultValue={formUser.email}
-                disabled={!editStatus.email}
+                // onChange={(e) =>
+                //   setFormUser((prevstate) => ({
+                //     ...prevstate,
+                //     email: e.target.value,
+                //   }))
+                // }
+                // id="email"
+                // name="email"
+                // onChange={formik.handleChange}
+                // onBlur={formik.handleBlur}
+                // defaultValue={formik.initialValues.email}
+                // disabled={!editStatus.email}
+                {...formik.getFieldProps("email")}
               />
             </div>
+            {formik.touched.email && formik.errors.email ? (
+              <div className="error">{formik.errors.email}</div>
+            ) : null}
           </div>
         </div>
         <div className="inputContainer">
           <label className="labelContainer"> Age </label>
-          {formUser.age < 18 && <p className="errorMsg"> Minimum age 18. </p>}
           <div
             className={editStatus.age ? "myTextInput active" : "myTextInput"}
           >
@@ -205,26 +259,35 @@ const EditUser = () => {
                 }))
               }
             >
+              {/* <p>{formik.value.age}</p> */}
               <p>{formUser.age}</p>
               <ArrowRight />
             </div>
             <div className="DisplayInputContainer">
               <input
                 type="number"
-                onChange={(e) =>
-                  setFormUser((prevstate) => ({
-                    ...prevstate,
-                    age: e.target.value,
-                  }))
-                }
-                defaultValue={formUser.age}
-                disabled={!editStatus.age}
+                // onChange={(e) =>
+                //   setFormUser((prevstate) => ({
+                //     ...prevstate,
+                //     age: e.target.value,
+                //   }))
+                // }
+                // id="age"
+                // name="age"
+                // onChange={formik.handleChange}
+                // onBlur={formik.handleBlur}
+                // defaultValue={formUser.age}
+                // disabled={!editStatus.age}
+                {...formik.getFieldProps("age")}
               />
             </div>
+            {formik.touched.age && formik.errors.age ? (
+              <div className="error"> {formik.errors.age} </div>
+            ) : null}
           </div>
         </div>
         <div className="inputContainer">
-          <label className="labelContainer"> Genre </label>
+          <label className="labelContainer"> Gender </label>
           <div
             className={editStatus.gender ? "myTextInput active" : "myTextInput"}
           >
@@ -244,30 +307,22 @@ const EditUser = () => {
               {" "}
               <input
                 type="radio"
-                name="Genre"
+                name="gender"
                 id="homme"
                 value="MALE"
-                checked={formUser.gender === "MALE"}
-                onChange={(e) =>
-                  setFormUser((prevstate) => ({
-                    ...prevstate,
-                    gender: e.target.value,
-                  }))
-                }
+                checked={formik.values.gender === "MALE"}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
               <label htmlFor="homme"> Homme </label>
               <input
                 type="radio"
-                name="Genre"
+                name="gender"
                 id="femme"
                 value="FEMALE"
-                checked={formUser.gender === "FEMALE"}
-                onChange={(e) =>
-                  setFormUser((prevstate) => ({
-                    ...prevstate,
-                    gender: e.target.value,
-                  }))
-                }
+                checked={formik.values.gender === "FEMALE"}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
               <label htmlFor="femme"> Femme </label>
             </div>
@@ -295,54 +350,61 @@ const EditUser = () => {
             <div className="myRadioInput">
               <input
                 type="radio"
-                name="prefers"
+                name="sexuality"
                 id="hetero"
                 value="HETEROSEXUAL"
-                checked={formUser.sexuality === "HETEROSEXUAL"}
-                onChange={(e) =>
-                  setFormUser((prevstate) => ({
-                    ...prevstate,
-                    sexuality: e.target.value,
-                  }))
-                }
+                checked={formik.values.sexuality === "HETEROSEXUAL"}
+                // onChange={(e) =>
+                //   setFormUser((prevstate) => ({
+                //     ...prevstate,
+                //     sexuality: e.target.value,
+                //   }))
+                // }
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
               <label htmlFor="hetero"> Hétérosexuel </label>
               <input
                 type="radio"
-                name="prefers"
+                name="sexuality"
                 id="homo"
                 value="HOMOSEXUAL"
-                checked={formUser.sexuality === "HOMOSEXUAL"}
-                onChange={(e) =>
-                  setFormUser((prevstate) => ({
-                    ...prevstate,
-                    sexuality: e.target.value,
-                  }))
-                }
+                checked={formik.values.sexuality === "HOMOSEXUAL"}
+                // onChange={(e) =>
+                //   setFormUser((prevstate) => ({
+                //     ...prevstate,
+                //     sexuality: e.target.value,
+                //   }))
+                // }
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
               <label htmlFor="homo"> Homosexuel </label>
               <input
                 type="radio"
-                name="prefers"
+                name="sexuality"
                 id="bi"
                 value="BISEXUAL"
-                checked={formUser.sexuality === "BISEXUAL"}
-                onChange={(e) =>
-                  setFormUser((prevstate) => ({
-                    ...prevstate,
-                    sexuality: e.target.value,
-                  }))
-                }
+                checked={formik.values.sexuality === "BISEXUAL"}
+                // onChange={(e) =>
+                //   setFormUser((prevstate) => ({
+                //     ...prevstate,
+                //     sexuality: e.target.value,
+                //   }))
+                // }
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
               <label htmlFor="bi"> Bisexuel </label>
             </div>
           </div>
         </div>
         <div className="inputContainer">
-          <label className="labelContainer"> Intérêts </label>
-          {tags.length > 5 && <p className="errorMsg"> 5 tags maximum. </p>}
+          <label className="labelContainer"> Interests </label>
           <div
-            className={editStatus.tags ? "myTextInput activeBioTags" : "myTextInput"}
+            className={
+              editStatus.tags ? "myTextInput activeBioTags" : "myTextInput"
+            }
           >
             <div
               className="currentValue"
@@ -353,9 +415,16 @@ const EditUser = () => {
                 }))
               }
             >
-              {tags.length > 0 ? tags.map((tag, index) => (
-                <p key={index} className="tagName"> {tag.tag.toLowerCase()} </p>
-              )) : <p> Ajouter </p>}
+              {tags.length > 0 ? (
+                tags.map((tag, index) => (
+                  <p key={index} className="tagName">
+                    {" "}
+                    {tag.tag.toLowerCase()}{" "}
+                  </p>
+                ))
+              ) : (
+                <p> Ajouter </p>
+              )}
               <ArrowRight />
             </div>
             <div className="myRadioInput">
@@ -382,7 +451,9 @@ const EditUser = () => {
                 id="jeuxVideos"
                 value={"JEUX_VIDEOS"}
                 onChange={EditTag}
-                checked={tags.some((tagObject) => tagObject.tag === "JEUX_VIDEOS")}
+                checked={tags.some(
+                  (tagObject) => tagObject.tag === "JEUX_VIDEOS"
+                )}
               />
               <label htmlFor="jeuxVideos"> Jeux vidéos </label>
 
@@ -431,12 +502,15 @@ const EditUser = () => {
               />
               <label htmlFor="tatoo"> Tatoo </label>
             </div>
+            {tags.length > 5 && <p className="error"> 5 tags maximum. </p>}
           </div>
         </div>
         <div className="inputContainer">
-          <label className="labelContainer"> Biographie </label>
+          <label className="labelContainer"> Biography </label>
           <div
-            className={editStatus.bio ? "myTextInput activeBioTags" : "myTextInput"}
+            className={
+              editStatus.bio ? "myTextInput activeBioTags" : "myTextInput"
+            }
           >
             <div
               className="currentValue"
@@ -451,31 +525,24 @@ const EditUser = () => {
               <ArrowRight />
             </div>
             <textarea
-              value={formUser.bio}
-              onChange={(e) =>
-                setFormUser((prevstate) => ({
-                  ...prevstate,
-                  bio: e.target.value,
-                }))
-              }
+              value={formik.values.bio}
+              // onChange={(e) =>
+              //   setFormUser((prevstate) => ({
+              //     ...prevstate,
+              //     bio: e.target.value,
+              //   }))
+              // }
+              {...formik.getFieldProps("bio")}
             ></textarea>
+            {formik.touched.bio && formik.errors.bio ? (
+              <div className="error"> {formik.errors.bio} </div>
+            ) : null}
           </div>
         </div>
+        <div className="sendButton">
+          <button type="submit">Submit</button>
+        </div>
       </form>
-      <div className="sendButton">
-        <button onClick={sendUserUpdated}>
-          {" "}
-          Envoyer <Send />{" "}
-        </button>
-        <button
-          disabled={tags.length > 5}
-          onClick={sendTagUpdate}
-          className={tags.length > 5 ? "disabledBtn" : ""}
-        >
-          {" "}
-          Send Tag
-        </button>
-      </div>
     </div>
   );
 };
