@@ -43,6 +43,7 @@
           // display: none;
           position: relative;
           .icon {
+            all: unset;
             position: absolute;
             height: 30px;
             top: 0px;
@@ -53,6 +54,9 @@
             &:hover {
               color: #ffffffaa;
               background-color: #000000aa;
+            }
+            &.disabled {
+              cursor: not-allowed;
             }
           }
           .sub-icon {
@@ -107,7 +111,7 @@
       gap: 1rem;
 
       &.open {
-        overflow:visible;
+        overflow: visible;
         max-height: 1000px;
       }
 

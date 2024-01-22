@@ -259,3 +259,33 @@ def block_user(current_user: UserSchema = Depends(get_current_user), target_user
         Crud.user.add_block(db, current_user, target_user)
     db.refresh(current_user)
     return current_user
+
+
+
+@router.post("/see/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
+async def see(
+    current_user: UserSchema = Depends(get_current_user), user_to_see: UserSchema = Depends(get_user), db=Depends(get_db)
+):
+    
+    if not (profile_seen := next((profile_seen for profile_seen in current_user.profile_seen if profile_seen.user_target_id == user_to_see.id), None)):
+        Crud.user.add_seen(db, current_user, user_to_see)
+
+
+
+@router.post("/like_photo/{photo_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
+def like_photo(
+    photo_id: int,
+    current_user: UserSchema = Depends(get_current_user),
+    db=Depends(get_db)
+):
+    
+    if not (photo := Crud.photo.get(db, photo_id)):
+        raise HTTPException(status_code=404, detail="Photo not found.")
+
+    if next((like_photo for like_photo in current_user.like_photos if like_photo.photo_id == photo.id), None):
+        Crud.user.remove_like_photo(db, current_user, photo)
+    else:
+        Crud.user.add_like_photo(db, current_user, photo)
+        
+    db.refresh(current_user)
+    return current_user

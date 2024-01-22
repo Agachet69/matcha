@@ -23,6 +23,7 @@ const Modals = ({ children }) => {
   const navigate = useNavigate();
   const instance = getAuthorizedInstance(token.access_token);
   const [allUsers, setAllUsers] = useState([]);
+  const me = useSelector(selectUser)
 
   async function deletePic() {
     try {
@@ -105,37 +106,76 @@ const Modals = ({ children }) => {
           <section className="listModal">
             <h3> Ces utilisateurs ont aimé ton profil </h3>
             <div className="listContainer">
-              {allUsers.map((userSeen, index) => {
+              {me.matches.map(({user_A, user_B}, index) => {
                 return (
                   <div
                     className="userLiked"
-                    key={index}
+                    key={index + 'match'}
                     onClick={() =>
                       navigate("/profil/see", {
-                        state: userSeen,
+                        state: (user_A.id == me.id ? user_B : user_A),
                       })
                     }
                   >
                     <div className="leftContent">
                       <div className="profilPic">
-                        {mainPic(userSeen) && (
+                        {mainPic((user_A.id == me.id ? user_B : user_A)) && (
                           <img
-                            src={`http://localhost:8000/${mainPic(userSeen)}`}
+                            src={`http://localhost:8000/${mainPic((user_A.id == me.id ? user_B : user_A))}`}
                             alt="photo de profil"
                           />
                         )}
                       </div>
-                      <p>{userSeen.firstName}</p>
-                      <p>{userSeen.lastName}</p>
-                      <p>{userSeen.age}y</p>
+                      <p>{(user_A.id == me.id ? user_B : user_A).firstName}</p>
+                      <p>{(user_A.id == me.id ? user_B : user_A).lastName}</p>
+                      <p>{(user_A.id == me.id ? user_B : user_A).age}y</p>
                     </div>
                     <div className="rightContent">
-                      {userSeen.gender === "FEMALE" ? (
+                      {(user_A.id == me.id ? user_B : user_A).gender === "FEMALE" ? (
                         <FemaleIcon />
                       ) : (
                         <MaleIcon />
                       )}
-                      {userSeen.status === "ONLINE" ? (
+                      {(user_A.id == me.id ? user_B : user_A).status === "ONLINE" ? (
+                        <span> online</span>
+                      ) : (
+                        <span> offline </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+              {me.liked_by.map(({user}, index) => {
+                return (
+                  <div
+                    className="userLiked"
+                    key={index + 'like'}
+                    onClick={() =>
+                      navigate("/profil/see", {
+                        state: user,
+                      })
+                    }
+                  >
+                    <div className="leftContent">
+                      <div className="profilPic">
+                        {mainPic(user) && (
+                          <img
+                            src={`http://localhost:8000/${mainPic(user)}`}
+                            alt="photo de profil"
+                          />
+                        )}
+                      </div>
+                      <p>{user.firstName}</p>
+                      <p>{user.lastName}</p>
+                      <p>{user.age}y</p>
+                    </div>
+                    <div className="rightContent">
+                      {user.gender === "FEMALE" ? (
+                        <FemaleIcon />
+                      ) : (
+                        <MaleIcon />
+                      )}
+                      {user.status === "ONLINE" ? (
                         <span> online</span>
                       ) : (
                         <span> offline </span>
@@ -169,37 +209,37 @@ const Modals = ({ children }) => {
           <section className="listModal">
             <h3> Ces utilisateurs ont vue ton profil </h3>
             <div className="listContainer">
-              {allUsers.map((userSeen, index) => {
+              {me.profile_seen_by.map(({user}, index) => {
                 return (
                   <div
                     className="userLiked"
                     key={index}
                     onClick={() =>
                       navigate("/profil/see", {
-                        state: userSeen,
+                        state: user,
                       })
                     }
                   >
                     <div className="leftContent">
                       <div className="profilPic">
-                        {mainPic(userSeen) && (
+                        {mainPic(user) && (
                           <img
-                            src={`http://localhost:8000/${mainPic(userSeen)}`}
+                            src={`http://localhost:8000/${mainPic(user)}`}
                             alt="photo de profil"
                           />
                         )}
                       </div>
-                      <p>{userSeen.firstName}</p>
-                      <p>{userSeen.lastName}</p>
-                      <p>{userSeen.age}y</p>
+                      <p>{user.firstName}</p>
+                      <p>{user.lastName}</p>
+                      <p>{user.age}y</p>
                     </div>
                     <div className="rightContent">
-                      {userSeen.gender === "FEMALE" ? (
+                      {user.gender === "FEMALE" ? (
                         <FemaleIcon />
                       ) : (
                         <MaleIcon />
                       )}
-                      {userSeen.status === "ONLINE" ? (
+                      {user.status === "ONLINE" ? (
                         <span> online</span>
                       ) : (
                         <span> offline </span>

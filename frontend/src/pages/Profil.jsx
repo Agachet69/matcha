@@ -223,14 +223,14 @@ const Profil = () => {
           onClick={() => dispatch(editLikedUser(deleteBack.likedUser))}
         >
           <div className="socialTitleSvg">
-            <h4 className="pink"> {user.liked_by.length} </h4>
+            <h4 className="pink"> {user.liked_by.length + user.matches.length} </h4>
             <Sparkless />
           </div>
           <p>crush</p>
         </div>
         <div className="socialInfos" onClick={() => dispatch(editViewUser(deleteBack.viewUser))}>
           <div className="socialTitleSvg">
-            <h4> 13 </h4>
+            <h4>{user.profile_seen_by.length}</h4>
             <Eye />
           </div>
           <p>vues</p>
