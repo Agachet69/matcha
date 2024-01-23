@@ -3,7 +3,7 @@ from Schemas.token import TokenSchema
 from Enum.NotifTypeEnum import NotifTypeEnum
 from Enum.GenderEnum import GenderEnum
 from Enum.SexualityEnum import SexualityEnum
-
+from Schemas.photo import PhotoSchema
 
 from pydantic import BaseModel, EmailStr, constr, validator
 
@@ -27,6 +27,7 @@ class MatchInDBBase(MatchBase):
 
 
 class UserBase(BaseModel):
+    id: int
     username: Optional[constr(min_length=1)]
     lastName: Optional[constr(min_length=1)]
     firstName: Optional[constr(min_length=1)]
@@ -35,7 +36,8 @@ class UserBase(BaseModel):
     sexuality: Optional[SexualityEnum]
     age: Optional[int]
     bio: Optional[str]
-    id: int
+    photos: List[PhotoSchema]
+    
     class Config:
         orm_mode = True
 

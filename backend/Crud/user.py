@@ -5,7 +5,7 @@ from Enum.StatusEnum import StatusEnum
 from Schemas.search import SearchSchema
 
 from .base import CRUDBase
-from Model import User, Notif, Like, Block, Photo
+from Model import User, Notif, Like, Block, Photo, ProfileSeen, LikePhoto
 from Schemas.user import UserCreate, UserUpdate
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
@@ -104,7 +104,19 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
     def remove_block(self, db: Session, user: User, user_target: User):
         db.query(Block).filter(Block.user_id == user.id, Block.user_target_id == user_target.id).delete()
         db.commit()
-
         
+    def add_like_photo(self, db: Session, user: User, photo: Photo):
+        block = LikePhoto(user_id=user.id, photo_id=photo.id)
+        db.add(block)
+        db.commit()
+
+    def remove_like_photo(self, db: Session, user: User, photo: Photo):
+        db.query(LikePhoto).filter(LikePhoto.user_id == user.id, LikePhoto.photo_id == photo.id).delete()
+        db.commit()
+
+    def add_seen(self, db: Session, user: User, user_target: User):
+        profile_seen = ProfileSeen(user_id=user.id, user_target_id=user_target.id)
+        db.add(profile_seen)
+        db.commit()
 
 user = CRUDUser(User)

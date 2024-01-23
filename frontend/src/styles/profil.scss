@@ -212,6 +212,34 @@
             filter: brightness(0.5);
           }
 
+          .likePhoto {
+            color: #ffffff33;
+            width: 50px;
+            aspect-ratio: 1/1;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            cursor: pointer;
+
+            &:hover {
+              color: #ff4ca8;
+            }
+
+            &.liked {
+              svg {
+                fill: #ff4ca8;
+                color: #ff4ca8;
+              }
+              &:hover {
+                svg {
+
+                  fill: transparent;
+                  color: #ffffff33;
+                }
+              }
+            }
+          }
+
           .addImg {
             width: 100%;
             height: 100%;
@@ -428,7 +456,7 @@
     align-items: center;
     padding: 20px 45px;
     cursor: pointer;
-    
+
     .borderR {
       border-right: 1px solid #ff4ca8;
 
@@ -507,13 +535,14 @@
       transition: 0.3s;
       cursor: pointer;
       svg {
-        transform:scaleX(-1);
+        transform: scaleX(-1);
         height: 18px;
         transition: 0.3s;
       }
     }
 
     .otherProfilMore {
+      pointer-events: none;
       position: absolute;
       top: 104px;
       right: 10%;
@@ -528,6 +557,8 @@
       }
 
       .ellipsMenu {
+        pointer-events: none;
+
         position: relative;
         display: flex;
         align-items: flex-start;
@@ -536,9 +567,13 @@
         width: 400px;
         overflow: hidden;
 
-        svg {
-          &:hover {
-            color: $pink;
+        button {
+          all: unset;
+          pointer-events: all;
+          svg {
+            &:hover {
+              color: $pink;
+            }
           }
         }
 
@@ -555,7 +590,7 @@
           border-top-right-radius: 0px;
           p {
             &:hover {
-              background-color: grey; 
+              background-color: grey;
             }
             user-select: none;
             padding: 10px 20px;
@@ -568,7 +603,7 @@
 
         .active {
           opacity: 1;
-          transition: opacity 0.4s
+          transition: opacity 0.4s;
         }
 
         .inactive {

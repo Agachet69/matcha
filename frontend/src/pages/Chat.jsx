@@ -23,14 +23,6 @@ import { ParseDate } from "../utils/ParseDate";
 import { getAuthorizedInstance } from "../utils/Instance";
 import Loader from "../components/utils/Loader";
 
-const user_image_list = [
-  "https://images.unsplash.com/photo-1588516903720-8ceb67f9ef84?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHdvbWVufGVufDB8fDB8fHww",
-  "https://images.unsplash.com/photo-1557862921-37829c790f19?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8bWFufGVufDB8fDB8fHww",
-  "https://plus.unsplash.com/premium_photo-1679440415182-c362deb2fd40?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjV8fHdvbWVufGVufDB8fDB8fHww",
-  "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8bWFufGVufDB8fDB8fHww",
-  "https://images.unsplash.com/photo-1560087637-bf797bc7796a?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjZ8fHdvbWVufGVufDB8fDB8fHww",
-];
-
 const Chat = () => {
   const [disabled, setDisabled] = useState(false);
   const socket = useSocket();
@@ -43,7 +35,6 @@ const Chat = () => {
   const [user, setUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [userList, setUserList] = useState(null);
-  const [searchbarValue, setSearchbarValue] = useState("");
 
   const formik = useFormik({
     validationSchema: MessageSchema(),
@@ -106,7 +97,7 @@ const Chat = () => {
     if (elem) elem.scrollTop = elem.scrollHeight;
   }, [messages]);
 
-  const onUpdateStatus = ({ user_id, status }) => {
+  const onUpdateStatus = ({ user_id }) => {
     if (user_id == id) getUser();
   };
 
@@ -137,10 +128,6 @@ const Chat = () => {
   useEffect(() => {
     if (token && id) getAllMessages();
   }, [token, id]);
-
-  // useEffect(() => {
-  //   console.log(user);
-  // }, [user]);
 
   const sendMessage = () => {
     if (!disabled) {
@@ -176,33 +163,9 @@ const Chat = () => {
     }
   }, [socket]);
 
-  function searchBarInput(e) {
-    setSearchbarValue(e.target.value);
-  }
-
-  // useEffect(() => {
-  //   if (userList) {
-  //     setUserList(
-  //       userList.filter((user) =>
-  //         user.username.toLowerCase().includes(searchbarValue.toLowerCase())
-  //       )
-  //     );
-  //   }
-  // }, [searchbarValue]);
-
-
-
   if (id == undefined)
     return (
       <div className="main">
-        {userList && userList.length > 0 && (
-          <div className="searchbar">
-            <input type="text" placeholder="search" onChange={searchBarInput} />
-            <div className="icon">
-              <SearchIcon />
-            </div>
-          </div>
-        )}
         {userList && userList.length <= 0 && (
           <div className="nothing">
             <h2> You don&apos;t have a match yet</h2>
@@ -253,7 +216,13 @@ const Chat = () => {
             }}
           >
             <img
-              src={user_image_list[user.id % user_image_list.length]}
+              src={
+                user.photos.find((photo) => photo.main)
+                  ? `http://localhost:8000/${
+                      user.photos.find((photo) => photo.main).path
+                    }`
+                  : null
+              }
               className="background"
               alt=""
             />
@@ -302,8 +271,9 @@ const Chat = () => {
         )}
 
         <div className="messageList" id="messageList">
-          {messages.map((message) => (
+          {messages.map((message, index) => (
             <div
+              key={index}
               className={`message ${
                 message.user_A_id == me.id ? "mine" : "target"
               }`}

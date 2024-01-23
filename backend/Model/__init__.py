@@ -6,3 +6,5 @@ from .tag import Tag
 from .match import Match
 from .message import Message
 from .block import Block
+from .profile_seen import ProfileSeen
+from .like_photo import LikePhoto

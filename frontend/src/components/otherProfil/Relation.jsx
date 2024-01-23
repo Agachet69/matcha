@@ -59,7 +59,7 @@ const Relation = ({ userSeen }) => {
         </div>
         <div className="delete">
           <Cancel />
-          <p> Supprimer ce match </p>
+          <p> Delete this match </p>
         </div>
       </div>
     );
@@ -79,7 +79,7 @@ const Relation = ({ userSeen }) => {
         </div>
         <div className="delete">
           <UnBoltIcon />
-          <p> Supprimer ce crush </p>
+          <p> Delete this crush </p>
         </div>
       </div>
     );

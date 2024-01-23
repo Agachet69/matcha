@@ -8,14 +8,19 @@ import {
   resetAllModals,
   selectAllModals,
 } from "../store/slices/modalSlice";
-import { deleteUserNotif, deleteUserPhoto, selectUser } from "../store/slices/userSlice";
+import {
+  deleteUserNotif,
+  deleteUserPhoto,
+  selectUser,
+} from "../store/slices/userSlice";
 import axios from "axios";
 import { getToken } from "../store/slices/authSlice";
 import { useCallback, useEffect, useState } from "react";
-import { FemaleIcon, MaleIcon, Trash } from "./icons/Icons";
+import { Trash } from "./icons/Icons";
 import { useNavigate } from "react-router-dom";
 import { getAuthorizedInstance } from "../utils/Instance";
 import ModalConfirm from "./ModalConfirm";
+import ListUserModal from "./profil/ListUserModal";
 
 const Modals = ({ children }) => {
   const dispatch = useDispatch();
@@ -47,7 +52,7 @@ const Modals = ({ children }) => {
   async function deleteNotif(id) {
     try {
       const res = await instance.delete("/users/del_notif/" + id);
-      dispatch(deleteUserNotif(id))
+      dispatch(deleteUserNotif(id));
       console.log(res);
     } catch (err) {
       console.error(err);
@@ -63,15 +68,6 @@ const Modals = ({ children }) => {
     return null;
   };
 
-  const getLikedUsers = useCallback(() => {
-    setAllUsers([]);
-    user.liked_by.map((liked) => {
-      instance
-        .get("/users/" + liked.user_id)
-        .then((res) => setAllUsers((prevState) => [...prevState, res.data]));
-    });
-  }, [user.liked_by]);
-
   const getNotifUsers = useCallback(() => {
     setAllUsers([]);
     user.notifs.map((notif) => {
@@ -81,26 +77,12 @@ const Modals = ({ children }) => {
     });
   }, [user.notifs, setAllUsers]);
 
-  const getMatches = useCallback(() => {
-    setAllUsers([]);
-    user.matches.map((match) => {
-      const matchId =
-        match.user_A_id === user.id ? match.user_B_id : match.user_A_id;
-      instance.get("/users/" + matchId).then((res) => {
-        setAllUsers((prevState) => [...prevState, res.data]);
-      });
-    });
-  }, [user.matches]);
-
   useEffect(() => {
-    if (allModals.likedUser) getLikedUsers();
-    else if (allModals.notif) getNotifUsers();
-    else if (allModals.match) getMatches();
-
+    if (allModals.notif) getNotifUsers();
     return () => {
       setAllUsers([]);
     };
-  }, [allModals, getLikedUsers, getNotifUsers, getMatches]);
+  }, [allModals, getNotifUsers]);
 
   useEffect(() => {
     const cleanup = () => {
@@ -144,49 +126,13 @@ const Modals = ({ children }) => {
       {allModals.likedUser && (
         <div className="modal">
           <main className="overlayModal">
-            {allUsers.length > 0 ? (
+            {user.liked_by.length > 0 ? (
               <section className="listModal">
-                <h3> Ces utilisateurs ont aimé ton profil </h3>
+                <h3> These users liked your profile </h3>
                 <div className="listContainer">
-                  {allUsers.map((userSeen, index) => {
+                  {user.liked_by.map((userLiked, index) => {
                     return (
-                      <div
-                        className="userLiked"
-                        key={index}
-                        onClick={() =>
-                          navigate("/profil/see", {
-                            state: userSeen,
-                          })
-                        }
-                      >
-                        <div className="leftContent">
-                          <div className="profilPic">
-                            {mainPic(userSeen) && (
-                              <img
-                                src={`http://localhost:8000/${mainPic(
-                                  userSeen
-                                )}`}
-                                alt="photo de profil"
-                              />
-                            )}
-                          </div>
-                          <p>{userSeen.firstName}</p>
-                          <p>{userSeen.lastName}</p>
-                          <p>{userSeen.age}y</p>
-                        </div>
-                        <div className="rightContent">
-                          {userSeen.gender === "FEMALE" ? (
-                            <FemaleIcon />
-                          ) : (
-                            <MaleIcon />
-                          )}
-                          {userSeen.status === "ONLINE" ? (
-                            <span> online</span>
-                          ) : (
-                            <span> offline </span>
-                          )}
-                        </div>
-                      </div>
+                      <ListUserModal user={userLiked.user} key={index}/>
                     );
                   })}
                 </div>
@@ -194,7 +140,7 @@ const Modals = ({ children }) => {
                   <button
                     onClick={() => dispatch(editLikedUser(allModals.likedUser))}
                   >
-                    Fermer
+                    Close
                   </button>
                 </div>
               </section>
@@ -205,7 +151,7 @@ const Modals = ({ children }) => {
                   <button
                     onClick={() => dispatch(editLikedUser(allModals.likedUser))}
                   >
-                    Fermer
+                    Close
                   </button>
                 </div>
               </section>
@@ -222,49 +168,13 @@ const Modals = ({ children }) => {
       {allModals.viewUser && (
         <div className="modal">
           <main className="overlayModal">
-            {allUsers.length > 0 ? (
+            {user.profile_seen_by.length > 0 ? (
               <section className="listModal">
-                <h3> Ces utilisateurs ont vue ton profil </h3>
+                <h3> These users have seen your profile </h3>
                 <div className="listContainer">
-                  {allUsers.map((userSeen, index) => {
+                  {user.profile_seen_by.map((userSee, index) => {
                     return (
-                      <div
-                        className="userLiked"
-                        key={index}
-                        onClick={() =>
-                          navigate("/profil/see", {
-                            state: userSeen,
-                          })
-                        }
-                      >
-                        <div className="leftContent">
-                          <div className="profilPic">
-                            {mainPic(userSeen) && (
-                              <img
-                                src={`http://localhost:8000/${mainPic(
-                                  userSeen
-                                )}`}
-                                alt="photo de profil"
-                              />
-                            )}
-                          </div>
-                          <p>{userSeen.firstName}</p>
-                          <p>{userSeen.lastName}</p>
-                          <p>{userSeen.age}y</p>
-                        </div>
-                        <div className="rightContent">
-                          {userSeen.gender === "FEMALE" ? (
-                            <FemaleIcon />
-                          ) : (
-                            <MaleIcon />
-                          )}
-                          {userSeen.status === "ONLINE" ? (
-                            <span> online</span>
-                          ) : (
-                            <span> offline </span>
-                          )}
-                        </div>
-                      </div>
+                     <ListUserModal user={userSee.user} key={index}/>
                     );
                   })}
                 </div>
@@ -272,7 +182,7 @@ const Modals = ({ children }) => {
                   <button
                     onClick={() => dispatch(editViewUser(allModals.viewUser))}
                   >
-                    Fermer
+                    Close
                   </button>
                 </div>
               </section>
@@ -283,7 +193,7 @@ const Modals = ({ children }) => {
                   <button
                     onClick={() => dispatch(editLikedUser(allModals.viewUser))}
                   >
-                    Fermer
+                    Close
                   </button>
                 </div>
               </section>
@@ -302,7 +212,7 @@ const Modals = ({ children }) => {
           <main className="overlayModal">
             {user.notifs.length > 0 ? (
               <section className="listModal">
-                <h3> Mes notifications </h3>
+                <h3> My notifications </h3>
                 <div className="listContainer">
                   {user.notifs.map((notif, index) => {
                     return (
@@ -334,13 +244,13 @@ const Modals = ({ children }) => {
                   <button
                     onClick={() => dispatch(editViewUser(allModals.notif))}
                   >
-                    Fermer
+                    Close
                   </button>
                 </div>
               </section>
             ) : (
               <section className="notNotif">
-                Pas de notifications en attente...
+                No pending notifications...
               </section>
             )}
 
@@ -361,55 +271,19 @@ const Modals = ({ children }) => {
       {allModals.match && (
         <div className="modal">
           <main className="overlayModal">
-            {allUsers.length > 0 ? (
+            {user.matches.length > 0 ? (
               <section className="listModal">
                 <h3> Your matches </h3>
                 <div className="listContainer">
-                  {allUsers.map((userSeen, index) => {
+                  {user.matches.map((userMatched, index) => {
                     return (
-                      <div
-                        className="userLiked"
-                        key={index}
-                        onClick={() =>
-                          navigate("/profil/see", {
-                            state: userSeen,
-                          })
-                        }
-                      >
-                        <div className="leftContent">
-                          <div className="profilPic">
-                            {mainPic(userSeen) && (
-                              <img
-                                src={`http://localhost:8000/${mainPic(
-                                  userSeen
-                                )}`}
-                                alt="photo de profil"
-                              />
-                            )}
-                          </div>
-                          <p>{userSeen.firstName}</p>
-                          <p>{userSeen.lastName}</p>
-                          <p>{userSeen.age}y</p>
-                        </div>
-                        <div className="rightContent">
-                          {userSeen.gender === "FEMALE" ? (
-                            <FemaleIcon />
-                          ) : (
-                            <MaleIcon />
-                          )}
-                          {userSeen.status === "ONLINE" ? (
-                            <span> online</span>
-                          ) : (
-                            <span> offline </span>
-                          )}
-                        </div>
-                      </div>
+                      <ListUserModal user={userMatched.user_A_id === user.id ? userMatched.user_B : userMatched.user_A} type={"modal"} key={index} />
                     );
                   })}
                 </div>
                 <div className="btnClose">
                   <button onClick={() => dispatch(editMatch(allModals.match))}>
-                    Fermer
+                    Close
                   </button>
                 </div>
               </section>
@@ -418,7 +292,7 @@ const Modals = ({ children }) => {
                 <h3> Nobody has a match with you yet</h3>
                 <div className="btnClose">
                   <button onClick={() => dispatch(editMatch(allModals.match))}>
-                    Fermer
+                    Close
                   </button>
                 </div>
               </section>

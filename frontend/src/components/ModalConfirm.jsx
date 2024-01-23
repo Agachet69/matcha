@@ -21,10 +21,6 @@ const ModalConfirm = () => {
     dispatch(editConcernUser(modalSlice.user));
     const res = await instance.post(`/users/block/${modalSlice.user.id}`);
     dispatch(initialiseUser(res.data));
-    // .then(({ data }) => {
-    //   dispatch(initialiseUser(data));
-    //   onSearch(searchFormik.values);
-    // });
     dispatch(editBlockUser(modalSlice.blockUser));
   };
 

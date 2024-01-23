@@ -216,8 +216,6 @@ const Profil = () => {
         {" "}
         {user.firstName} {user.lastName}{" "}
       </h3>
-      <p> Qui à vue ton profil </p>
-      {/* <Fire /> */}
       <p>Fame-rate {user.fame_rate} </p>
       <p> Modifier sa position </p>
       <div className="socialInfosContainer">
@@ -246,7 +244,7 @@ const Profil = () => {
           onClick={() => dispatch(editViewUser(deleteBack.viewUser))}
         >
           <div className="socialTitleSvg">
-            <h4> 13 </h4>
+            <h4>{user.profile_seen_by.length}</h4>
             <Eye />
           </div>
           <p>views</p>

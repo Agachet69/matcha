@@ -7,7 +7,7 @@ import printVarsHook from "../components/printVarsHook";
 import { CogIcon, TriangleIcon } from "../components/icons/Icons";
 import { useSocket } from "../utils/PrivateRoutes";
 import { initialiseUser, selectUser } from "../store/slices/userSlice";
-import { Autocomplete, Slider, TextField } from "@mui/material";
+import { Autocomplete, Slider, TextField, Tooltip } from "@mui/material";
 import UserCard from "../components/UserCard";
 import SearchSchema from "../schemas/SearchSchema";
 import { useFormik } from "formik";
@@ -25,9 +25,31 @@ const Home = () => {
   const token = useSelector(getToken);
   const dispatch = useDispatch();
   const socket = useSocket();
-  // const navigate = useNavigate();
   const allModals = useSelector(selectAllModals);
-  const [openSearchParm, setOpenSearchParm] = useState(true);
+  const navigate = useNavigate();
+  const [openSearchParm, setOpenSearchParm] = useState(false);
+
+  const getAllUsers = () => {
+    axios
+      .get("http://localhost:8000/users/", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token.access_token}`,
+        },
+      })
+      .then(({ data }) => {
+        setAllUsers(data.filter((user) => user.id != me.id));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const navOtherProfil = (user) => () => {
+    navigate("/profil/see", {
+      state: user,
+    });
+  };
 
   const onSearch = (value) => {
     const headers = {
@@ -107,12 +129,15 @@ const Home = () => {
           <div className="title">Search an user</div>
           <div className="icons">
             <div className="container">
+              <Tooltip disableHoverListener={me.photos.find(photo => photo.main)} title='You must set a main profile pic to search users.'>
+
               <div
-                className="icon"
-                onClick={() => setOpenSearchParm((prev) => !prev)}
-              >
+                className={"icon " + (!me.photos.find(photo => photo.main) ? "disabled" : "")}
+                onClick={() => !!me.photos.find(photo => photo.main) && setOpenSearchParm((prev) => !prev)}
+                >
                 <CogIcon />
               </div>
+                </Tooltip>
               <div
                 className={"sub-icon " + (openSearchParm ? "open" : "close")}
               >
@@ -265,21 +290,11 @@ const Home = () => {
               }
             />
           </div>
-        </div>
         {!Object.keys(searchFormik.values).length &&
           searchFormik.isSubmitting && (
             <div className="error">Need at least one param.</div>
           )}
-
-        {/* {allUsers.map((user, index) => (
-          <UserCard
-            me={me}
-            user={user}
-            key={user.id}
-            onLikeUser={onLikeUser}
-            onBlockUser={onBlockUser}
-          />
-        ))} */}
+        </div>
       </form>
       {allUsers && allUsers.length <= 0 ? (
         <div> </div>

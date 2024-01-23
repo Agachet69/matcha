@@ -3,10 +3,12 @@ from typing import Any, Optional, List
 from Schemas.token import TokenSchema
 from Schemas.notif import NotifSchema
 from Schemas.like import LikeSchema
+from Schemas.like_photo import LikePhotoSchema
 from Schemas.block import BlockSchema
 from Schemas.photo import PhotoSchema, PhotoSchema
 from Schemas.tag import TagSchema
 from Schemas.match import MatchSchema
+from Schemas.profile_seen import ProfileSeenSchema
 from Enum.GenderEnum import GenderEnum
 from Enum.SexualityEnum import SexualityEnum
 from Enum.StatusEnum import StatusEnum
@@ -71,6 +73,9 @@ class UserSchema(UserInDBBase):
     notifs: List[NotifSchema]
     likes: List[LikeSchema]
     liked_by: List[LikeSchema]
+    like_photos: List[LikePhotoSchema]
+    profile_seen: List[ProfileSeenSchema]
+    profile_seen_by: List[ProfileSeenSchema]
     photos: List[PhotoSchema]
     tags: List[TagSchema]
     matches: List[MatchSchema]

@@ -16,6 +16,5 @@ export const getAuthorizedInstance = (token) => {
       return Promise.reject(error);
     }
   );
-
   return instance;
 };

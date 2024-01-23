@@ -18,25 +18,45 @@ import {
   FemaleIcon,
   MaleIcon,
   ChatIcon,
+  HeartIcon,
 } from "../components/icons/Icons";
 import Relation from "../components/otherProfil/Relation";
 import { useDispatch, useSelector } from "react-redux";
 import { initialiseUser, selectUser } from "../store/slices/userSlice";
 import Profil from "./Profil";
 import { getAuthorizedInstance } from "../utils/Instance";
+import { useSocket } from "../utils/PrivateRoutes";
 
 const OtherProfil = () => {
   const location = useLocation();
   const myUser = useSelector(selectUser);
   const navigate = useNavigate();
   const token = useSelector(getToken);
-  const userSeen = location.state;
+  const locationState = location.state;
+  const [userSeen, setUserSeen] = useState(null)
   const [seenMenuEllips, setSeenMenuEllips] = useState(false);
   const [translateXValue, setTranslateXValue] = useState(0);
   const [mainSeen, setMainSeen] = useState(null);
   const backPicRef = useRef();
-  const dispatch = useDispatch();
-  const instance = getAuthorizedInstance(token.access_token);
+  const instance = getAuthorizedInstance(token.access_token)
+  const socket = useSocket();
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    instance.get(`users/${locationState.id}`).then(({ data }) => setUserSeen(data))
+  }, [])
+
+  const onUpdateStatus = ({ user_id, status }) => {
+    if (user_id == userSeen.id) instance.get(`users/${locationState.id}`).then(({ data }) => setUserSeen(data));
+  };
+
+  useEffect(() => {
+    if (socket) socket.on("update-status", onUpdateStatus);
+
+    return () => {
+      if (socket) socket.off("update-status", onUpdateStatus);
+    };
+  }, [socket]);
 
   useEffect(() => {
     if (backPicRef.current)
@@ -44,10 +64,16 @@ const OtherProfil = () => {
   }, [translateXValue]);
 
   useEffect(() => {
+    instance.post(`/users/see/${locationState.id}`)
+  }, [])
+
+  useEffect(() => {
     if (userSeen)
       setMainSeen(
         userSeen.photos.filter((photo) => photo.main === true)[0]?.path
       );
+      console.log(userSeen);
+    
   }, [userSeen, navigate]);
 
   const onBlockUser = () => {
@@ -71,6 +97,11 @@ const OtherProfil = () => {
     return nomMois;
   }
 
+
+  const onLikePhoto = id => {
+    instance.post(`/users/like_photo/${id}`).then(({data}) => dispatch(initialiseUser(data)))
+  }
+
   const lastConnexion = () => {
     const date = new Date(userSeen.last_connection_date);
     const options = {
@@ -84,9 +115,8 @@ const OtherProfil = () => {
     };
     const formatter = new Intl.DateTimeFormat("fr-FR", options);
     const res = formatter.format(date).split("");
-    const display = `${res[0]}${res[1]} ${getMonth(res[3] + res[4])} à ${
-      res[6]
-    }${res[7]}h${res[9]}${res[10]}`;
+    const display = `${res[0]}${res[1]} ${getMonth(res[3] + res[4])} at ${res[6]
+      }${res[7]}h${res[9]}${res[10]}`;
     return display;
   };
 
@@ -104,14 +134,16 @@ const OtherProfil = () => {
     return false;
   };
 
-  if (!userSeen) return <div> Compte inconnu </div>;
-  if (userSeen.id === myUser.id)
+  if (!locationState) return <div> Compte inconnu </div>;
+  if (!userSeen) return <></>;
+  if (locationState.id === myUser.id)
     return (
       <div>
         <Profil />
       </div>
     );
   else
+    // return (<></>)
     return (
       <div className="ProfilContainer">
         <div className="topContainer">
@@ -133,22 +165,23 @@ const OtherProfil = () => {
                           <ArrowRight />
                         </div>
                       )}
+                      <div className={"likePhoto " + (myUser.like_photos.find(like => like.photo_id == photo.id) ? "liked" : "")} onClick={() => {onLikePhoto(photo.id)}}><HeartIcon /></div>
                     </div>
                   );
                 })}
               {userSeen.photos.filter((photo) => photo.main === false).length <=
                 0 && (
-                <div className="oneBackPic">
-                  <div className="addImg">
-                    <label htmlFor="pict" className="iconAddImg">
-                      <EmptyImgIcon />
-                    </label>
-                    <label htmlFor="pict" className="addImgTxt">
-                      <p> Cet utilisateur n&apos;a pas encore de photos </p>
-                    </label>
+                  <div className="oneBackPic">
+                    <div className="addImg">
+                      <label htmlFor="pict" className="iconAddImg">
+                        <EmptyImgIcon />
+                      </label>
+                      <label htmlFor="pict" className="addImgTxt">
+                        <p> This user has no photos yet </p>
+                      </label>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
             </div>
           </div>
           <section>
@@ -188,9 +221,9 @@ const OtherProfil = () => {
           )}
           <div className="otherProfilMore">
             <div className="ellipsMenu">
-              <div onClick={() => setSeenMenuEllips((prevState) => !prevState)}>
+              <button onClick={() => setSeenMenuEllips((prevState) => !prevState)}>
                 <EllipsisVerticalIcon />
-              </div>
+              </button>
               <div
                 className={
                   seenMenuEllips
@@ -203,7 +236,6 @@ const OtherProfil = () => {
               </div>
             </div>
           </div>
-          {/* <p> Crushed on...</p> */}
         </div>
         <p className="otherProfilBio"> {userSeen.bio} </p>
         <div className="socialInfosContainer">
@@ -218,15 +250,15 @@ const OtherProfil = () => {
             {mainSeen ? (
               <Relation userSeen={userSeen} />
             ) : (
-              <p> Cet utilisateur n&apos;a pas de photo de profil</p>
+              <p> This user has no profile picture </p>
             )}
           </div>
           <div className="socialInfos">
             <div className="socialTitleSvg">
-              <h4> 13 </h4>
+              <h4> {userSeen.profile_seen_by.length} </h4>
               <Eye />
             </div>
-            <p>vues</p>
+            <p>views</p>
           </div>
         </div>
         {!userSeen && <div> Loader </div>}
@@ -242,8 +274,8 @@ const OtherProfil = () => {
                   userSeen.gender === "MALE") ||
                   (userSeen.sexuality.toLowerCase() === "homosexual" &&
                     userSeen.gender === "FEMALE")) && (
-                  <p> attracted to womens. </p>
-                )}
+                    <p> attracted to womens. </p>
+                  )}
                 {((userSeen.sexuality.toLowerCase() === "heterosexual" &&
                   userSeen.gender === "FEMALE") ||
                   (userSeen.sexuality.toLowerCase() === "homosexual" &&
@@ -261,12 +293,14 @@ const OtherProfil = () => {
                     </p>
                   ))
                 ) : (
-                  <p> Pas d&apos;interêts enregistré.</p>
+                  <p> No registered interest.</p>
                 )}
               </div>
-              {userSeen.status === "OFFLINE" && (
-                <p> Dernière connexion le {lastConnexion()}.</p>
-              )}
+              {
+                userSeen.status === "OFFLINE" ?
+                  <p> Last connection on {lastConnexion()}.</p>
+                  : <p>Online.</p>
+              }
             </form>
           </div>
         )}

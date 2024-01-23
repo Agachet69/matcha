@@ -13,14 +13,14 @@ from Validators.user import user_name_validator, password_validator
 
 
 
-class LikeBase(BaseModel):
+class ProfileSeenBase(BaseModel):
     user_id: Optional[int]
     user_target_id: Optional[int]
 
-class LikeCreate(LikeBase):
+class ProfileSeenCreate(ProfileSeenBase):
 	pass
 
-class LikeInDBBase(LikeBase):
+class ProfileSeenInDBBase(ProfileSeenBase):
     id: int
 
     class Config:
@@ -41,7 +41,7 @@ class UserBase(BaseModel):
     class Config:
         orm_mode = True
 
-class LikeSchema(LikeInDBBase):
+class ProfileSeenSchema(ProfileSeenInDBBase):
     user_target: Optional[UserBase]
     user: Optional[UserBase]
     

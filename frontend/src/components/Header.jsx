@@ -46,7 +46,7 @@ const Header = ({ children, connected = true }) => {
             </div>
 
             <div className="limiter" />
-            <Badge badgeContent={user.notifs.length} color="error">
+            {/* <Badge badgeContent={user.notifs.length} color="error"> */}
               <div
                 className="logout"
                 onClick={() => {
@@ -55,7 +55,7 @@ const Header = ({ children, connected = true }) => {
               >
                 <ChatIcon />
               </div>
-            </Badge>
+            {/* </Badge> */}
             <div className="limiter" />
             <Badge badgeContent={user.notifs.length} color="error">
               <div
