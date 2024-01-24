@@ -4,7 +4,7 @@ import { getToken } from "../store/slices/authSlice";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import printVarsHook from "../components/printVarsHook";
-import { CogIcon, TriangleIcon } from "../components/icons/Icons";
+import { ArrowRight, CogIcon, TriangleIcon } from "../components/icons/Icons";
 import { useSocket } from "../utils/PrivateRoutes";
 import { initialiseUser, selectUser } from "../store/slices/userSlice";
 import { Autocomplete, Slider, TextField, Tooltip } from "@mui/material";
@@ -28,6 +28,13 @@ const Home = () => {
   const allModals = useSelector(selectAllModals);
   const navigate = useNavigate();
   const [openSearchParm, setOpenSearchParm] = useState(false);
+  const initialValueSort = {
+    name: 0,
+    fame: 0,
+    position: 0,
+    tags: 0,
+  };
+  const [sortResult, setSortResult] = useState(initialValueSort);
 
   const getAllUsers = () => {
     axios
@@ -118,9 +125,98 @@ const Home = () => {
     return () => clearTimeout(id);
   }, [searchFormik.values]);
 
-  printVarsHook(allUsers, "allUsers");
-  printVarsHook(searchFormik.values, "searchFormik.values");
-  printVarsHook(searchFormik.errors, "searchFormik.errors");
+  useEffect(() => {
+    if (sortResult.name > 0) sortByName();
+    else if (sortResult.fame > 0) sortByFame();
+    else if (sortResult.position > 0) sortByPosition();
+    else if (sortResult.tags > 0) sortByTags();
+  }, [sortResult]);
+
+  const sortByName = () => {
+    const sortedArray = [...allUsers].sort((a, b) => {
+      const nameA = a.username.toLowerCase();
+      const nameB = b.username.toLowerCase();
+
+      if (nameA < nameB) return sortResult.name <= 1 ? -1 : 1;
+      if (nameA > nameB) return sortResult.name <= 1 ? 1 : -1;
+      return 0;
+    });
+
+    setAllUsers(sortedArray);
+  };
+
+  const sortByFame = () => {
+    const sortedArray = [...allUsers].sort((a, b) => {
+      const fameA = a.fame_rate;
+      const fameB = b.fame_rate;
+
+      if (fameA < fameB) return sortResult.fame === 2 ? -1 : 1;
+      if (fameA > fameB) return sortResult.fame === 2 ? 1 : -1;
+      return 0;
+    });
+
+    setAllUsers(sortedArray);
+  };
+
+  const sortByTags = () => {
+    const sortedArray = [...allUsers].sort((a, b) => {
+      const commonTagsA = me.tags.filter((tag) =>
+        a.tags.map((tag) => tag.tag).includes(tag.tag)
+      );
+      const commonTagsB = me.tags.filter((tag) =>
+        b.tags.map((tag) => tag.tag).includes(tag.tag)
+      );
+
+      if (commonTagsA.length < commonTagsB.length)
+        return sortResult.tags === 2 ? -1 : 1;
+      if (commonTagsA.length > commonTagsB.length)
+        return sortResult.tags === 2 ? 1 : -1;
+      return 0;
+    });
+
+    setAllUsers(sortedArray);
+  };
+
+  const sortByPosition = () => {
+
+  }
+
+  function mySortResult(type) {
+    switch (type) {
+      case "name":
+        setSortResult((prevState) => ({
+          ...initialValueSort,
+          name: prevState.name <= 0 ? 1 : prevState.name > 1 ? 1 : 2,
+        }));
+        break;
+      case "fame":
+        setSortResult((prevState) => ({
+          ...initialValueSort,
+          fame: prevState.fame <= 0 ? 1 : prevState.fame > 1 ? 1 : 2,
+        }));
+        break;
+      case "position":
+        setSortResult((prevState) => ({
+          ...initialValueSort,
+          position:
+            prevState.position <= 0 ? 1 : prevState.position > 1 ? 1 : 2,
+        }));
+        break;
+      case "tags":
+        setSortResult((prevState) => ({
+          ...initialValueSort,
+          tags: prevState.tags <= 0 ? 1 : prevState.tags > 1 ? 1 : 2,
+        }));
+        break;
+      default:
+        console.log("Type unknown");
+        break;
+    }
+  }
+
+  // printVarsHook(allUsers, "allUsers");
+  // printVarsHook(searchFormik.values, "searchFormik.values");
+  // printVarsHook(searchFormik.errors, "searchFormik.errors");
 
   return (
     <div className="main">
@@ -129,15 +225,23 @@ const Home = () => {
           <div className="title">Search an user</div>
           <div className="icons">
             <div className="container">
-              <Tooltip disableHoverListener={me.photos.find(photo => photo.main)} title='You must set a main profile pic to search users.'>
-
-              <div
-                className={"icon " + (!me.photos.find(photo => photo.main) ? "disabled" : "")}
-                onClick={() => !!me.photos.find(photo => photo.main) && setOpenSearchParm((prev) => !prev)}
+              <Tooltip
+                disableHoverListener={me.photos.find((photo) => photo.main)}
+                title="You must set a main profile pic to search users."
+              >
+                <div
+                  className={
+                    "icon " +
+                    (!me.photos.find((photo) => photo.main) ? "disabled" : "")
+                  }
+                  onClick={() =>
+                    !!me.photos.find((photo) => photo.main) &&
+                    setOpenSearchParm((prev) => !prev)
+                  }
                 >
-                <CogIcon />
-              </div>
-                </Tooltip>
+                  <CogIcon />
+                </div>
+              </Tooltip>
               <div
                 className={"sub-icon " + (openSearchParm ? "open" : "close")}
               >
@@ -165,7 +269,7 @@ const Home = () => {
             />
             <Slider
               min={18}
-              max={99}
+              max={122}
               disabled={!Object.keys(searchFormik.values).includes("age_limit")}
               value={
                 Object.keys(searchFormik.values).includes("age_limit")
@@ -290,17 +394,76 @@ const Home = () => {
               }
             />
           </div>
-        {!Object.keys(searchFormik.values).length &&
-          searchFormik.isSubmitting && (
-            <div className="error">Need at least one param.</div>
-          )}
+          {!Object.keys(searchFormik.values).length &&
+            searchFormik.isSubmitting && (
+              <div className="error">Need at least one param.</div>
+            )}
         </div>
       </form>
       {allUsers && allUsers.length <= 0 ? (
         <div> </div>
       ) : (
         <div className="searchResult">
-          {allUsers && <h3> Result of your research</h3>}
+          {allUsers && (
+            <div className="headerResult">
+              <h3> Result of your research</h3>
+              <div className="sortResult">
+                <p> Sort by </p>
+                <button
+                  className={
+                    sortResult.name <= 0
+                      ? "inactiveSort"
+                      : sortResult.name > 1
+                      ? "reverseSort"
+                      : "activeSort"
+                  }
+                  onClick={() => mySortResult("name")}
+                >
+                  {" "}
+                  name <ArrowRight />{" "}
+                </button>
+                <button
+                  className={
+                    sortResult.fame <= 0
+                      ? "inactiveSort"
+                      : sortResult.fame > 1
+                      ? "reverseSort"
+                      : "activeSort"
+                  }
+                  onClick={() => mySortResult("fame")}
+                >
+                  {" "}
+                  fame <ArrowRight />
+                </button>
+                <button
+                  className={
+                    sortResult.position <= 0
+                      ? "inactiveSort"
+                      : sortResult.position > 1
+                      ? "reverseSort"
+                      : "activeSort"
+                  }
+                  onClick={() => mySortResult("position")}
+                >
+                  {" "}
+                  position? <ArrowRight />
+                </button>
+                <button
+                  className={
+                    sortResult.tags <= 0
+                      ? "inactiveSort"
+                      : sortResult.tags > 1
+                      ? "reverseSort"
+                      : "activeSort"
+                  }
+                  onClick={() => mySortResult("tags")}
+                >
+                  {" "}
+                  tags <ArrowRight />
+                </button>
+              </div>
+            </div>
+          )}
           <div className="resultCardContainer">
             {allUsers &&
               allUsers.map((user, index) => (
@@ -317,7 +480,7 @@ const Home = () => {
       )}
       {!allUsers && <h3 className="launchSearch"> Find your soul mate !</h3>}
       {allUsers && allUsers.length <= 0 && (
-        <div  className="findNothing">
+        <div className="findNothing">
           <h3>
             {" "}
             The search didn&apos;t produce any results, please broaden your

@@ -33,21 +33,26 @@ const OtherProfil = () => {
   const navigate = useNavigate();
   const token = useSelector(getToken);
   const locationState = location.state;
-  const [userSeen, setUserSeen] = useState(null)
+  const [userSeen, setUserSeen] = useState(null);
   const [seenMenuEllips, setSeenMenuEllips] = useState(false);
   const [translateXValue, setTranslateXValue] = useState(0);
   const [mainSeen, setMainSeen] = useState(null);
   const backPicRef = useRef();
-  const instance = getAuthorizedInstance(token.access_token)
+  const instance = getAuthorizedInstance(token.access_token);
   const socket = useSocket();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    instance.get(`users/${locationState.id}`).then(({ data }) => setUserSeen(data))
-  }, [])
+    instance
+      .get(`users/${locationState.id}`)
+      .then(({ data }) => setUserSeen(data));
+  }, []);
 
   const onUpdateStatus = ({ user_id, status }) => {
-    if (user_id == userSeen.id) instance.get(`users/${locationState.id}`).then(({ data }) => setUserSeen(data));
+    if (user_id == userSeen.id)
+      instance
+        .get(`users/${locationState.id}`)
+        .then(({ data }) => setUserSeen(data));
   };
 
   useEffect(() => {
@@ -64,16 +69,15 @@ const OtherProfil = () => {
   }, [translateXValue]);
 
   useEffect(() => {
-    instance.post(`/users/see/${locationState.id}`)
-  }, [])
+    instance.post(`/users/see/${locationState.id}`);
+  }, []);
 
   useEffect(() => {
     if (userSeen)
       setMainSeen(
-        userSeen.photos.filter((photo) => photo.main === true)[0]?.path
+        userSeen.photos.filter((photo) => photo.main === true)[0]
       );
-      console.log(userSeen);
-    
+    console.log(userSeen);
   }, [userSeen, navigate]);
 
   const onBlockUser = () => {
@@ -97,10 +101,11 @@ const OtherProfil = () => {
     return nomMois;
   }
 
-
-  const onLikePhoto = id => {
-    instance.post(`/users/like_photo/${id}`).then(({data}) => dispatch(initialiseUser(data)))
-  }
+  const onLikePhoto = (id) => {
+    instance
+      .post(`/users/like_photo/${id}`)
+      .then(({ data }) => dispatch(initialiseUser(data)));
+  };
 
   const lastConnexion = () => {
     const date = new Date(userSeen.last_connection_date);
@@ -115,8 +120,9 @@ const OtherProfil = () => {
     };
     const formatter = new Intl.DateTimeFormat("fr-FR", options);
     const res = formatter.format(date).split("");
-    const display = `${res[0]}${res[1]} ${getMonth(res[3] + res[4])} at ${res[6]
-      }${res[7]}h${res[9]}${res[10]}`;
+    const display = `${res[0]}${res[1]} ${getMonth(res[3] + res[4])} at ${
+      res[6]
+    }${res[7]}h${res[9]}${res[10]}`;
     return display;
   };
 
@@ -142,8 +148,8 @@ const OtherProfil = () => {
         <Profil />
       </div>
     );
+  // return (<></>)
   else
-    // return (<></>)
     return (
       <div className="ProfilContainer">
         <div className="topContainer">
@@ -165,34 +171,63 @@ const OtherProfil = () => {
                           <ArrowRight />
                         </div>
                       )}
-                      <div className={"likePhoto " + (myUser.like_photos.find(like => like.photo_id == photo.id) ? "liked" : "")} onClick={() => {onLikePhoto(photo.id)}}><HeartIcon /></div>
+                      <div
+                        className={
+                          "likePhoto " +
+                          (myUser.like_photos.find(
+                            (like) => like.photo_id == photo.id
+                          )
+                            ? "liked"
+                            : "")
+                        }
+                        onClick={() => {
+                          onLikePhoto(photo.id);
+                        }}
+                      >
+                        <HeartIcon />
+                      </div>
                     </div>
                   );
                 })}
               {userSeen.photos.filter((photo) => photo.main === false).length <=
                 0 && (
-                  <div className="oneBackPic">
-                    <div className="addImg">
-                      <label htmlFor="pict" className="iconAddImg">
-                        <EmptyImgIcon />
-                      </label>
-                      <label htmlFor="pict" className="addImgTxt">
-                        <p> This user has no photos yet </p>
-                      </label>
-                    </div>
+                <div className="oneBackPic">
+                  <div className="addImg">
+                    <label htmlFor="pict" className="iconAddImg">
+                      <EmptyImgIcon />
+                    </label>
+                    <label htmlFor="pict" className="addImgTxt">
+                      <p> This user has no photos yet </p>
+                    </label>
                   </div>
-                )}
+                </div>
+              )}
             </div>
           </div>
           <section>
             {mainSeen ? (
               <div className="actualPic">
-                <img src={`http://localhost:8000/${mainSeen}`} />
+                <img src={`http://localhost:8000/${mainSeen.path}`} />
                 {userSeen.status === "OFFLINE" ? (
                   <div className="statusUser offline"></div>
                 ) : (
                   <div className="statusUser online"></div>
                 )}
+                <div
+                  className={
+                    "likePhoto " +
+                    (myUser.like_photos.find(
+                      (like) => like.photo_id == mainSeen.id
+                    )
+                      ? "liked"
+                      : "")
+                  }
+                  onClick={() => {
+                    onLikePhoto(mainSeen.id);
+                  }}
+                >
+                  <HeartIcon />
+                </div>
               </div>
             ) : (
               <div className="defaultPic">
@@ -221,7 +256,9 @@ const OtherProfil = () => {
           )}
           <div className="otherProfilMore">
             <div className="ellipsMenu">
-              <button onClick={() => setSeenMenuEllips((prevState) => !prevState)}>
+              <button
+                onClick={() => setSeenMenuEllips((prevState) => !prevState)}
+              >
                 <EllipsisVerticalIcon />
               </button>
               <div
@@ -274,8 +311,8 @@ const OtherProfil = () => {
                   userSeen.gender === "MALE") ||
                   (userSeen.sexuality.toLowerCase() === "homosexual" &&
                     userSeen.gender === "FEMALE")) && (
-                    <p> attracted to womens. </p>
-                  )}
+                  <p> attracted to womens. </p>
+                )}
                 {((userSeen.sexuality.toLowerCase() === "heterosexual" &&
                   userSeen.gender === "FEMALE") ||
                   (userSeen.sexuality.toLowerCase() === "homosexual" &&
@@ -296,11 +333,11 @@ const OtherProfil = () => {
                   <p> No registered interest.</p>
                 )}
               </div>
-              {
-                userSeen.status === "OFFLINE" ?
-                  <p> Last connection on {lastConnexion()}.</p>
-                  : <p>Online.</p>
-              }
+              {userSeen.status === "OFFLINE" ? (
+                <p> Last connection on {lastConnexion()}.</p>
+              ) : (
+                <p>Online.</p>
+              )}
             </form>
           </div>
         )}

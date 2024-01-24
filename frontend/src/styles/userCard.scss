@@ -44,7 +44,6 @@
     gap: 0.5rem;
     cursor: pointer;
 
-
     .limiter {
       height: 40%;
       border-radius: 10px;
@@ -175,14 +174,15 @@
         }
       }
 
-      .block, .chat {
+      .block,
+      .chat {
         display: flex;
         justify-content: center;
         align-items: center;
         height: 100%;
         transition: 0.2s;
         cursor: pointer;
-        
+
         svg {
           &:hover {
             color: rgba(0, 0, 0, 0.586);
@@ -213,9 +213,19 @@
 }
 
 .female {
+  &:hover {
+    background-color: #ff4ca8a6;
+    transition: 0.3s;
+  }
   background-color: #ff4ca873;
+  transition: 0.3s;
 }
 
 .male {
+  &:hover {
+    background-color: #3c3cfd96;
+    transition: 0.3s;
+  }
   background-color: #3c3cfd73;
+  transition: 0.3s;
 }

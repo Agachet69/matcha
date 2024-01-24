@@ -156,6 +156,44 @@
         .deleteImg {
           left: 17px;
         }
+
+        .likePhoto {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          // color: #14141442 !important;
+          background-color: white;
+          border-radius: 50%;
+          aspect-ratio: 1/1;
+          position: absolute;
+          bottom: 60px;
+          right: -9px;
+          padding: 5px;
+          border: 1px solid $pink;
+          cursor: pointer;
+
+          svg {
+            color: $pink;
+          }
+
+          &:hover {
+            color: #ff4ca8;
+          }
+
+          &.liked {
+            svg {
+              fill: #ff4ca8;
+              color: #ff4ca8;
+            }
+            &:hover {
+              svg {
+                fill: transparent;
+                color: #14141442 ;
+              }
+            }
+          }
+        }
+
       }
 
       h3 {
@@ -213,12 +251,19 @@
           }
 
           .likePhoto {
-            color: #ffffff33;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #14141442;
+            background-color: white;
+            border-radius: 50%;
             width: 50px;
             aspect-ratio: 1/1;
             position: absolute;
-            bottom: 0;
-            right: 0;
+            bottom: 10px;
+            right: 10px;
+            padding: 9px;
+            border: 1px solid $pink;
             cursor: pointer;
 
             &:hover {
@@ -226,15 +271,15 @@
             }
 
             &.liked {
+              padding: 9px;
               svg {
-                fill: #ff4ca8;
-                color: #ff4ca8;
+                fill: $pink;
+                color: $pink;
               }
               &:hover {
                 svg {
-
                   fill: transparent;
-                  color: #ffffff33;
+                  color: #14141442;
                 }
               }
             }
@@ -458,10 +503,10 @@
     cursor: pointer;
 
     .borderR {
-      border-right: 1px solid #ff4ca8;
+      border-right: 1px solid $pink;
 
       .pink {
-        color: #ff4ca8;
+        color: $pink;
       }
     }
 
@@ -542,9 +587,9 @@
     }
 
     .otherProfilMore {
-      pointer-events: none;
+      // pointer-events: none;
       position: absolute;
-      top: 104px;
+      top: 18px;
       right: 10%;
       display: flex;
       align-items: center;
@@ -557,19 +602,18 @@
       }
 
       .ellipsMenu {
-        pointer-events: none;
-
+        // pointer-events: none;
         position: relative;
         display: flex;
         align-items: flex-start;
         justify-content: center;
-        height: 200px;
-        width: 400px;
-        overflow: hidden;
+        // height: 200px;
+        // width: 400px;
+        // overflow: hidden;
 
         button {
           all: unset;
-          pointer-events: all;
+          // pointer-events: all;
           svg {
             &:hover {
               color: $pink;
@@ -579,7 +623,7 @@
 
         .ellipsMenuContent {
           position: absolute;
-          left: 50px;
+          left: -140px;
           top: 20px;
           display: flex;
           flex-direction: column;
@@ -588,6 +632,8 @@
           overflow: hidden;
           border-radius: 15px;
           border-top-right-radius: 0px;
+          z-index: 50;
+          cursor: pointer;
           p {
             &:hover {
               background-color: grey;
