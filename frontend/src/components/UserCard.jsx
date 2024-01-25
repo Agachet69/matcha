@@ -1,6 +1,6 @@
 import { Tooltip } from "@mui/material";
 import GenderEnum from "../Enum/GenderEnum";
-import { ChatIcon, HeartIcon, NoSymbol, Sparkless } from "./icons/Icons";
+import { ChatIcon, Fire, HeartIcon, NoSymbol, Sparkless } from "./icons/Icons";
 import "../styles/userCard.scss";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
@@ -79,7 +79,7 @@ const UserCard = ({
             <div className="info">
               <Tooltip title="Fame rating">
                 <div className="icon">
-                  <Sparkless />
+                  <Fire />
                   <p> {user.fame_rate} </p>
                 </div>
               </Tooltip>

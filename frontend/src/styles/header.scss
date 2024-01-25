@@ -49,6 +49,7 @@
       .logout {
         display: flex;
         align-items: center;
+        justify-content: center;
         height: 100%;
         aspect-ratio: 1/1;
 
@@ -157,6 +158,25 @@
       }
       100% {
         margin-left: -1600px;
+      }
+    }
+  }
+}
+
+
+@media screen and (max-width: 430px) {
+  .container {
+
+    .header {
+      padding: 1rem 5px;
+      .logo {
+        font-size: 18px;
+        text-align: center;
+      }
+
+      .other {
+        padding: 5px 0px;
+        gap: 5px;
       }
     }
   }

@@ -9,7 +9,7 @@
   overflow-x: scroll;
   display: flex;
   border-radius: 10px;
-  flex: 1 0 400px;
+  flex: 1 0 380px;
   max-height: 80px;
 
   .mainContentCard {
@@ -228,4 +228,74 @@
   }
   background-color: #3c3cfd73;
   transition: 0.3s;
+}
+
+@media screen and (max-width: 400px) {
+  .user-card-item {
+    backdrop-filter: unset;
+    flex: unset;
+    width: 100%;
+    padding: 0.5rem 5px;
+
+    .mainContentCard {
+      .leftContent {
+        .image {
+          height: 40px;
+          width: 40px;
+
+          &.offline::after {
+            width: 10px;
+            height: 10px;
+            bottom: 1px;
+            right: 2px;
+          }
+
+          &.online::after {
+            width: 10px;
+            height: 10px;
+            bottom: 1px;
+            right: 2px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .user-card-item {
+    backdrop-filter: unset;
+    flex: unset;
+    width: 100%;
+    padding: 0.5rem 5px;
+
+    .mainContentCard {
+      .leftContent {
+        .limiter {
+          display: none;
+        }
+
+        .icon {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+    .user-card-item {
+    backdrop-filter: unset;
+    flex: unset;
+    width: 100%;
+    padding: 0.5rem 5px;
+
+    .mainContentCard {
+      .leftContent {
+        .info {
+          display: none;
+        }
+      }
+    }
+  }
 }

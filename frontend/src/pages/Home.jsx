@@ -4,7 +4,14 @@ import { getToken } from "../store/slices/authSlice";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import printVarsHook from "../components/printVarsHook";
-import { ArrowRight, CogIcon, TriangleIcon } from "../components/icons/Icons";
+import {
+  Age,
+  ArrowRight,
+  CogIcon,
+  Fire,
+  MapPin,
+  TriangleIcon,
+} from "../components/icons/Icons";
 import { useSocket } from "../utils/PrivateRoutes";
 import { initialiseUser, selectUser } from "../store/slices/userSlice";
 import { Autocomplete, Slider, TextField, Tooltip } from "@mui/material";
@@ -35,6 +42,11 @@ const Home = () => {
     tags: 0,
   };
   const [sortResult, setSortResult] = useState(initialValueSort);
+  const searchFormik = useFormik({
+    validationSchema: SearchSchema(),
+    initialValues: {},
+    onSubmit: (values) => onSearch(values),
+  });
 
   const getAllUsers = () => {
     axios
@@ -110,12 +122,6 @@ const Home = () => {
     };
   }, [socket]);
 
-  const searchFormik = useFormik({
-    validationSchema: SearchSchema(),
-    initialValues: {},
-    onSubmit: (values) => onSearch(values),
-  });
-
   useEffect(() => {
     const id = setTimeout(() => {
       if (Object.keys(searchFormik.values).length) {
@@ -177,9 +183,7 @@ const Home = () => {
     setAllUsers(sortedArray);
   };
 
-  const sortByPosition = () => {
-
-  }
+  const sortByPosition = () => {};
 
   function mySortResult(type) {
     switch (type) {
@@ -214,10 +218,6 @@ const Home = () => {
     }
   }
 
-  // printVarsHook(allUsers, "allUsers");
-  // printVarsHook(searchFormik.values, "searchFormik.values");
-  // printVarsHook(searchFormik.errors, "searchFormik.errors");
-
   return (
     <div className="main">
       <form className="search-container" onSubmit={searchFormik.onSubmit}>
@@ -226,7 +226,7 @@ const Home = () => {
           <div className="icons">
             <div className="container">
               <Tooltip
-                disableHoverListener={me.photos.find((photo) => photo.main)}
+                disableHoverListener={me.photos.some((photo) => photo.main)}
                 title="You must set a main profile pic to search users."
               >
                 <div
@@ -255,6 +255,10 @@ const Home = () => {
         >
           <div className="item">
             <div className="title">Age Limit</div>
+            <div className="iconResponsive">
+              {" "}
+              <Age />{" "}
+            </div>
             <input
               type="checkbox"
               value={Object.keys(searchFormik.values).includes("age_limit")}
@@ -291,6 +295,10 @@ const Home = () => {
           </div>
           <div className="item">
             <div className="title">Fame Limit</div>
+            <div className="iconResponsive">
+              {" "}
+              <Fire />{" "}
+            </div>
             <input
               type="checkbox"
               value={Object.keys(searchFormik.values).includes(
@@ -331,6 +339,10 @@ const Home = () => {
           </div>
           <div className="item">
             <div className="title">{"Location Limit (m)"}</div>
+            <div className="iconResponsive">
+              {" "}
+              <MapPin />{" "}
+            </div>
             <input
               type="checkbox"
               value={Object.keys(searchFormik.values).includes(

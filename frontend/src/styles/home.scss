@@ -17,10 +17,7 @@
     margin-inline: auto;
     width: 90%;
     padding: 1rem;
-    // height: 500px;
-
     display: flex;
-    // align-items: center;
     flex-direction: column;
     gap: 1rem;
 
@@ -32,7 +29,7 @@
       .title {
         margin-inline: auto;
         font-size: 25px;
-        font-family: Alkatra;
+        font-family: Montserrat;
       }
       .icons {
         position: absolute;
@@ -135,6 +132,13 @@
           white-space: pre;
         }
 
+        .iconResponsive {
+          display: none;
+          color: white;
+          height: 24px;
+          aspect-ratio: 1/1;
+        }
+
         .icon {
           height: 20px;
           aspect-ratio: 1/1;
@@ -161,11 +165,12 @@
     font-family: Montserrat;
 
     .headerResult {
+      width: 100%;
       display: flex;
       flex-direction: column;
-      // align-items: center;
       justify-content: center;
       gap: 10px;
+      margin-bottom: 20px;
 
       h3 {
         display: flex;
@@ -179,13 +184,16 @@
         align-items: center;
         padding: 0px 20px;
         gap: 10px;
+        flex-wrap: wrap;
 
         button {
           display: flex;
           align-items: center;
+          justify-content: center;
           padding: 5px 15px;
           gap: 5px;
           border-radius: 100px;
+          flex: 0 0 115px;
           font-family: Montserrat;
 
           svg {
@@ -242,7 +250,57 @@
     font-size: 30px;
 
     h3 {
+      text-align: center;
       width: 80%;
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .container .main {
+    padding: 1rem 0rem;
+    .search-container {
+      width: 100%;
+      border-radius: unset;
+      // border: unset;
+      // gap: 2rem;
+      .param-container .item {
+        .title {
+          display: none;
+        }
+
+        .iconResponsive {
+          display: unset;
+        }
+      }
+    }
+
+    .searchResult {
+      padding: 20px 0px;
+    }
+  }
+}
+
+@media screen and (max-width: 430px) {
+  .container .search-container {
+    gap: 2rem;
+    .title-container .icons {
+      bottom: -30px;
+      right: 50%;
+      transform: translateX(-50%);
+
+      .container {
+        .icon {
+          right: unset;
+          left: 50%;
+          transform: translateX(-50%);
+        }
+
+        .sub-icon {
+          right: unset;
+          left: 6px;
+        }
+      }
     }
   }
 }

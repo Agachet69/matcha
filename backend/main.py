@@ -17,11 +17,19 @@ from dotenv import load_dotenv
 from fastapi_socketio import SocketManager
 from fastapi.staticfiles import StaticFiles
 from Router import api_router
+import os
 
 load_dotenv()
 
 from Utils.App import app
 from Socket.socket import socket_manager
+
+# Chemin du répertoire "uploads"
+uploads_directory = "uploads"
+
+# Vérifier si le répertoire existe, sinon le créer
+if not os.path.exists(uploads_directory):
+    os.makedirs(uploads_directory)
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 

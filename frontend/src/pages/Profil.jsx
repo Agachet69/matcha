@@ -216,7 +216,8 @@ const Profil = () => {
         {" "}
         {user.firstName} {user.lastName}{" "}
       </h3>
-      <p>Fame-rate {user.fame_rate} </p>
+      <p> Fame {user.fame_rate}</p>
+
       <p> Modifier sa position </p>
       <div className="socialInfosContainer">
         <div

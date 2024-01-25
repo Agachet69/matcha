@@ -288,7 +288,7 @@ const Modals = ({ children }) => {
                 </div>
               </section>
             ) : (
-              <section className="listModal">
+              <section>
                 <h3> Nobody has a match with you yet</h3>
                 <div className="btnClose">
                   <button onClick={() => dispatch(editMatch(allModals.match))}>
