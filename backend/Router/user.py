@@ -140,7 +140,10 @@ async def like(
 ):
     from Socket.socket import socket_manager
     
-    
+    for blocked in user_to_like.blocked:
+        if (blocked.user_target_id == current_user.id):
+            raise HTTPException(status_code=400, detail="This user as blocked you.")
+
     user_match = next((user_match for user_match in current_user.matches if user_match.user_A_id == user_to_like.id or user_match.user_B_id == user_to_like.id), None)
     if user_match != None:
         Crud.match.remove(db, id=user_match.id)

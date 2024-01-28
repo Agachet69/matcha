@@ -20,7 +20,7 @@ const EditUserSchema = () =>
       .test(
         "onlyASCIIAndUnderScore",
         "The only characters allowed are [aA-zZ]",
-        (value) => /^[a-zA-Z0-9_]+$/.test(value)
+        (value) => /^[a-zA-Z]+$/.test(value)
       ),
     firstName: string()
       .min(3, "First name must have at least 3 characters.")
@@ -33,6 +33,7 @@ const EditUserSchema = () =>
       ),
     email: string()
       .email("Invalid email format.")
+      .max(50, "Email length must be less than 50 long.")
       .required("Email is required."),
     age: number()
       .min(18, "Wait for ur majority!")

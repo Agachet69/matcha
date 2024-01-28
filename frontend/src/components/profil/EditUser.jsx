@@ -67,154 +67,172 @@ const EditUser = () => {
     <div className="editUserContainer">
       <h3> Profile information </h3>
       <form onSubmit={formik.handleSubmit}>
-        <div className="inputContainer">
-          <label className="labelContainer"> Username</label>
+        <div
+          className={
+            editStatus.username ? "inputContainer active" : "inputContainer"
+          }
+        >
           <div
-            className={
-              editStatus.username ? "myTextInput active" : "myTextInput"
+            className="titleInput"
+            onClick={() =>
+              setEditStatus((prevState) => ({
+                ...prevState,
+                username: !editStatus.username,
+              }))
             }
           >
-            <div
-              className="currentValue"
-              onClick={() =>
-                setEditStatus((prevState) => ({
-                  ...prevState,
-                  username: !editStatus.username,
-                }))
-              }
-            >
+            <label className="labelContainer"> Username </label>
+            <div className="currentValue">
               <p>{formUser.username}</p>
               <ArrowRight />
             </div>
+          </div>
+          <div className="myTextInput">
             <div className="DisplayInputContainer">
               <input type="text" {...formik.getFieldProps("username")} />
             </div>
             {!!formik.errors.username && formik.touched.username && (
-              <div className="error">{formik.errors.username}</div>
+              <div className="errorEdit">{formik.errors.username}</div>
             )}
           </div>
         </div>
-        <div className="inputContainer">
-          <label className="labelContainer"> Firstname </label>
+        <div
+          className={
+            editStatus.firstName ? "inputContainer active" : "inputContainer"
+          }
+        >
           <div
-            className={
-              editStatus.firstName ? "myTextInput active" : "myTextInput"
+            className="titleInput"
+            onClick={() =>
+              setEditStatus((prevState) => ({
+                ...prevState,
+                firstName: !editStatus.firstName,
+              }))
             }
           >
-            <div
-              className="currentValue"
-              onClick={() =>
-                setEditStatus((prevState) => ({
-                  ...prevState,
-                  firstName: !editStatus.firstName,
-                }))
-              }
-            >
+            <label className="labelContainer"> FirstName </label>
+            <div className="currentValue">
               <p>{formUser.firstName}</p>
               <ArrowRight />
             </div>
+          </div>
+          <div className="myTextInput">
             <div className="DisplayInputContainer">
               <input type="text" {...formik.getFieldProps("firstName")} />
             </div>
             {formik.touched.firstName && formik.errors.firstName ? (
-              <div className="error">{formik.errors.firstName}</div>
+              <div className="errorEdit">{formik.errors.firstName}</div>
             ) : null}
           </div>
         </div>
-        <div className="inputContainer">
-          <label className="labelContainer"> Lastname </label>
+        <div
+          className={
+            editStatus.lastName ? "inputContainer active" : "inputContainer"
+          }
+        >
           <div
-            className={
-              editStatus.lastName ? "myTextInput active" : "myTextInput"
+            className="titleInput"
+            onClick={() =>
+              setEditStatus((prevState) => ({
+                ...prevState,
+                lastName: !editStatus.lastName,
+              }))
             }
           >
-            <div
-              className="currentValue"
-              onClick={() =>
-                setEditStatus((prevState) => ({
-                  ...prevState,
-                  lastName: !editStatus.lastName,
-                }))
-              }
-            >
+            <label className="labelContainer"> LastName </label>
+            <div className="currentValue">
               <p>{formUser.lastName}</p>
               <ArrowRight />
             </div>
+          </div>
+          <div className="myTextInput">
             <div className="DisplayInputContainer">
               <input type="text" {...formik.getFieldProps("lastName")} />
             </div>
             {formik.touched.lastName && formik.errors.lastName ? (
-              <div className="error">{formik.errors.lastName}</div>
+              <div className="errorEdit">{formik.errors.lastName}</div>
             ) : null}
           </div>
         </div>
-        <div className="inputContainer">
-          <label className="labelContainer"> Email </label>
+        <div
+          className={
+            editStatus.email ? "inputContainer active" : "inputContainer"
+          }
+        >
           <div
-            className={editStatus.email ? "myTextInput active" : "myTextInput"}
+            className="titleInput"
+            onClick={() =>
+              setEditStatus((prevState) => ({
+                ...prevState,
+                email: !editStatus.email,
+              }))
+            }
           >
-            <div
-              className="currentValue"
-              onClick={() =>
-                setEditStatus((prevState) => ({
-                  ...prevState,
-                  email: !editStatus.email,
-                }))
-              }
-            >
+            <label className="labelContainer"> Email </label>
+            <div className="currentValue">
               <p>{formUser.email}</p>
               <ArrowRight />
             </div>
+          </div>
+          <div className="myTextInput">
             <div className="DisplayInputContainer">
               <input type="text" {...formik.getFieldProps("email")} />
             </div>
             {formik.touched.email && formik.errors.email ? (
-              <div className="error">{formik.errors.email}</div>
+              <div className="errorEdit">{formik.errors.email}</div>
             ) : null}
           </div>
         </div>
-        <div className="inputContainer">
-          <label className="labelContainer"> Age </label>
+        <div
+          className={
+            editStatus.age ? "inputContainer active" : "inputContainer"
+          }
+        >
           <div
-            className={editStatus.age ? "myTextInput active" : "myTextInput"}
+            className="titleInput"
+            onClick={() =>
+              setEditStatus((prevState) => ({
+                ...prevState,
+                age: !editStatus.age,
+              }))
+            }
           >
-            <div
-              className="currentValue"
-              onClick={() =>
-                setEditStatus((prevState) => ({
-                  ...prevState,
-                  age: !editStatus.age,
-                }))
-              }
-            >
+            <label className="labelContainer"> Age </label>
+            <div className="currentValue">
               <p>{formUser.age}</p>
               <ArrowRight />
             </div>
+          </div>
+          <div className="myTextInput">
             <div className="DisplayInputContainer">
-              <input type="number" {...formik.getFieldProps("age")} />
+              <input type="number" {...formik.getFieldProps("age")} step={1} />
             </div>
             {formik.touched.age && formik.errors.age ? (
-              <div className="error"> {formik.errors.age} </div>
+              <div className="errorEdit"> {formik.errors.age} </div>
             ) : null}
           </div>
         </div>
-        <div className="inputContainer">
-          <label className="labelContainer"> Gender </label>
+        <div
+          className={
+            editStatus.gender ? "inputContainer active" : "inputContainer"
+          }
+        >
           <div
-            className={editStatus.gender ? "myTextInput active" : "myTextInput"}
+            className="titleInput"
+            onClick={() =>
+              setEditStatus((prevState) => ({
+                ...prevState,
+                gender: !editStatus.gender,
+              }))
+            }
           >
-            <div
-              className="currentValue"
-              onClick={() =>
-                setEditStatus((prevState) => ({
-                  ...prevState,
-                  gender: !editStatus.gender,
-                }))
-              }
-            >
+            <label className="labelContainer"> Gender </label>
+            <div className="currentValue">
               <p>{formUser.gender.toLowerCase()}</p>
               <ArrowRight />
             </div>
+          </div>
+          <div className="myTextInput">
             <div className="myRadioInput">
               {" "}
               <input
@@ -240,25 +258,28 @@ const EditUser = () => {
             </div>
           </div>
         </div>
-        <div className="inputContainer">
-          <label className="labelContainer"> Orientation </label>
+        <div
+          className={
+            editStatus.sexuality ? "inputContainer active" : "inputContainer"
+          }
+        >
           <div
-            className={
-              editStatus.sexuality ? "myTextInput active" : "myTextInput"
+            className="titleInput"
+            onClick={() =>
+              setEditStatus((prevState) => ({
+                ...prevState,
+                sexuality: !editStatus.sexuality,
+              }))
             }
           >
-            <div
-              className="currentValue"
-              onClick={() =>
-                setEditStatus((prevState) => ({
-                  ...prevState,
-                  sexuality: !editStatus.sexuality,
-                }))
-              }
-            >
+            <label className="labelContainer"> Orientation </label>
+            <div className="currentValue">
               <p>{formUser.sexuality.toLowerCase()}</p>
               <ArrowRight />
             </div>
+          </div>
+
+          <div className="myTextInput">
             <div className="myRadioInput">
               <input
                 type="radio"
@@ -293,22 +314,22 @@ const EditUser = () => {
             </div>
           </div>
         </div>
-        <div className="inputContainer">
-          <label className="labelContainer"> Interests </label>
+        <div
+          className={
+            editStatus.tags ? "inputContainer active" : "inputContainer"
+          }
+        >
           <div
-            className={
-              editStatus.tags ? "myTextInput activeBioTags" : "myTextInput"
+            className="titleInput"
+            onClick={() =>
+              setEditStatus((prevState) => ({
+                ...prevState,
+                tags: !editStatus.tags,
+              }))
             }
           >
-            <div
-              className="currentValue"
-              onClick={() =>
-                setEditStatus((prevState) => ({
-                  ...prevState,
-                  tags: !editStatus.tags,
-                }))
-              }
-            >
+            <label className="labelContainer"> Interests </label>
+            <div className="currentValue">
               {tags.length > 0 ? (
                 tags.map((tag, index) => (
                   <p key={index} className="tagName">
@@ -321,6 +342,8 @@ const EditUser = () => {
               )}
               <ArrowRight />
             </div>
+          </div>
+          <div className="myTextInput">
             <div className="myRadioInput">
               <input
                 type="checkbox"
@@ -396,34 +419,38 @@ const EditUser = () => {
               />
               <label htmlFor="tatoo"> Tatoo </label>
             </div>
-            {tags.length > 5 && <p className="error"> 5 tags maximum. </p>}
           </div>
+          {tags.length > 5 && <p className="errorEdit"> 5 tags maximum. </p>}
         </div>
-        <div className="inputContainer">
-          <label className="labelContainer"> Biography </label>
+        <div
+          className={
+            editStatus.bio ? "inputContainer active" : "inputContainer"
+          }
+        >
           <div
-            className={
-              editStatus.bio ? "myTextInput activeBioTags" : "myTextInput"
+            className="titleInput"
+            onClick={() =>
+              setEditStatus((prevState) => ({
+                ...prevState,
+                bio: !editStatus.bio,
+              }))
             }
           >
-            <div
-              className="currentValue"
-              onClick={() =>
-                setEditStatus((prevState) => ({
-                  ...prevState,
-                  bio: !editStatus.bio,
-                }))
-              }
-            >
-              <p>Edit..</p>
+            <label className="labelContainer"> Biography </label>
+            <div className="currentValue">
+              <p>Edit...</p>
               <ArrowRight />
             </div>
-            <textarea
-              value={formik.values.bio}
-              {...formik.getFieldProps("bio")}
-            ></textarea>
+          </div>
+          <div className="myTextInput">
+            <div className="DisplayInputContainer">
+              <textarea
+                value={formik.values.bio}
+                {...formik.getFieldProps("bio")}
+              ></textarea>
+            </div>
             {formik.touched.bio && formik.errors.bio ? (
-              <div className="error"> {formik.errors.bio} </div>
+              <div className="errorEdit"> {formik.errors.bio} </div>
             ) : null}
           </div>
         </div>

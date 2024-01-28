@@ -7,7 +7,8 @@ from Deps.photo import get_photo, delete_with_id
 from Deps.user import get_current_user
 from pathlib import Path as PathLib
 import Crud
-import Model 
+import Model
+import time
 
 router = APIRouter(prefix="/photo", tags=["Photos"])
 
@@ -28,7 +29,7 @@ def change_main(
     save_folder = f"uploads/images/{current_user.id}"
     PathLib(save_folder).mkdir(parents=True, exist_ok=True)
         
-    filename = f"{current_user.id}_{len(current_user.photos)}_{image.filename}"
+    filename = f"{len(current_user.photos)}_{int(time.time() * 1000)}_{image.filename}"
     save_path = PathLib(save_folder) / filename
     with open(save_path, "wb") as file:
       file.write(image.file.read())
@@ -53,7 +54,7 @@ async def upload_image(
     save_folder = f"uploads/images/{current_user.id}"
     PathLib(save_folder).mkdir(parents=True, exist_ok=True)
       
-    filename = f"{current_user.id}_{len(current_user.photos)}_{image.filename}"
+    filename = f"{len(current_user.photos)}_{int(time.time() * 1000)}_{image.filename}"
     save_path = PathLib(save_folder) / filename
     with open(save_path, "wb") as file:
       file.write(image.file.read())

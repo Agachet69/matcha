@@ -7,7 +7,8 @@ const initialState = {
   viewUser: false,
   notif: false,
   blockUser: false,
-  match: null,
+  blockedList: false,
+  match: false,
   user: null,
 };
 
@@ -36,6 +37,9 @@ export const modalSlice = createSlice({
     editMatch: (state, action) => {
       return { ...initialState, match: !action.payload };
     },
+    editBlockedList: (state, action) => {
+      return { ...initialState, blockedList: !action.payload };
+    },
     editConcernUser: (state, action) => {
       return { ...state, user: action.payload };
     },
@@ -47,6 +51,7 @@ export const modalSlice = createSlice({
       state.notif = false;
       state.blockUser = false;
       state.match = false;
+      state.blockedList = false;
     },
   },
 });
@@ -60,6 +65,7 @@ export const {
   editBlockUser,
   editConcernUser,
   editMatch,
+  editBlockedList,
   resetAllModals,
 } = modalSlice.actions;
 export const selectModalMainPic = (state) => state.modal.deleteMainPic;

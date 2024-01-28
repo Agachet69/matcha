@@ -8,13 +8,17 @@ import {
 } from "../store/slices/modalSlice";
 import { getAuthorizedInstance } from "../utils/Instance";
 import { getToken } from "../store/slices/authSlice";
-import { initialiseUser } from "../store/slices/userSlice";
+import { initialiseUser, selectUser } from "../store/slices/userSlice";
 
 const ModalConfirm = () => {
   const dispatch = useDispatch();
   const token = useSelector(getToken);
   const modalSlice = useSelector(selectAllModals);
   const instance = getAuthorizedInstance(token.access_token);
+  const myUser = useSelector(selectUser);
+  const isBlocked = myUser.blocked.some(
+    (block) => block.user_target_id === modalSlice.user.id
+  );
 
   const onBlockUser = async () => {
     dispatch(editBlockUser(modalSlice.blockUser));
@@ -26,10 +30,15 @@ const ModalConfirm = () => {
 
   return (
     <section className="blockModalContainer">
-      <h3>
-        {" "}
-        Do you want to block <b>{modalSlice.user.username}</b> ?
-      </h3>
+      {!isBlocked ? (
+        <h3>
+          Do you want to block <b>{modalSlice.user.username}</b> ?
+        </h3>
+      ) : (
+        <h3>
+          Do you want to unblock <b>{modalSlice.user.username}</b> ?
+        </h3>
+      )}
       <div className="choices">
         <button
           className="cancel"
@@ -38,10 +47,15 @@ const ModalConfirm = () => {
           {" "}
           Cancel <ArrowUturnLeft />{" "}
         </button>
-        <button className="block" onClick={() => onBlockUser()}>
-          {" "}
-          Block <NoSymbol />{" "}
-        </button>
+        {!isBlocked ? (
+          <button className="block" onClick={() => onBlockUser()}>
+            Block <NoSymbol />
+          </button>
+        ) : (
+          <button className="unblock" onClick={() => onBlockUser()}>
+            Unblock <NoSymbol />
+          </button>
+        )}
       </div>
     </section>
   );

@@ -89,6 +89,7 @@
           width: 200px;
           border-radius: 50%;
           border: 3px solid white;
+          background-color: black;
         }
 
         .confirmChoice,
@@ -188,12 +189,11 @@
             &:hover {
               svg {
                 fill: transparent;
-                color: #14141442 ;
+                color: #14141442;
               }
             }
           }
         }
-
       }
 
       h3 {
@@ -487,6 +487,23 @@
     }
   }
 
+  .fameRate {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+
+    p {
+      font-family: Montserrat;
+      font-size: 22px;
+    }
+
+    svg {
+      width: 25px;
+    }
+  }
+
   .otherProfilBio {
     padding: 0px 45px;
     font-family: Inter;
@@ -523,6 +540,13 @@
       .socialTitleSvg {
         display: flex;
         gap: 10px;
+
+        h4 {
+          max-width: 50px;
+          overflow-x: hidden;
+          text-overflow: ellipsis;
+        }
+
         svg {
           height: 22px;
         }
@@ -647,17 +671,141 @@
           }
         }
 
-        .active {
-          opacity: 1;
-          transition: opacity 0.4s;
-        }
-
         .inactive {
-          opacity: 0;
-          z-index: 0;
-          transition: 0.4s;
+          display: none;
         }
       }
+    }
+  }
+
+  .pinkSvg {
+    svg {
+      color: $pink;
+    }
+  }
+
+  .blockedList {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0px 0px 75px;
+    gap: 10px;
+    font-size: 25px;
+    cursor: pointer;
+
+    svg {
+      height: 25px;
+      width: 25px;
+    }
+  }
+}
+
+.blockUserTitle {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $pink;
+  mix-blend-mode: difference;
+}
+
+@media screen and (max-width: 800px) {
+  .ProfilContainer {
+    .topContainer {
+      .topContent {
+        .backPic {
+          .oneBackPic {
+            .addImg {
+              .iconAddImg {
+                padding: 12px;
+                svg {
+                  height: 50px;
+                  width: 50px;
+                }
+              }
+            }
+          }
+        }
+      }
+
+      section {
+        bottom: -15px;
+        .actualPic,
+        .displayPic,
+        .defaultPic {
+          width: 100px;
+          height: 100px;
+
+          img {
+            width: 100px;
+            height: 100px;
+          }
+
+          .deleteImg,
+          .confirmChoice,
+          .cancelChoice,
+          label {
+            svg {
+              height: 15px;
+              width: 15px;
+            }
+          }
+
+          .deleteImg {
+            left: 3px;
+          }
+
+          .confirmChoice {
+            right: -14px;
+            top: 45%;
+          }
+
+          .cancelChoice {
+            right: -2px;
+            top: 80%;
+          }
+
+          label {
+            right: 3px;
+          }
+        }
+
+        .statusUser {
+          right: 5px;
+          bottom: 8px;
+          width: 16px;
+          height: 16px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .ProfilContainer {
+    .topContainer {
+      .topContent {
+        .backPic {
+          .oneBackPic {
+            .rightArrow,
+            .leftArrow {
+              svg {
+                height: 70px;
+                width: 70px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .ProfilContainer {
+    .socialInfosContainer {
+      padding: 20px 5px;
     }
   }
 }

@@ -1,9 +1,4 @@
-import {
-  Navigate,
-  useLocation,
-  useNavigate,
-  useParams,
-} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getToken } from "../store/slices/authSlice";
 import "../styles/profil.scss";
 import { useEffect, useRef, useState } from "react";
@@ -48,7 +43,7 @@ const OtherProfil = () => {
       .then(({ data }) => setUserSeen(data));
   }, []);
 
-  const onUpdateStatus = ({ user_id, status }) => {
+  const onUpdateStatus = ({ user_id /*, status */ }) => {
     if (user_id == userSeen.id)
       instance
         .get(`users/${locationState.id}`)
@@ -74,16 +69,14 @@ const OtherProfil = () => {
 
   useEffect(() => {
     if (userSeen)
-      setMainSeen(
-        userSeen.photos.filter((photo) => photo.main === true)[0]
-      );
+      setMainSeen(userSeen.photos.filter((photo) => photo.main === true)[0]);
     console.log(userSeen);
   }, [userSeen, navigate]);
 
   const onBlockUser = () => {
+    setSeenMenuEllips(false);
     instance.post(`/users/block/${userSeen.id}`).then(({ data }) => {
       dispatch(initialiseUser(data));
-      console.log("bloqué");
     });
   };
 
@@ -140,7 +133,13 @@ const OtherProfil = () => {
     return false;
   };
 
+  const isBlocked = () => {
+    return userSeen.blocked.some((block) => block.user_target_id === myUser.id);
+  };
+
   if (!locationState) return <div> Compte inconnu </div>;
+  if (userSeen && isBlocked())
+    return <h2 className="blockUserTitle"> This user as blocked you </h2>;
   if (!userSeen) return <></>;
   if (locationState.id === myUser.id)
     return (
@@ -148,7 +147,6 @@ const OtherProfil = () => {
         <Profil />
       </div>
     );
-  // return (<></>)
   else
     return (
       <div className="ProfilContainer">
@@ -269,7 +267,13 @@ const OtherProfil = () => {
                 }
               >
                 <p> Report as fake account</p>
-                <p onClick={onBlockUser}> Block this user</p>
+                {myUser.blocked.some(
+                  (block) => block.user_target_id === userSeen.id
+                ) ? (
+                  <p onClick={onBlockUser}> Unblock this user</p>
+                ) : (
+                  <p onClick={onBlockUser}> Block this user </p>
+                )}
               </div>
             </div>
           </div>
@@ -336,7 +340,7 @@ const OtherProfil = () => {
               {userSeen.status === "OFFLINE" ? (
                 <p> Last connection on {lastConnexion()}.</p>
               ) : (
-                <p>Online.</p>
+                ""
               )}
             </form>
           </div>

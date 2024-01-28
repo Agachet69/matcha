@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import "../styles/modal.scss";
 import {
+  editBlockUser,
+  editBlockedList,
   editDeleteMainPic,
   editLikedUser,
   editMatch,
@@ -15,7 +17,7 @@ import {
 } from "../store/slices/userSlice";
 import axios from "axios";
 import { getToken } from "../store/slices/authSlice";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Trash } from "./icons/Icons";
 import { useNavigate } from "react-router-dom";
 import { getAuthorizedInstance } from "../utils/Instance";
@@ -29,7 +31,6 @@ const Modals = ({ children }) => {
   const allModals = useSelector(selectAllModals);
   const navigate = useNavigate();
   const instance = getAuthorizedInstance(token.access_token);
-  const [allUsers, setAllUsers] = useState([]);
 
   async function deletePic() {
     try {
@@ -68,22 +69,6 @@ const Modals = ({ children }) => {
     return null;
   };
 
-  const getNotifUsers = useCallback(() => {
-    setAllUsers([]);
-    user.notifs.map((notif) => {
-      instance
-        .get("/users/" + notif.data_user_id)
-        .then((res) => setAllUsers((prevState) => [...prevState, res.data]));
-    });
-  }, [user.notifs, setAllUsers]);
-
-  useEffect(() => {
-    if (allModals.notif) getNotifUsers();
-    return () => {
-      setAllUsers([]);
-    };
-  }, [allModals, getNotifUsers]);
-
   useEffect(() => {
     const cleanup = () => {
       dispatch(resetAllModals());
@@ -120,7 +105,6 @@ const Modals = ({ children }) => {
               }
             ></div>
           </main>
-          <div className="App">{children}</div>
         </div>
       )}
       {allModals.likedUser && (
@@ -131,9 +115,7 @@ const Modals = ({ children }) => {
                 <h3> These users liked your profile </h3>
                 <div className="listContainer">
                   {user.liked_by.map((userLiked, index) => {
-                    return (
-                      <ListUserModal user={userLiked.user} key={index}/>
-                    );
+                    return <ListUserModal user={userLiked.user} key={index} />;
                   })}
                 </div>
                 <div className="btnClose">
@@ -161,8 +143,6 @@ const Modals = ({ children }) => {
               onClick={() => dispatch(editLikedUser(allModals.likedUser))}
             ></div>
           </main>
-
-          <div className="App">{children}</div>
         </div>
       )}
       {allModals.viewUser && (
@@ -173,9 +153,7 @@ const Modals = ({ children }) => {
                 <h3> These users have seen your profile </h3>
                 <div className="listContainer">
                   {user.profile_seen_by.map((userSee, index) => {
-                    return (
-                     <ListUserModal user={userSee.user} key={index}/>
-                    );
+                    return <ListUserModal user={userSee.user} key={index} />;
                   })}
                 </div>
                 <div className="btnClose">
@@ -203,8 +181,6 @@ const Modals = ({ children }) => {
               onClick={() => dispatch(editViewUser(allModals.viewUser))}
             ></div>
           </main>
-
-          <div className="App">{children}</div>
         </div>
       )}
       {allModals.notif && (
@@ -219,10 +195,10 @@ const Modals = ({ children }) => {
                       <div className="notification" key={index}>
                         <div className="leftContent">
                           <div className="profilPic">
-                            {mainPic(allUsers[index]) && (
+                            {mainPic(notif.data_user) && (
                               <img
                                 src={`http://localhost:8000/${mainPic(
-                                  allUsers[index]
+                                  notif.data_user
                                 )}`}
                                 alt="photo de profil"
                               />
@@ -240,6 +216,11 @@ const Modals = ({ children }) => {
                     );
                   })}
                 </div>
+                {/* <div className="listContainer">
+                  {user.notifs.map((notif, index) => {
+                    return <ListUserModal user={notif.data_user} key={index} />;
+                  })}
+                </div> */}
                 <div className="btnClose">
                   <button
                     onClick={() => dispatch(editViewUser(allModals.notif))}
@@ -265,6 +246,10 @@ const Modals = ({ children }) => {
         <div className="modal">
           <main className="overlayModal">
             <ModalConfirm />
+            <div
+              className="modalRest"
+              onClick={() => dispatch(editBlockUser(allModals.blockUser))}
+            ></div>
           </main>
         </div>
       )}
@@ -277,7 +262,15 @@ const Modals = ({ children }) => {
                 <div className="listContainer">
                   {user.matches.map((userMatched, index) => {
                     return (
-                      <ListUserModal user={userMatched.user_A_id === user.id ? userMatched.user_B : userMatched.user_A} type={"modal"} key={index} />
+                      <ListUserModal
+                        user={
+                          userMatched.user_A_id === user.id
+                            ? userMatched.user_B
+                            : userMatched.user_A
+                        }
+                        type={"modal"}
+                        key={index}
+                      />
                     );
                   })}
                 </div>
@@ -300,6 +293,54 @@ const Modals = ({ children }) => {
             <div
               className="modalRest"
               onClick={() => dispatch(editMatch(allModals.match))}
+            ></div>
+          </main>
+        </div>
+      )}
+      {allModals.blockedList && (
+        <div className="modal">
+          <main className="overlayModal">
+            {user.blocked.length > 0 ? (
+              <section className="listModal">
+                <h3> Blocked users </h3>
+                <div className="listContainer">
+                  {user.blocked.map((blocked, index) => {
+                    return (
+                      <ListUserModal
+                        user={blocked.user_target}
+                        type={"block"}
+                        key={index}
+                      />
+                    );
+                  })}
+                </div>
+                <div className="btnClose">
+                  <button
+                    onClick={() =>
+                      dispatch(editBlockedList(allModals.blockedList))
+                    }
+                  >
+                    Close
+                  </button>
+                </div>
+              </section>
+            ) : (
+              <section>
+                <h3> You haven&apos;t blocked any users. </h3>
+                <div className="btnClose">
+                  <button
+                    onClick={() =>
+                      dispatch(editBlockedList(allModals.blockedList))
+                    }
+                  >
+                    Close
+                  </button>
+                </div>
+              </section>
+            )}
+            <div
+              className="modalRest"
+              onClick={() => dispatch(editBlockedList(allModals.blockedList))}
             ></div>
           </main>
         </div>

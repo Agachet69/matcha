@@ -17,26 +17,24 @@ import {
   Eye,
   Sparkless,
   CheckBadgeIcon,
+  UnFriend,
 } from "../components/icons/Icons";
 import axios from "axios";
 import { MainPic } from "../components/MainPic";
 import { ValidImg } from "../utils/ValidImg";
 import {
+  editBlockedList,
   editDeletePic,
   editLikedUser,
   editMatch,
   editViewUser,
   selectAllModals,
-  // selectModalMainPic,
-  // selectModalPic,
 } from "../store/slices/modalSlice";
-// import Modals from "../components/Modals";
 import EditUser from "../components/profil/EditUser";
 
 const Profil = () => {
   const token = useSelector(getToken);
   const user = useSelector(selectUser);
-  // const mainModal = useSelector(selectModalMainPic);
   const deleteBack = useSelector(selectAllModals);
   const [translateXValue, setTranslateXValue] = useState(0);
   const [myImgs, setMyImgs] = useState(null);
@@ -216,7 +214,10 @@ const Profil = () => {
         {" "}
         {user.firstName} {user.lastName}{" "}
       </h3>
-      <p> Fame {user.fame_rate}</p>
+      <div className="fameRate pinkSvg">
+        <p>{user.fame_rate} </p>
+        <Fire />
+      </div>
 
       <p> Modifier sa position </p>
       <div className="socialInfosContainer">
@@ -224,8 +225,8 @@ const Profil = () => {
           className="socialInfos borderR"
           onClick={() => dispatch(editMatch(deleteBack.match))}
         >
-          <div className="socialTitleSvg">
-            <h4> {user.matches.length} </h4>
+          <div className="socialTitleSvg pinkSvg">
+            <h4> {user.matches.length < 100 ? user.matches.length : "99+"} </h4>
             <CheckBadgeIcon />
           </div>
           <p>match</p>
@@ -235,7 +236,10 @@ const Profil = () => {
           onClick={() => dispatch(editLikedUser(deleteBack.likedUser))}
         >
           <div className="socialTitleSvg">
-            <h4 className="pink"> {user.liked_by.length} </h4>
+            <h4 className="pink">
+              {" "}
+              {user.liked_by.length < 100 ? user.liked_by.length : "99+"}{" "}
+            </h4>
             <Sparkless />
           </div>
           <p>crush</p>
@@ -244,12 +248,19 @@ const Profil = () => {
           className="socialInfos"
           onClick={() => dispatch(editViewUser(deleteBack.viewUser))}
         >
-          <div className="socialTitleSvg">
-            <h4>{user.profile_seen_by.length}</h4>
+          <div className="socialTitleSvg pinkSvg">
+            <h4>
+              {user.profile_seen_by.length < 100
+                ? user.profile_seen_by.length
+                : "99+"}
+            </h4>
             <Eye />
           </div>
           <p>views</p>
         </div>
+      </div>
+      <div className="blockedList" onClick={() => dispatch(editBlockedList(deleteBack.blockedList))}>
+        {user.blocked.length} <UnFriend />
       </div>
       {!user && <div> Loader </div>}
       {user && <EditUser />}

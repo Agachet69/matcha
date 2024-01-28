@@ -17,7 +17,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    gap: 20px;
+    gap: 10px;
     width: 100%;
     padding: 20px 30px;
     border-radius: 20px;
@@ -25,137 +25,148 @@
     flex-shrink: 0;
 
     .inputContainer {
-      position: relative;
       width: 100%;
       display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 15px;
+      flex-direction: column;
+      gap: 10px;
 
-      .errorMsg {
-        position: absolute;
-        mix-blend-mode: difference;
-        color: red;
-        top: 25px;
-        left: 0px;
-        font-size: 12px;
-      }
-
-      .labelContainer {
-        color: white;
-        width: 100px;
-      }
-
-      .active {
-        svg {
-          transform: rotate(90deg);
-          transition: 1s;
+      .titleInput {
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.021);
+          transition: 0.3s;
         }
-
-        max-height: 180px !important;
-        transition: 0.5s;
-      }
-
-      .activeBioTags {
-        svg {
-          transform: rotate(90deg);
-        }
-
-        max-height: 450px !important;
-      }
-
-      .myTextInput {
-        max-height: 24px;
-        position: relative;
         display: flex;
-        flex-direction: column;
-        align-items: flex-end;
-        justify-content: start;
-        background-color: transparent;
-        background-color: transparent;
-        flex: 1;
-        gap: 10px;
-        overflow: hidden;
-        color: rgb(255, 255, 255);
-        transition: max-height 1s;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        height: 40px;
+        border-radius: 50px;
+        padding: 0px 10px;
+        user-select: none;
+        cursor: pointer;
+        transition: 0.3s;
 
         .currentValue {
           display: flex;
-          align-items: flex-start;
+          flex: 1;
           justify-content: flex-end;
-          align-self: stretch;
-          gap: 20px;
-          cursor: pointer;
+          gap: 15px;
+          svg {
+            height: 22px;
+            width: 22px;
+            transition: 0.3s;
+          }
+
+          p {
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+          }
         }
+      }
+
+      .myTextInput {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.25s ease-out;
 
         .DisplayInputContainer {
           display: flex;
           justify-content: flex-end;
-          width: 100%;
+          overflow: hidden;
+          padding: 0px 10px;
+
           input {
             position: relative;
             z-index: 1;
             border: none;
             padding: 10px 35px 10px 20px;
-            width: 70%;
+            width: 40%;
             border-radius: 100px;
             background-color: rgba(128, 128, 128, 0.142);
             font-size: 14px;
             font-family: Montserrat;
-            color: $pink;
-            border: 1px solid #ffffff2e;
+            color: #ff4ca8;
+            border: 1px solid rgba(255, 255, 255, 0.1803921569);
           }
         }
 
-        svg {
-          flex-shrink: 0;
-          width: 20px;
-          height: 24px;
-          transition: transform 0.8s;
+        .myRadioInput {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 15px;
+          flex-wrap: wrap;
+          overflow: hidden;
+          padding: 0px 10px;
+
+          input[type="checkbox"] {
+            display: none;
+          }
+
+          input[type="checkbox"]:checked + label {
+            cursor: pointer;
+            background-color: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 24px;
+            border: 1px solid var(--basic-dark, rgba(25, 43, 57, 0.1294117647));
+            border-radius: 100px;
+            font-size: 14px;
+            line-height: 16px;
+            letter-spacing: 0.75px;
+          }
+
+          label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 140px;
+            padding: 10px 24px;
+            background-color: white;
+            color: black;
+            border: 1px solid var(--basic-dark, rgba(25, 43, 57, 0.1294117647));
+            border-radius: 100px;
+            font-size: 14px;
+            line-height: 16px;
+            letter-spacing: 0.75px;
+            cursor: pointer;
+            user-select: none;
+          }
+        }
+
+        textarea {
+          resize: none;
+          border: none;
+          outline: none;
+          height: 200px;
+          width: 100%;
+          padding: 10px 20px;
+          font-family: Montserrat;
+          font-size: 14px;
+          line-height: 16px;
+          letter-spacing: 0.75px;
+          border-radius: 10px;
         }
       }
 
-      .myRadioInput {
+      .errorEdit {
         display: flex;
-        align-items: center;
-        gap: 15px;
-        flex-wrap: wrap;
+        justify-content: flex-end;
+        font-family: monospace;
+        margin-left: 10px;
+        color: red;
+        margin-top: 0.2rem;
+        mix-blend-mode: difference;
+        padding: 0px 10px;
+      }
 
-        input[type="checkbox"] {
-          display: none;
-        }
-
-        input[type="checkbox"]:checked + label {
-          cursor: pointer;
-          background-color: black;
-          color: white;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 10px 24px;
-          border: 1px solid var(--basic-dark, rgba(25, 43, 57, 0.1294117647));
-          border-radius: 100px;
-          font-size: 14px;
-          line-height: 16px;
-          letter-spacing: 0.75px;
-        }
-
-        label {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 140px;
-          padding: 10px 24px;
-          background-color: white;
-          color: black;
-          border: 1px solid var(--basic-dark, rgba(25, 43, 57, 0.1294117647));
-          border-radius: 100px;
-          font-size: 14px;
-          line-height: 16px;
-          letter-spacing: 0.75px;
-          cursor: pointer;
-          user-select: none;
-        }
+      .labelContainer {
+        color: white;
+        width: 100px;
       }
 
       .myRadioInput input[type="radio"] + label {
@@ -176,38 +187,26 @@
         color: white;
       }
 
-      .inactive {
-        background-color: transparent;
-        input {
-          color: rgba(168, 168, 168, 0.692);
-        }
-        color: rgba(168, 168, 168, 0.692);
-      }
-
       input[type="radio"] {
         display: none;
       }
+    }
 
-      textarea {
-        resize: none;
-        outline: none;
-        height: 300px;
-        width: 100%;
-        padding: 10px 20px;
-        font-family: Montserrat;
-        font-size: 14px;
-        line-height: 16px;
-        letter-spacing: 0.75px;
-        border-radius: 10px;
+    .inputContainer.active {
+      .currentValue {
+        svg {
+          transform: rotate(90deg);
+          transition: 0.3s;
+        }
+      }
+
+      .myTextInput {
+        grid-template-rows: 1fr;
       }
     }
 
-    .tagsListContainer {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-
-      .tagName::first-letter {
+    .currentValue {
+      p::first-letter {
         text-transform: capitalize;
       }
     }
@@ -249,5 +248,72 @@
         cursor: unset;
       }
     }
+  }
+}
+
+@media screen and (max-width: 1420px) {
+  .editUserContainer form .inputContainer .myTextInput .myRadioInput {
+    justify-content: center;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .editUserContainer
+    form
+    .inputContainer
+    .myTextInput
+    .DisplayInputContainer
+    input {
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 580px) {
+  .editUserContainer form .inputContainer .titleInput .currentValue .tagName {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 630px) {
+  .editUserContainer {
+    padding: 15px 10px;
+    form {
+      .inputContainer {
+        .myTextInput .DisplayInputContainer input {
+          width: 100%;
+        }
+        .titleInput .currentValue p {
+          max-width: 200px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .editUserContainer {
+    h3 {
+      padding: 0px 0px;
+
+    }
+    form {
+      padding: 20px 0px;
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .editUserContainer form .inputContainer .titleInput .currentValue p {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 230px) {
+  .editUserContainer
+    form
+    .inputContainer
+    .myTextInput
+    .DisplayInputContainer
+    input {
+    padding: 10px 10px;
   }
 }

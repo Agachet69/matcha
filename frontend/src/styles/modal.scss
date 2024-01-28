@@ -1,4 +1,4 @@
-@import './var.scss';
+@import "./var.scss";
 
 .modal {
   width: 100%;
@@ -28,6 +28,7 @@
       font-family: Montserrat;
       z-index: 1;
       color: black;
+      text-align: center;
 
       h3 {
         font-weight: normal;
@@ -40,6 +41,7 @@
         justify-content: space-around;
         align-items: center;
         gap: 20px;
+        flex-wrap: wrap;
 
         button {
           padding: 10px 20px;
@@ -100,6 +102,7 @@
           display: flex;
           align-items: center;
           gap: 10px;
+          text-align: center;
 
           .profilPic {
             display: flex;
@@ -117,7 +120,9 @@
         .rightContent {
           display: flex;
           align-items: center;
+          height: 100%;
           gap: 10px;
+
           svg {
             height: 22px;
           }
@@ -135,6 +140,13 @@
             svg {
               transition: 0.3s;
             }
+          }
+
+          .unblock {
+            display: flex;
+            align-items: center;
+            color: $pink;
+            height: 100%;
           }
         }
       }
@@ -158,12 +170,13 @@
       background-color: #f4eeee;
       .choices {
         .block,
+        .unblock,
         .cancel {
           display: flex;
           align-items: center;
           justify-content: center;
           gap: 10px;
-          width: 120px;
+          width: 130px;
           font-family: Montserrat;
           font-size: 14px;
 
@@ -178,6 +191,11 @@
 
         .block {
           background-color: red;
+          border: 1px solid rgba(0, 0, 0, 0.329);
+        }
+
+        .unblock {
+          background-color: $pink;
           border: 1px solid rgba(0, 0, 0, 0.329);
         }
       }
@@ -195,5 +213,26 @@
 
   .App {
     height: 100%;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .modal .overlayModal section {
+    width: 200px;
+    .notification {
+      .leftContent {
+        flex-wrap: wrap;
+      }
+      .rightContent {
+        height: 100%;
+        align-items: flex-start !important;
+      }
+    }
+  }
+  .modal .overlayModal .listModal .userLiked {
+    padding: 0px 0px 10px 0px;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3px;
   }
 }

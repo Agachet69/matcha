@@ -3,7 +3,6 @@ import "../styles/home.scss";
 import { getToken } from "../store/slices/authSlice";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import printVarsHook from "../components/printVarsHook";
 import {
   Age,
   ArrowRight,
@@ -19,7 +18,6 @@ import UserCard from "../components/UserCard";
 import SearchSchema from "../schemas/SearchSchema";
 import { useFormik } from "formik";
 import TagEnum from "../Enum/TagEnum";
-import { useNavigate } from "react-router-dom";
 import {
   editBlockUser,
   editConcernUser,
@@ -33,7 +31,6 @@ const Home = () => {
   const dispatch = useDispatch();
   const socket = useSocket();
   const allModals = useSelector(selectAllModals);
-  const navigate = useNavigate();
   const [openSearchParm, setOpenSearchParm] = useState(false);
   const initialValueSort = {
     name: 0,
@@ -47,28 +44,6 @@ const Home = () => {
     initialValues: {},
     onSubmit: (values) => onSearch(values),
   });
-
-  const getAllUsers = () => {
-    axios
-      .get("http://localhost:8000/users/", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token.access_token}`,
-        },
-      })
-      .then(({ data }) => {
-        setAllUsers(data.filter((user) => user.id != me.id));
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const navOtherProfil = (user) => () => {
-    navigate("/profil/see", {
-      state: user,
-    });
-  };
 
   const onSearch = (value) => {
     const headers = {
@@ -110,7 +85,7 @@ const Home = () => {
     dispatch(editConcernUser(user));
   };
 
-  const onUpdateStatus = ({ user_id, status }) => {
+  const onUpdateStatus = ({ user_id/*, status */}) => {
     if (user_id != me.id) searchFormik.submitForm();
   };
 
@@ -478,7 +453,7 @@ const Home = () => {
           )}
           <div className="resultCardContainer">
             {allUsers &&
-              allUsers.map((user, index) => (
+              allUsers.map((user) => (
                 <UserCard
                   me={me}
                   user={user}

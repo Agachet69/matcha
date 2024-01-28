@@ -1,6 +1,6 @@
 import { Tooltip } from "@mui/material";
 import GenderEnum from "../Enum/GenderEnum";
-import { ChatIcon, Fire, HeartIcon, NoSymbol, Sparkless } from "./icons/Icons";
+import { ChatIcon, Fire, HeartIcon, NoSymbol } from "./icons/Icons";
 import "../styles/userCard.scss";
 import { useNavigate } from "react-router";
 import { useLocation } from "react-router-dom";
@@ -118,7 +118,7 @@ const UserCard = ({
                   </div>
                 </Tooltip>
                 {onBlockUser && (
-                  <Tooltip title={"Block"}>
+                  <Tooltip title={"Block/Unblock"}>
                     <div className="block" onClick={() => onBlockUser(user)}>
                       <NoSymbol />
                     </div>

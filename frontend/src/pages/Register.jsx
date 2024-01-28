@@ -49,7 +49,10 @@ const Register = () => {
         navigate("/profil");
       })
       .catch((error) => {
-        setOnRegisterErrorMessage(JSON.stringify(error.response.data));
+        console.log(error);
+        setOnRegisterErrorMessage(
+          /*JSON.stringify(*/ error.response.data.detail /*)*/
+        );
       });
   };
 
@@ -178,9 +181,9 @@ const Register = () => {
                   </button>
                 ))}
               </div>
-            {!!formik.errors.gender && formik.touched.gender && (
-              <div className="error">{formik.errors.gender}</div>
-            )}
+              {!!formik.errors.gender && formik.touched.gender && (
+                <div className="error">{formik.errors.gender}</div>
+              )}
             </div>
             <div className="selector">
               <label>Sexuality</label>
@@ -253,13 +256,15 @@ const Register = () => {
                 <div className="error">{formik.errors.password}</div>
               )}
             </div>
-            <button className="loginButton" type="submit">
-              {" "}
-              Register{" "}
-            </button>
-            {!!onRegisterErrorMessage && (
-              <div className="error">{onRegisterErrorMessage}</div>
-            )}
+            <div>
+              <button className="loginButton" type="submit">
+                {" "}
+                Register{" "}
+              </button>
+              {!!onRegisterErrorMessage && (
+                <div className="error">{onRegisterErrorMessage}</div>
+              )}
+            </div>
           </form>
           <div className="bottomForm">
             {/* <p> Forgot password? </p> */}
@@ -271,22 +276,6 @@ const Register = () => {
         </section>
       </main>
     </div>
-    // <form onSubmit={formik.handleSubmit} className='container'>
-    //   <h1>Register</h1>
-    //   <input type="text" name='username' value={formik.values.username} onChange={formik.handleChange} placeholder='Username'/>
-    //   <p>username</p>
-    //   <p>mdp</p>
-    //   <p>nom</p>
-    //   <p>prénom</p>
-    //   <p>genre</p>
-    //   <p>sexualité</p>
-    //   <p>description</p>
-    //   <p>position</p>
-    //   <p>age</p>
-    //   <p>email</p>
-    //   <p>photos</p>
-    //   <button type='submit'>submit</button>
-    // </form>
   );
 };
 
