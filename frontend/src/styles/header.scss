@@ -92,7 +92,10 @@
 
         .name {
           width: max-content;
+          width: 100px;
+          overflow-x: hidden;
           color: inherit;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -163,10 +166,8 @@
   }
 }
 
-
-@media screen and (max-width: 460px) {
+@media screen and (max-width: 520px) {
   .container {
-
     .header {
       padding: 1rem 5px;
       .logo {
@@ -180,4 +181,20 @@
       }
     }
   }
+}
+
+@media screen and (max-width: 350px) {
+  .container .header .other .me .name {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 250px) {
+.container .header .other {
+  flex-wrap: wrap;
+
+  .limiter {
+    display: none;
+  }
+}
 }

@@ -85,7 +85,7 @@ const Home = () => {
     dispatch(editConcernUser(user));
   };
 
-  const onUpdateStatus = ({ user_id/*, status */}) => {
+  const onUpdateStatus = ({ user_id /*, status */ }) => {
     if (user_id != me.id) searchFormik.submitForm();
   };
 
@@ -197,6 +197,7 @@ const Home = () => {
     <div className="main">
       <form className="search-container" onSubmit={searchFormik.onSubmit}>
         <div className="title-container">
+          <p> {token.access_token} </p>
           <div className="title">Search an user</div>
           <div className="icons">
             <div className="container">
@@ -366,11 +367,7 @@ const Home = () => {
               filterSelectedOptions
               disableCloseOnSelect
               renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Search by tags"
-                  // placeholder="Favorites"
-                />
+                <TextField {...params} label="Search by tags" />
               )}
               selectOnFocus
               onChange={(e, value) =>

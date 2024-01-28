@@ -347,12 +347,12 @@ const EditUser = () => {
             <div className="myRadioInput">
               <input
                 type="checkbox"
-                id="musique"
-                value={"MUSIQUE"}
+                id="music"
+                value={"MUSIC"}
                 onChange={EditTag}
-                checked={tags.some((tagObject) => tagObject.tag === "MUSIQUE")}
+                checked={tags.some((tagObject) => tagObject.tag === "MUSIC")}
               />
-              <label htmlFor="musique"> Musique</label>
+              <label htmlFor="music"> Music</label>
 
               <input
                 type="checkbox"
@@ -365,23 +365,23 @@ const EditUser = () => {
 
               <input
                 type="checkbox"
-                id="jeuxVideos"
-                value={"JEUX_VIDEOS"}
+                id="videoGames"
+                value={"VIDEO_GAMES"}
                 onChange={EditTag}
                 checked={tags.some(
-                  (tagObject) => tagObject.tag === "JEUX_VIDEOS"
+                  (tagObject) => tagObject.tag === "VIDEO_GAMES"
                 )}
               />
-              <label htmlFor="jeuxVideos"> Jeux vidéos </label>
+              <label htmlFor="videoGames"> Video games </label>
 
               <input
                 type="checkbox"
-                id="voyage"
-                value={"VOYAGES"}
+                id="trip"
+                value={"TRIPS"}
                 onChange={EditTag}
-                checked={tags.some((tagObject) => tagObject.tag === "VOYAGES")}
+                checked={tags.some((tagObject) => tagObject.tag === "TRIPS")}
               />
-              <label htmlFor="voyage"> Voyages </label>
+              <label htmlFor="trip"> Trips </label>
 
               <input
                 type="checkbox"

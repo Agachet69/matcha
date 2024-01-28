@@ -487,6 +487,13 @@
     }
   }
 
+  .titleProfil {
+    width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+  }
+
   .fameRate {
     display: flex;
     width: 100%;
@@ -626,18 +633,13 @@
       }
 
       .ellipsMenu {
-        // pointer-events: none;
         position: relative;
         display: flex;
         align-items: flex-start;
         justify-content: center;
-        // height: 200px;
-        // width: 400px;
-        // overflow: hidden;
 
         button {
           all: unset;
-          // pointer-events: all;
           svg {
             &:hover {
               color: $pink;
@@ -697,6 +699,33 @@
     svg {
       height: 25px;
       width: 25px;
+    }
+  }
+
+  .infosUserSeen {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+    padding: 0px 60px;
+    flex-wrap: wrap;
+
+    .listTagContent {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+
+      .tagName {
+        &::first-letter {
+          text-transform: capitalize;
+        }
+        width: 130px;
+        background-color: $pink;
+        padding: 5px 10px;
+        border-radius: 100px;
+        text-align: center;
+      }
     }
   }
 }

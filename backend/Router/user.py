@@ -262,8 +262,6 @@ def block_user(current_user: UserSchema = Depends(get_current_user), target_user
     db.refresh(current_user)
     return current_user
 
-
-
 @router.post("/see/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 async def see(
     current_user: UserSchema = Depends(get_current_user), user_to_see: UserSchema = Depends(get_user), db=Depends(get_db)

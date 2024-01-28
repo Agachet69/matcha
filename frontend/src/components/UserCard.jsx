@@ -55,16 +55,16 @@ const UserCard = ({
                 user.status === "ONLINE" ? "image online" : "image offline"
               }
             >
-              <img
-                src={
-                  user.photos.find((photo) => photo.main)
-                    ? `http://localhost:8000/${
-                        user.photos.find((photo) => photo.main).path
-                      }`
-                    : null
-                }
-                alt=""
-              />
+              {user.photos.find((photo) => photo.main) ? (
+                <img
+                  src={`http://localhost:8000/${
+                    user.photos.find((photo) => photo.main).path
+                  }`}
+                  alt="profil picture"
+                />
+              ) : (
+                <div> </div>
+              )}
             </div>
             <Tooltip title="Username">
               <div className="name">{user.username}</div>
@@ -80,7 +80,11 @@ const UserCard = ({
               <Tooltip title="Fame rating">
                 <div className="icon">
                   <Fire />
-                  <p> {user.fame_rate} </p>
+                  {user.fame_rate >= 100 ? (
+                    <p> 99+ </p>
+                  ) : (
+                    <p> {user.fame_rate} </p>
+                  )}
                 </div>
               </Tooltip>
             </div>

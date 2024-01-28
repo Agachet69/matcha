@@ -2,20 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import UserCard from "../components/UserCard";
 import { initialiseUser, selectUser } from "../store/slices/userSlice";
 import "../styles/chat.scss";
-import {
-  Age,
-  FemaleIcon,
-  MaleIcon,
-  SearchIcon,
-  SendIcon,
-  UserIcon,
-} from "../components/icons/Icons";
+import { SendIcon } from "../components/icons/Icons";
 import { useNavigate, useParams } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import { getActions } from "../utils/SnackBarsManager";
 import { getToken } from "../store/slices/authSlice";
 import { useEffect, useState } from "react";
-import GenderEnum from "../Enum/GenderEnum";
 import { useFormik } from "formik";
 import MessageSchema from "../schemas/MessageSchema";
 import { useSocket } from "../utils/PrivateRoutes";
@@ -210,22 +202,13 @@ const Chat = () => {
       <div className="main">
         {user && (
           <div
-            className="userInfo"
+            className={
+              user.gender == "MALE" ? "userInfo male" : "userInfo female"
+            }
             onClick={() => {
               navigate("/profil/see", { state: user });
             }}
           >
-            <img
-              src={
-                user.photos.find((photo) => photo.main)
-                  ? `http://localhost:8000/${
-                      user.photos.find((photo) => photo.main).path
-                    }`
-                  : null
-              }
-              className="background"
-              alt=""
-            />
             <div className="userInfo-content">
               <div className="image">
                 <img
@@ -240,32 +223,10 @@ const Chat = () => {
                 />
               </div>
               <div className="name">{user.username}</div>
-              <div className="limiter" />
-              <div className="info">
-                <div className="text">{user.firstName}</div>
-                <div className="text">{user.lastName}</div>
-              </div>
-              <div className="limiter" />
-              <div className="info">
-                <div className="icon">
-                  <Age />
-                </div>
-                <div className="text">{user.age}</div>
-              </div>
-              <div className="limiter" />
-              <div className="info">
-                <div className="icon">
-                  {user.gender == GenderEnum.MALE ? (
-                    <MaleIcon />
-                  ) : (
-                    <FemaleIcon />
-                  )}
-                </div>
-              </div>
-              <div className="limiter" />
-              <div className="info">
-                <div className="text">{user.status}</div>
-              </div>
+            </div>
+            <div className="limiter" />
+            <div className="info">
+              <div className="text">{user.status}</div>
             </div>
           </div>
         )}

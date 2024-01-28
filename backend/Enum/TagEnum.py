@@ -1,10 +1,10 @@
 from enum import Enum
 
 class TagEnum(Enum):
-  MUSIQUE = "MUSIQUE"
+  MUSIC = "MUSIC"
   SPORT = "SPORT"
-  JEUX_VIDEOS = "JEUX_VIDEOS"
-  VOYAGES = "VOYAGES"
+  VIDEO_GAMES = "VIDEO_GAMES"
+  TRIPS = "TRIPS"
   CINEMA = "CINEMA"
   VEGAN = "VEGAN"
   PIERCING = "PIERCING"

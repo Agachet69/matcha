@@ -24,7 +24,6 @@
 
   .background {
     filter: blur(100px) contrast(1.75);
-    // background-color: red;
     left: -300px;
     position: absolute;
     z-index: -1;
@@ -52,15 +51,14 @@
 
     .image {
       position: relative;
-      height: 70px;
-      width: 70px;
+      height: 64px;
+      width: 64px;
       aspect-ratio: 1/1;
       background-color: rgb(0, 0, 0);
       border-radius: 50%;
 
-      // overflow: hidden;
-
       img {
+        background-color: black;
         object-fit: cover;
         object-position: center;
         height: 100%;
@@ -71,24 +69,24 @@
       &.offline::after {
         content: "";
         position: absolute;
-        width: 15px; /* Ajustez la taille de la pastille selon vos besoins */
-        height: 15px; /* Ajustez la taille de la pastille selon vos besoins */
-        background-color: $offlineColor; /* Couleur de la pastille pour l'état hors ligne */
+        width: 15px;
+        height: 15px;
+        background-color: $offlineColor;
         border-radius: 50%;
-        bottom: 4px; /* Ajustez la position verticale selon vos besoins */
-        right: 4px; /* Ajustez la position horizontale selon vos besoins */
+        bottom: 4px;
+        right: 4px;
         z-index: 3;
       }
 
       &.online::after {
         content: "";
         position: absolute;
-        width: 15px; /* Ajustez la taille de la pastille selon vos besoins */
-        height: 15px; /* Ajustez la taille de la pastille selon vos besoins */
-        background-color: $onlineColor; /* Couleur de la pastille pour l'état hors ligne */
+        width: 15px;
+        height: 15px;
+        background-color: $onlineColor;
         border-radius: 50%;
-        bottom: 4px; /* Ajustez la position verticale selon vos besoins */
-        right: 4px; /* Ajustez la position horizontale selon vos besoins */
+        bottom: 4px;
+        right: 4px;
         z-index: 3;
       }
     }
@@ -121,11 +119,6 @@
       .text {
         color: #0000002c;
       }
-    }
-
-    &:hover {
-      // filter: brightness(0.8);
-      // border: 1px solid #00000022;
     }
   }
 
@@ -262,7 +255,7 @@
   }
 }
 
-@media screen and (max-width: 400px) {
+@media screen and (max-width: 350px) {
   .user-card-item {
     backdrop-filter: unset;
     flex: unset;
@@ -276,23 +269,6 @@
         }
 
         .icon {
-          display: none;
-        }
-      }
-    }
-  }
-}
-
-@media screen and (max-width: 400px) {
-    .user-card-item {
-    backdrop-filter: unset;
-    flex: unset;
-    width: 100%;
-    padding: 0.5rem 5px;
-
-    .mainContentCard {
-      .leftContent {
-        .info {
           display: none;
         }
       }

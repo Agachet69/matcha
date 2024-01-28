@@ -282,7 +282,11 @@ const OtherProfil = () => {
         <div className="socialInfosContainer">
           <div className="socialInfos borderR">
             <div className="socialTitleSvg">
-              <h4> {userSeen.fame_rate} </h4>
+              {userSeen.fame_rate >= 100 ? (
+                <h4> 99+ </h4>
+              ) : (
+                <h4> {userSeen.fame_rate} </h4>
+              )}
               <Fire />
             </div>
             <p>fame rating</p>
@@ -296,7 +300,11 @@ const OtherProfil = () => {
           </div>
           <div className="socialInfos">
             <div className="socialTitleSvg">
-              <h4> {userSeen.profile_seen_by.length} </h4>
+              {userSeen.profile_seen_by.length >= 100 ? (
+                <h4> 99+ </h4>
+              ) : (
+                <h4> {userSeen.profile_seen_by.length} </h4>
+              )}
               <Eye />
             </div>
             <p>views</p>
@@ -304,45 +312,43 @@ const OtherProfil = () => {
         </div>
         {!userSeen && <div> Loader </div>}
         {userSeen && (
-          <div className="editUserContainer">
-            <h3> Profil</h3>
-            <form>
-              <div className="inputContainer">
-                <p>{userSeen.username}, </p>
-              </div>
-              <div className="inputContainer">
-                {((userSeen.sexuality.toLowerCase() === "heterosexual" &&
-                  userSeen.gender === "MALE") ||
-                  (userSeen.sexuality.toLowerCase() === "homosexual" &&
-                    userSeen.gender === "FEMALE")) && (
-                  <p> attracted to womens. </p>
-                )}
-                {((userSeen.sexuality.toLowerCase() === "heterosexual" &&
-                  userSeen.gender === "FEMALE") ||
-                  (userSeen.sexuality.toLowerCase() === "homosexual" &&
-                    userSeen.gender === "MALE")) && <p> attracted to mens. </p>}
-                {userSeen.sexuality.toLowerCase() === "bisexual" && (
-                  <p> attracted to both men and women. </p>
-                )}
-              </div>
-              <div className="tagsListContainer">
-                {userSeen.tags.length > 0 ? (
-                  userSeen.tags.map((tag, index) => (
+          <div className="infosUserSeen">
+            <p>{userSeen.username}, </p>
+            <div className="orientationOther">
+              {((userSeen.sexuality.toLowerCase() === "heterosexual" &&
+                userSeen.gender === "MALE") ||
+                (userSeen.sexuality.toLowerCase() === "homosexual" &&
+                  userSeen.gender === "FEMALE")) && (
+                <p> attracted to womens. </p>
+              )}
+              {((userSeen.sexuality.toLowerCase() === "heterosexual" &&
+                userSeen.gender === "FEMALE") ||
+                (userSeen.sexuality.toLowerCase() === "homosexual" &&
+                  userSeen.gender === "MALE")) && <p> attracted to mens. </p>}
+              {userSeen.sexuality.toLowerCase() === "bisexual" && (
+                <p> attracted to both men and women. </p>
+              )}
+            </div>
+            <div className="tagsListContainer">
+              {userSeen.tags.length > 0 ? (
+                <div className="listTagContent">
+                  <p> Interests : </p>
+                  {userSeen.tags.map((tag, index) => (
                     <p key={index} className="tagName">
                       {" "}
                       {tag.tag.toLowerCase()}{" "}
                     </p>
-                  ))
-                ) : (
-                  <p> No registered interest.</p>
-                )}
-              </div>
-              {userSeen.status === "OFFLINE" ? (
-                <p> Last connection on {lastConnexion()}.</p>
+                  ))}
+                </div>
               ) : (
-                ""
+                <p> No registered interest.</p>
               )}
-            </form>
+            </div>
+            {userSeen.status === "OFFLINE" ? (
+              <p> Last connection on {lastConnexion()}.</p>
+            ) : (
+              ""
+            )}
           </div>
         )}
       </div>

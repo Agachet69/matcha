@@ -52,9 +52,8 @@ const Modals = ({ children }) => {
 
   async function deleteNotif(id) {
     try {
-      const res = await instance.delete("/users/del_notif/" + id);
+      await instance.delete("/users/del_notif/" + id);
       dispatch(deleteUserNotif(id));
-      console.log(res);
     } catch (err) {
       console.error(err);
     }
