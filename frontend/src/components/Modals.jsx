@@ -17,7 +17,7 @@ import {
   selectUser,
 } from "../store/slices/userSlice";
 import axios from "axios";
-import { getToken } from "../store/slices/authSlice";
+import { getToken, setToken } from "../store/slices/authSlice";
 import { useEffect, useState } from "react";
 import { KeyIcon, Trash, UserIcon } from "./icons/Icons";
 import { useNavigate } from "react-router-dom";
@@ -26,6 +26,7 @@ import ModalConfirm from "./ModalConfirm";
 import ListUserModal from "./profil/ListUserModal";
 import { useFormik } from "formik";
 import {UsernameSchema} from "../schemas/ForgotPasswordSchema";
+import ChangePasswordSchema from "../schemas/ChangePasswordSchema";
 
 const Modals = ({ children }) => {
   const dispatch = useDispatch();
@@ -87,6 +88,14 @@ const Modals = ({ children }) => {
     )
   }
 
+  const onChangePassword = (values) => {
+    instance.post('/users/change_password', values).then(({data}) => {
+      dispatch(setToken(data))
+      setForgotPasswordErr('Password changed.')
+    }).catch((error) => setForgotPasswordErr(error.response.data.detail)
+    )
+  }
+
   const [forgotPasswordErr, setForgotPasswordErr] = useState('')
 
   const ForgotPasswordFormik = useFormik({
@@ -96,6 +105,16 @@ const Modals = ({ children }) => {
     },
     onSubmit: (values) => onForgotPassword(values),
   });
+  
+  const ChangePasswordFormik = useFormik({
+    validationSchema: ChangePasswordSchema(),
+    initialValues: {
+      last_password: "",
+      new_password: ""
+    },
+    onSubmit: (values) => onChangePassword(values),
+  });
+
 
   return (
     <div className="containerApp">
@@ -385,6 +404,64 @@ const Modals = ({ children }) => {
               </div>
               {!!ForgotPasswordFormik.errors.username && ForgotPasswordFormik.touched.username && (
                 <div className="error">{ForgotPasswordFormik.errors.username}</div>
+              )}
+              {!!forgotPasswordErr && (
+                <div className="error">{forgotPasswordErr}</div>
+              )}
+              <div className="btnClose">
+                <button
+                  type="submit"
+                >
+                  Send
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    dispatch(editForgotPassword(allModals.forgotPassword))
+                  }
+                  }
+                >
+                  Close
+                </button>
+              </div>
+            </section>
+          </main>
+        </form>
+      )}
+      {allModals.changePassword && (
+        <form onSubmit={ChangePasswordFormik.handleSubmit} className="modal">
+          <main className="overlayModal">
+            <section>
+              {/* <h3> Please enter your username : </h3> */}
+              <div className="loginInput">
+                <input
+                  type="last_password"
+                  placeholder=" "
+                  name="last_password"
+                  onChange={ChangePasswordFormik.handleChange}
+                />
+                <label>Last password</label>
+                <div className="icon">
+                  <KeyIcon />
+                </div>
+              </div>
+              {!!ChangePasswordFormik.errors.last_password && ChangePasswordFormik.touched.last_password && (
+                <div className="error">{ChangePasswordFormik.errors.last_password}</div>
+              )}
+              <div className="loginInput">
+                <input
+                  type="new_password"
+                  placeholder=" "
+                  name="new_password"
+                  onChange={ChangePasswordFormik.handleChange}
+                />
+                <label>New password</label>
+                <div className="icon">
+                  <KeyIcon />
+                </div>
+              </div>
+              {!!ChangePasswordFormik.errors.new_password && ChangePasswordFormik.touched.new_password && (
+                <div className="error">{ChangePasswordFormik.errors.new_password}</div>
               )}
               {!!forgotPasswordErr && (
                 <div className="error">{forgotPasswordErr}</div>

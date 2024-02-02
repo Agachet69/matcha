@@ -10,6 +10,7 @@ const initialState = {
   blockedList: false,
   match: false,
   forgotPassword: false,
+  changePassword: false,
   user: null,
 };
 
@@ -37,6 +38,9 @@ export const modalSlice = createSlice({
     },
     editForgotPassword: (state, action) => {
       return { ...initialState, forgotPassword: !action.payload };
+    },
+    editChangePassword: (state, action) => {
+      return { ...initialState, changePassword: !action.payload };
     },
     editMatch: (state, action) => {
       return { ...initialState, match: !action.payload };
@@ -73,6 +77,7 @@ export const {
   editBlockedList,
   editForgotPassword,
   resetAllModals,
+  editChangePassword,
 } = modalSlice.actions;
 export const selectModalMainPic = (state) => state.modal.deleteMainPic;
 export const selectModalPic = (state) => state.modal.deletePic;

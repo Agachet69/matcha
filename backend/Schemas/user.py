@@ -67,6 +67,10 @@ class ForgotPassword(BaseModel):
     code: str
     username: Optional[constr(min_length=1)]
     password: constr(min_length=1)
+
+class ChangePassword(BaseModel):
+    last_password: constr(min_length=1)
+    new_password: constr(min_length=1)
     
 
 class UserUpdate(UserBase):

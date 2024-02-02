@@ -1,5 +1,5 @@
 import "../../styles/profil/editUser.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../store/slices/userSlice";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "../icons/Icons";
@@ -7,6 +7,7 @@ import { getAuthorizedInstance } from "../../utils/Instance";
 import { getToken } from "../../store/slices/authSlice";
 import { useFormik } from "formik";
 import EditUserSchema from "../../schemas/EditUserSchema";
+import { editChangePassword } from "../../store/slices/modalSlice";
 
 const EditUser = () => {
   const user = useSelector(selectUser);
@@ -14,6 +15,7 @@ const EditUser = () => {
   const instance = getAuthorizedInstance(token.access_token);
   const [formUser, setFormUser] = useState(user);
   const [tags, setTags] = useState(user.tags);
+  const dispatch = useDispatch()
   const initialStatusState = {
     username: false,
     lastName: false,
@@ -30,7 +32,7 @@ const EditUser = () => {
   const [editStatus, setEditStatus] = useState(initialStatusState);
 
   useEffect(() => {
-    formik.setValues({...user})
+    formik.setValues(user)
   }, [user])
 
   const formik = useFormik({
@@ -72,6 +74,9 @@ const EditUser = () => {
   return (
     <div className="editUserContainer">
       <h3> Profile information </h3>
+      <div className="sendButton" onClick={() => dispatch(editChangePassword(false))}>
+        <button>Change Password</button>
+      </div>
       <form onSubmit={formik.handleSubmit}>
         <div
           className={
@@ -521,7 +526,6 @@ const EditUser = () => {
         <div className="sendButton">
           <button type="submit">Submit changes</button>
         </div>
-        
       </form>
     </div>
   );

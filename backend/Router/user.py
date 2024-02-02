@@ -9,7 +9,7 @@ from Schemas.like import LikeSchema
 from Schemas.match import MatchCreate
 from Schemas.search import SearchSchema
 from fastapi import APIRouter, Depends, HTTPException, status
-from Schemas.user import UserLogin, UserSchema, UserCreate, UserUpdate, ValidateEmail, ForgotPasswordSendCode, ForgotPassword, UserSearchSchema
+from Schemas.user import UserLogin, UserSchema, UserCreate, UserUpdate, ValidateEmail, ForgotPasswordSendCode, ForgotPassword, UserSearchSchema, ChangePassword
 from Schemas.tag import TagCreate
 import Crud
 from Deps.user import get_user, get_current_user
@@ -226,6 +226,21 @@ def login(user_to_login: UserLogin, db=Depends(get_db)):
         ),
         "token_type": "bearer",
     }
+
+@router.post("/change_password", status_code=status.HTTP_200_OK, response_model=TokenSchema)
+def login(change_password: ChangePassword, current_user = Depends(get_current_user), db=Depends(get_db)):
+    if not security.verify_password(change_password.last_password, current_user.password):
+        raise HTTPException(status_code=400, detail="Last password incorrect")
+    
+    user_update = UserUpdate(password=security.hash_password(change_password.new_password))
+
+    Crud.user.update(db, db_obj=current_user, obj_in=user_update)
+    return {
+        "access_token": security.create_jwt_token(
+            {"username": current_user.username, "password": current_user.password}
+        ),
+        "token_type": "bearer",
+    }
     
 @router.get("/me", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def get_me(current_user: UserSchema = Depends(get_current_user)):
@@ -233,7 +248,12 @@ def get_me(current_user: UserSchema = Depends(get_current_user)):
 
 @router.put('/', status_code=status.HTTP_200_OK, response_model=UserSchema)
 def update_user(user_update: UserUpdate, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
-  return Crud.user.update(db, db_obj=current_user, obj_in=user_update)
+    if user_update.last_password and user_update:
+        print('oui')
+
+
+
+    return Crud.user.update(db, db_obj=current_user, obj_in=user_update)
 
 @router.put('/tags', response_model=UserSchema)
 def update_tags(tags: List[TagCreate], current_user= Depends(get_current_user), db= Depends(get_db)):
