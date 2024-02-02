@@ -1,7 +1,6 @@
 import { useFormik } from "formik";
 import GenderEnum from "../Enum/GenderEnum";
 import SexualityEnum from "../Enum/SexualityEnum";
-import printVarsHook from "../components/printVarsHook";
 import RegisterSchema from "../schemas/RegisterSchema";
 import { useNavigate } from "react-router-dom";
 import "../styles/register.scss";
@@ -85,10 +84,6 @@ const Register = () => {
   }, []);
 
   useEffect(() => window.scrollTo(0, 0), []);
-  printVarsHook(formik.errors, "errors");
-  printVarsHook(formik.touched, "touched");
-  printVarsHook(formik.values, "values");
-  printVarsHook(formik.isSubmitting, "isSubmitting");
 
   return (
     <div className="loginContainer">

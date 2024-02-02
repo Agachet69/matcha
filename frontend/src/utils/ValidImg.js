@@ -7,11 +7,11 @@ export const ValidImg = (file) => {
     "image/svg+xml",
   ];
   if (!typesMIMEImages.includes(file.type)) {
-    console.log("Le fichier n'est pas supporté");
+    alert("Le fichier n'est pas supporté");
     return false
   }
   if (file && file.size > maxSize) {
-    console.log("image trop volumineuse");
+    alert("image trop volumineuse");
     return false;
   }
   return true;

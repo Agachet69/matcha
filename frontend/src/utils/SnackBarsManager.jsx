@@ -82,7 +82,6 @@ const SnackBarsManager = () => {
   useEffect(() => {
     if (socket) {
       socket.on("add-notification", ({ type, data, data_user_id }) => {
-        console.log("add-notif");
         getMe();
         enqueueSnackbar(data, {
           variant: "info",
@@ -92,8 +91,6 @@ const SnackBarsManager = () => {
       socket.on(
         "add-message-notification",
         ({ data, data_user_id, notif_id }) => {
-          console.log("add-msg-notif");
-          console.log(data, data_user_id, notif_id);
           getMe();
           enqueueSnackbar(data, {
             variant: "info",
@@ -113,7 +110,6 @@ const SnackBarsManager = () => {
         socket.off(
           "add-message-notification",
           ({ data, data_user_id, notif_id }) => {
-            console.log(data, data_user_id, notif_id);
             getMe();
             enqueueSnackbar(data, {
               variant: "info",

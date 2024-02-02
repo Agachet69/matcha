@@ -65,7 +65,6 @@ const Login = () => {
         navigate("/");
       })
       .catch((error) => {
-        console.log(error.response.data.detail);
         setOnLoginErrorMessage(error.response.data.detail);
       });
   };

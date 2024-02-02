@@ -41,10 +41,6 @@ const UserCard = ({
           ? "user-card-item male"
           : "user-card-item female"
       }
-      // onWheel={(e) => {
-      //   console.log('ok');
-      //   e.currentTarget.scrollLeft += e.deltaY;
-      // }}
       onClick={navigateChat}
     >
       {user && user.photos ? (

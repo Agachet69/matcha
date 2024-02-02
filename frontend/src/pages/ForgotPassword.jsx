@@ -18,10 +18,7 @@ const ForgotPassword = () => {
   const [errorMsg, setErrorMsg] = useState('')
   const [searchParams] = useSearchParams();
   const navigate = useNavigation()
-  console.log(searchParams.get('code'))
-  console.log()
   const onChangePassword = (values) => {
-    console.log('oui')
     axios.post('http://localhost:8000/users/forgot_password', { ...values, code: searchParams.get('code'), username: searchParams.get('username') }).then(({ data }) => {
       navigate('/login')
     })

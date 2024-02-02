@@ -80,7 +80,6 @@ def resend_code(current_user = Depends(get_current_user), db = Depends(get_db)):
         server.starttls()
         server.login(smtp_username, smtp_password)
         server.sendmail(sender_email, current_user.email, msg.as_string())
-        print("Verification email sent successfully.")
     except Exception as e:
         print(f"Error sending email: {str(e)}")
         raise HTTPException(status_code=400, detail="Error when send the verification email.")
@@ -187,7 +186,6 @@ def register(user_to_create: UserCreate, db=Depends(get_db)):
         server.starttls()
         server.login(smtp_username, smtp_password)
         server.sendmail(sender_email, user_to_create.email, msg.as_string())
-        print("Verification email sent successfully.")
     except Exception as e:
         print(f"Error sending email: {str(e)}")
         raise HTTPException(status_code=400, detail="Error when send the verification email.")
@@ -249,7 +247,6 @@ def get_me(current_user: UserSchema = Depends(get_current_user)):
 @router.put('/', status_code=status.HTTP_200_OK, response_model=UserSchema)
 def update_user(user_update: UserUpdate, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
     if user_update.last_password and user_update:
-        print('oui')
 
 
 

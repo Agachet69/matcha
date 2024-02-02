@@ -70,7 +70,6 @@ const OtherProfil = () => {
   useEffect(() => {
     if (userSeen)
       setMainSeen(userSeen.photos.filter((photo) => photo.main === true)[0]);
-    console.log(userSeen);
   }, [userSeen, navigate]);
 
   const onBlockUser = () => {

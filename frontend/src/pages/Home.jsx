@@ -55,8 +55,6 @@ const Home = () => {
         headers: headers,
       })
       .then(({ data }) => {
-        console.log(data);
-        console.log(value);
         setAllUsers(data);
       });
   };
@@ -86,7 +84,9 @@ const Home = () => {
   };
 
   const onUpdateStatus = ({ user_id /*, status */ }) => {
-    if (user_id != me.id) if (Object.keys(searchFormik).length) searchFormik.submitForm();
+    if (user_id != me.id)
+      if (Object.keys(searchFormik.values).length)
+        searchFormik.submitForm();
   };
 
   useEffect(() => {
@@ -265,9 +265,9 @@ const Home = () => {
               value={
                 Object.keys(searchFormik.values).includes("age_limit")
                   ? [
-                      searchFormik.values.age_limit.min,
-                      searchFormik.values.age_limit.max,
-                    ]
+                    searchFormik.values.age_limit.min,
+                    searchFormik.values.age_limit.max,
+                  ]
                   : 0
               }
               onChange={(e) =>
@@ -309,9 +309,9 @@ const Home = () => {
               value={
                 Object.keys(searchFormik.values).includes("fame_rate_limit")
                   ? [
-                      searchFormik.values.fame_rate_limit.min,
-                      searchFormik.values.fame_rate_limit.max,
-                    ]
+                    searchFormik.values.fame_rate_limit.min,
+                    searchFormik.values.fame_rate_limit.max,
+                  ]
                   : 0
               }
               onChange={(e) =>
@@ -353,9 +353,9 @@ const Home = () => {
               value={
                 Object.keys(searchFormik.values).includes("location_limit")
                   ? [
-                      searchFormik.values.location_limit.min,
-                      searchFormik.values.location_limit.max,
-                    ]
+                    searchFormik.values.location_limit.min,
+                    searchFormik.values.location_limit.max,
+                  ]
                   : 0
               }
               onChange={(e) =>
@@ -409,8 +409,8 @@ const Home = () => {
                     sortResult.name <= 0
                       ? "inactiveSort"
                       : sortResult.name > 1
-                      ? "reverseSort"
-                      : "activeSort"
+                        ? "reverseSort"
+                        : "activeSort"
                   }
                   onClick={() => mySortResult("name")}
                 >
@@ -422,8 +422,8 @@ const Home = () => {
                     sortResult.fame <= 0
                       ? "inactiveSort"
                       : sortResult.fame > 1
-                      ? "reverseSort"
-                      : "activeSort"
+                        ? "reverseSort"
+                        : "activeSort"
                   }
                   onClick={() => mySortResult("fame")}
                 >
@@ -435,8 +435,8 @@ const Home = () => {
                     sortResult.position <= 0
                       ? "inactiveSort"
                       : sortResult.position > 1
-                      ? "reverseSort"
-                      : "activeSort"
+                        ? "reverseSort"
+                        : "activeSort"
                   }
                   onClick={() => mySortResult("position")}
                 >
@@ -448,8 +448,8 @@ const Home = () => {
                     sortResult.tags <= 0
                       ? "inactiveSort"
                       : sortResult.tags > 1
-                      ? "reverseSort"
-                      : "activeSort"
+                        ? "reverseSort"
+                        : "activeSort"
                   }
                   onClick={() => mySortResult("tags")}
                 >

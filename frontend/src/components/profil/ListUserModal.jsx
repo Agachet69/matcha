@@ -27,10 +27,6 @@ const ListUserModal = ({ user, type = null }) => {
     });
   };
 
-  useEffect(() => {
-    console.log(user);
-  }, []);
-
   return (
     <div
       className="userLiked"

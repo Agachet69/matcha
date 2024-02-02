@@ -1,14 +1,10 @@
 import { useState } from 'react';
 import '../styles/carousel.scss'
 import { AddImage, ArrowLeft, ArrowRight, Delete } from './icons/Icons';
-import printVarsHook from './printVarsHook';
 
 
 const Carousel = ({ images, onDeleteImage }) => {
 	const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-	
-	printVarsHook(currentImageIndex, "currentImageIndex")
 
 	const deleteImage = (e) => {
 		e.stopPropagation()

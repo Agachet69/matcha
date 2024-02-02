@@ -74,9 +74,7 @@ const Chat = () => {
     const fetchData = async () => {
       try {
         const usersData = await getAllUsers();
-        console.log(usersData);
         setUserList(usersData);
-        console.log(userList);
       } catch (error) {
         console.log(error);
       }
@@ -147,7 +145,6 @@ const Chat = () => {
       .then(({ data }) => dispatch(initialiseUser({ ...data })));
 
   useEffect(() => {
-    console.log("socket", socket);
     if (socket) {
       socket.on("add-message-notification", onDeleteNewNotifMessage);
       return () =>
