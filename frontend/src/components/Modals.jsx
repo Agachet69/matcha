@@ -4,6 +4,7 @@ import {
   editBlockUser,
   editBlockedList,
   editDeleteMainPic,
+  editForgotPassword,
   editLikedUser,
   editMatch,
   editViewUser,
@@ -17,12 +18,14 @@ import {
 } from "../store/slices/userSlice";
 import axios from "axios";
 import { getToken } from "../store/slices/authSlice";
-import { useEffect } from "react";
-import { Trash } from "./icons/Icons";
+import { useEffect, useState } from "react";
+import { KeyIcon, Trash, UserIcon } from "./icons/Icons";
 import { useNavigate } from "react-router-dom";
 import { getAuthorizedInstance } from "../utils/Instance";
 import ModalConfirm from "./ModalConfirm";
 import ListUserModal from "./profil/ListUserModal";
+import { useFormik } from "formik";
+import {UsernameSchema} from "../schemas/ForgotPasswordSchema";
 
 const Modals = ({ children }) => {
   const dispatch = useDispatch();
@@ -30,7 +33,7 @@ const Modals = ({ children }) => {
   const token = useSelector(getToken);
   const allModals = useSelector(selectAllModals);
   const navigate = useNavigate();
-  const instance = getAuthorizedInstance(token.access_token);
+  const instance = getAuthorizedInstance(token ? token.access_token : '');
 
   async function deletePic() {
     try {
@@ -69,11 +72,30 @@ const Modals = ({ children }) => {
   };
 
   useEffect(() => {
+    setForgotPasswordErr('')
+  }, [allModals.forgotPassword])
+
+  useEffect(() => {
     const cleanup = () => {
       dispatch(resetAllModals());
     };
     return cleanup;
   }, [navigate, dispatch]);
+
+  const onForgotPassword = (values) => {
+    axios.post('http://localhost:8000/users/forgot_password_send_code', values).then(() => setForgotPasswordErr('Email successfuly sent.')).catch((error) => setForgotPasswordErr(error.response.data.detail)
+    )
+  }
+
+  const [forgotPasswordErr, setForgotPasswordErr] = useState('')
+
+  const ForgotPasswordFormik = useFormik({
+    validationSchema: UsernameSchema(),
+    initialValues: {
+      username: "",
+    },
+    onSubmit: (values) => onForgotPassword(values),
+  });
 
   return (
     <div className="containerApp">
@@ -343,6 +365,49 @@ const Modals = ({ children }) => {
             ></div>
           </main>
         </div>
+      )}
+      {allModals.forgotPassword && (
+        <form onSubmit={ForgotPasswordFormik.handleSubmit} className="modal">
+          <main className="overlayModal">
+            <section>
+              <h3> Please enter your username : </h3>
+              <div className="loginInput">
+                <input
+                  type="username"
+                  placeholder=" "
+                  name="username"
+                  onChange={ForgotPasswordFormik.handleChange}
+                />
+                <label>Username</label>
+                <div className="icon">
+                  <UserIcon />
+                </div>
+              </div>
+              {!!ForgotPasswordFormik.errors.username && ForgotPasswordFormik.touched.username && (
+                <div className="error">{ForgotPasswordFormik.errors.username}</div>
+              )}
+              {!!forgotPasswordErr && (
+                <div className="error">{forgotPasswordErr}</div>
+              )}
+              <div className="btnClose">
+                <button
+                  type="submit"
+                >
+                  Send
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    dispatch(editForgotPassword(allModals.forgotPassword))
+                  }
+                  }
+                >
+                  Close
+                </button>
+              </div>
+            </section>
+          </main>
+        </form>
       )}
       <div className="App">{children}</div>
     </div>

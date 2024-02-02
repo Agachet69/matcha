@@ -1,0 +1,48 @@
+.container {
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    h3 {
+        font-size: 30px;
+    }
+    input {
+        font-family: Montserrat;
+        font-size: 16px;
+        padding: 15px 20px;
+        width: 100%;
+        background-color: #ffffff;
+        color: black;
+        position: relative;
+        // z-index: 1;
+        border-radius: 10px;
+        border: 1px solid #ffffff50;
+        transition: 0.3s;
+      }
+
+    p {
+        cursor: pointer;
+        &:hover {
+            color: #ff4ca8;
+          }
+      }
+      
+    .inputContainer {
+        display: flex;
+        gap: 1rem;
+        
+        .icon {
+            all: unset;
+            height: 100%;
+            aspect-ratio: 1/1;
+            color: #00000077;
+
+            &:hover {
+                color: #ff4ca8;
+            }
+
+        }
+    }
+      
+}

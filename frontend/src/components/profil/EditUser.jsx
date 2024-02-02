@@ -1,7 +1,7 @@
 import "../../styles/profil/editUser.scss";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/slices/userSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowRight } from "../icons/Icons";
 import { getAuthorizedInstance } from "../../utils/Instance";
 import { getToken } from "../../store/slices/authSlice";
@@ -24,8 +24,14 @@ const EditUser = () => {
     sexuality: false,
     tags: false,
     bio: false,
+    longitude: false,
+    lattitude: false,
   };
   const [editStatus, setEditStatus] = useState(initialStatusState);
+
+  useEffect(() => {
+    formik.setValues({...user})
+  }, [user])
 
   const formik = useFormik({
     validationSchema: EditUserSchema(),
@@ -454,9 +460,68 @@ const EditUser = () => {
             ) : null}
           </div>
         </div>
+        <div
+          className={
+            editStatus.longitude ? "inputContainer active" : "inputContainer"
+          }
+        >
+          <div
+            className="titleInput"
+            onClick={() =>
+              setEditStatus((prevState) => ({
+                ...prevState,
+                longitude: !editStatus.longitude,
+              }))
+            }
+          >
+            <label className="labelContainer"> Longitude </label>
+            <div className="currentValue">
+              <p>{formUser.longitude}</p>
+              <ArrowRight />
+            </div>
+          </div>
+          <div className="myTextInput">
+            <div className="DisplayInputContainer">
+              <input type="number" {...formik.getFieldProps("longitude")} />
+            </div>
+            {formik.touched.longitude && formik.errors.longitude ? (
+              <div className="errorEdit">{formik.errors.longitude}</div>
+            ) : null}
+          </div>
+        </div>
+        <div
+          className={
+            editStatus.latitude ? "inputContainer active" : "inputContainer"
+          }
+        >
+          <div
+            className="titleInput"
+            onClick={() =>
+              setEditStatus((prevState) => ({
+                ...prevState,
+                latitude: !editStatus.latitude,
+              }))
+            }
+          >
+            <label className="labelContainer"> Longitude </label>
+            <div className="currentValue">
+              <p>{formUser.latitude}</p>
+              <ArrowRight />
+            </div>
+          </div>
+          <div className="myTextInput">
+            <div className="DisplayInputContainer">
+              <input type="number" {...formik.getFieldProps("latitude")} />
+            </div>
+            {formik.touched.latitude && formik.errors.latitude ? (
+              <div className="errorEdit">{formik.errors.latitude}</div>
+            ) : null}
+          </div>
+        </div>
         <div className="sendButton">
           <button type="submit">Submit changes</button>
         </div>
+        
       </form>
     </div>
   );

@@ -343,5 +343,5 @@ crypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 for user_to_create in user_list:
     print(user_to_create)
     user_to_create["password"] = security.hash_password(user_to_create["password"])
-    db.add(User(**user_to_create))
+    db.add(User(**user_to_create, email_check=True))
     db.commit()

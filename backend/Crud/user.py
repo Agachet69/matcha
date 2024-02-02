@@ -11,16 +11,15 @@ from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy import select, func, or_
 from sqlalchemy.orm import Session, noload, selectinload, aliased
-from math import radians, sin, cos, sqrt, atan2
 from Enum.SexualityEnum import SexualityEnum
 from Enum.GenderEnum import GenderEnum
 from Model import Tag
 
 
 class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
-    def create(self, db: Session, obj_in: UserCreate, **kwargs) -> User:
+    def create(self, db: Session, obj_in: UserCreate, verification_code: str, **kwargs) -> User:
         obj_in_data = jsonable_encoder(obj_in)
-        db_obj = self.model(**obj_in_data)
+        db_obj = self.model(**obj_in_data, verification_code=verification_code)
         db.add(db_obj)
         db.commit()
         db.refresh(db_obj)

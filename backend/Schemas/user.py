@@ -55,10 +55,26 @@ class UserLogin(UserBase):
     
     # _validate_password = validator("password", allow_reuse=True)(password_validator('CREATE'))
 
+class ValidateEmail(BaseModel):
+    code: str
+
+class ForgotPasswordSendCode(BaseModel):
+    username: Optional[constr(min_length=1)]
+
+    _validate_name_not_none = validator("username", allow_reuse=True)(user_name_validator)
+
+class ForgotPassword(BaseModel):
+    code: str
+    username: Optional[constr(min_length=1)]
+    password: constr(min_length=1)
+    
+
 class UserUpdate(UserBase):
     password: Optional[constr(min_length=1)]
     latitude: Optional[int]
     longitude: Optional[int]
+    verification_code: Optional[str]
+    email_check: Optional[bool]
     
     # _validate_password = validator("password", allow_reuse=True)(password_validator('EDIT'))
 
@@ -81,3 +97,21 @@ class UserSchema(UserInDBBase):
     matches: List[MatchSchema]
     blocked: List[BlockSchema]
     status: Optional[StatusEnum]
+    latitude: Optional[int]
+    longitude: Optional[int]
+    email_check: bool
+
+class UserSearchSchema(UserInDBBase):
+    notifs: List[NotifSchema]
+    likes: List[LikeSchema]
+    liked_by: List[LikeSchema]
+    like_photos: List[LikePhotoSchema]
+    profile_seen: List[ProfileSeenSchema]
+    profile_seen_by: List[ProfileSeenSchema]
+    photos: List[PhotoSchema]
+    tags: List[TagSchema]
+    matches: List[MatchSchema]
+    blocked: List[BlockSchema]
+    status: Optional[StatusEnum]
+    email_check: bool
+    distance: int

@@ -86,7 +86,7 @@ const Home = () => {
   };
 
   const onUpdateStatus = ({ user_id /*, status */ }) => {
-    if (user_id != me.id) searchFormik.submitForm();
+    if (user_id != me.id) if (Object.keys(searchFormik).length) searchFormik.submitForm();
   };
 
   useEffect(() => {
@@ -158,7 +158,18 @@ const Home = () => {
     setAllUsers(sortedArray);
   };
 
-  const sortByPosition = () => {};
+  const sortByPosition = () => {
+    const sortedArray = [...allUsers].sort((a, b) => {
+      const distanceA = a.distance;
+      const distanceB = b.distance;
+
+      if (distanceA < distanceB) return sortResult.position === 2 ? -1 : 1;
+      if (distanceA > distanceB) return sortResult.position === 2 ? 1 : -1;
+      return 0;
+    });
+
+    setAllUsers(sortedArray);
+  };
 
   function mySortResult(type) {
     switch (type) {
@@ -197,7 +208,7 @@ const Home = () => {
     <div className="main">
       <form className="search-container" onSubmit={searchFormik.onSubmit}>
         <div className="title-container">
-          <p> {token.access_token} </p>
+          {/* <p> {token.access_token} </p> */}
           <div className="title">Search an user</div>
           <div className="icons">
             <div className="container">
@@ -314,7 +325,7 @@ const Home = () => {
             />
           </div>
           <div className="item">
-            <div className="title">{"Location Limit (m)"}</div>
+            <div className="title">{"Location Limit (km)"}</div>
             <div className="iconResponsive">
               {" "}
               <MapPin />{" "}

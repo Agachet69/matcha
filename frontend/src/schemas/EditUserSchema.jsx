@@ -46,6 +46,8 @@ const EditUserSchema = () =>
       .oneOf(Object.keys(SexualityEnum), "Sexuality is not good.")
       .required("Sexuality is required."),
     bio: string().max(400, "Bio length must be less than 400 long."),
+    longitude: number().required('longitude is requiered.').max(180, 'Max is 180.').min(-180, 'Min is -180.'),
+    latitude: number().required('latitude is requiered.').max(90, 'Max is 90.').min(-90, 'Min is -90.'),
   });
 
 export default EditUserSchema;

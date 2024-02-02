@@ -3,7 +3,7 @@ from typing import List
 from Enum.GenderEnum import GenderEnum
 from Enum.SexualityEnum import SexualityEnum
 from Enum.StatusEnum import StatusEnum
-from sqlalchemy import Column, Integer, String, Sequence, Enum, DateTime
+from sqlalchemy import Column, Integer, String, Sequence, Enum, DateTime, Boolean
 from sqlalchemy.orm import relationship
 from Utils import Base
 from Model.photo import Photo
@@ -33,6 +33,9 @@ class User(Base):
     longitude = Column(Integer)
     
     fame_rate = Column(Integer, default=0)
+
+    email_check = Column(Boolean, default=False)
+    verification_code = Column(String(6), nullable=True, default=None)
 
     password = Column(String(256))
     tags= relationship("Tag", secondary=user_tag_association, back_populates="users")

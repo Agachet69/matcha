@@ -59,10 +59,88 @@
         }
       }
 
+      .loginInput {
+        display: flex;
+        align-items: center;
+        position: relative;
+        width: 100%;
+        // background-color: #663d6111;
+        /* border-radius: 10px;
+      border: 1px solid #7d6b75ae; */
+      }
+
+      .loginInput .icon {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 20px;
+        width: 20px;
+        z-index: 0;
+        color: #7d6b75;
+        transition: 0.3s;
+      }
+
+      .loginInput label {
+        position: absolute;
+        left: 22px;
+        top: 50%;
+        color: #7d6b75;
+        font-size: 16px;
+        transform: translateY(-50%);
+        transition: 0.3s;
+      }
+
+      .loginInput input {
+        font-family: Montserrat;
+        font-size: 16px;
+        padding: 15px 20px;
+        width: 100%;
+        background-color: #663d6111;
+        color: #7d6b75;
+        position: relative;
+        z-index: 1;
+        border-radius: 10px;
+        border: 1px solid #7d6b7550;
+        transition: 0.3s;
+      }
+
+      .loginInput input:focus {
+        color: #7d6b75;
+        border: 1px solid #ff4ca8;
+        background-color: transparent;
+        transition: 0.3s;
+      }
+
+      .loginInput input:hover {
+        border: 1px solid #ff4ca8;
+        transition: 0.3s;
+      }
+
+      .loginInput input:not(:placeholder-shown) + label {
+        top: -10px;
+        transition: 0.3s;
+      }
+
+      .loginInput input:focus + label {
+        top: -10px;
+        transition: 0.3s;
+        color: #616161;
+      }
+
+      .loginInput input:hover ~ label,
+      .loginInput input:hover ~ .icon,
+      .loginInput input:focus ~ .icon,
+      .loginInput input:focus ~ label {
+        color: #ff4ca8;
+        transition: 0.3s;
+      }
+
       .btnClose {
         width: 100%;
         display: flex;
         justify-content: center;
+        gap: 1rem;
         align-items: center;
 
         button {

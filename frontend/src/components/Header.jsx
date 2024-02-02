@@ -8,7 +8,7 @@ import { Badge } from "@mui/material";
 import { useEffect, useState } from "react";
 import { editNotif, selectAllModals } from "../store/slices/modalSlice";
 
-const Header = ({ children, connected = true }) => {
+const Header = ({ children, connected = true, logout = false }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector(selectUser);
@@ -32,8 +32,9 @@ const Header = ({ children, connected = true }) => {
           Matcha ❤
         </div>
 
-        {connected && (
           <div className="other">
+        {connected && (
+          <>
             <div className="me" onClick={() => navigate("/profil")}>
               <div className="image">
                 {profilPic ? (
@@ -68,25 +69,28 @@ const Header = ({ children, connected = true }) => {
               </div>
             </Badge>
             <div className="limiter" />
+            </>
+        )}
+        {(connected || logout ) &&
             <div
-              className="logout"
-              onClick={() => {
-                dispatch(setToken(null));
-                navigate("/login");
-              }}
+            className="logout"
+            onClick={() => {
+              dispatch(setToken(null));
+              navigate("/login");
+            }}
             >
               <Logout />
             </div>
+            }
           </div>
-        )}
       </div>
       <div className="content">{children}</div>
       <div className="wave-container">
-        <div className="sticky">
+        {/* <div className="sticky"> */}
           <div className="wave" />
           <div className="wave" />
           <div className="wave" />
-        </div>
+        {/* </div> */}
       </div>
     </div>
   );

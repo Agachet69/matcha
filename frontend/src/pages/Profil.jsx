@@ -35,6 +35,8 @@ import EditUser from "../components/profil/EditUser";
 const Profil = () => {
   const token = useSelector(getToken);
   const user = useSelector(selectUser);
+  // const test = useSelector();
+  // console.log(test)
   const deleteBack = useSelector(selectAllModals);
   const [translateXValue, setTranslateXValue] = useState(0);
   const [myImgs, setMyImgs] = useState(null);
@@ -44,7 +46,7 @@ const Profil = () => {
 
   useEffect(() => {
     console.log(user);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     backPicRef.current.style.transform = `translateX(${translateXValue}%)`;
@@ -219,7 +221,7 @@ const Profil = () => {
         <Fire />
       </div>
 
-      <p> Modifier sa position </p>
+      {/* <p> Modifier sa position </p> */}
       <div className="socialInfosContainer">
         <div
           className="socialInfos borderR"

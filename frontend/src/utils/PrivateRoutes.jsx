@@ -90,6 +90,9 @@ export const PrivateRoutes = ({ children }) => {
   if (!token)
     return <Navigate to="/login" replace state={{ from: location }} />;
   if (!socket || !user) return <></>;
+  console.log(user.email_check)
+  if (!user.email_check)
+    return <Navigate to="/verify_email" replace state={{ from: location }} />;
   return (
     <SocketContext.Provider value={socket}>
       {children}

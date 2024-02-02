@@ -7,6 +7,7 @@ import { KeyIcon, UserIcon } from "../components/icons/Icons";
 import { useFormik } from "formik";
 import LoginSchema from "../schemas/LoginSchema";
 import axios from "axios";
+import { editForgotPassword } from "../store/slices/modalSlice";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -121,7 +122,7 @@ const Login = () => {
             </div>
           </form>
           <div className="bottomForm">
-            <p> Forgot password? </p>
+            <p onClick={() => dispatch(editForgotPassword(false))}> Forgot password? </p>
             <p onClick={() => navigate("/register")}> Sign-up </p>
           </div>
         </section>
