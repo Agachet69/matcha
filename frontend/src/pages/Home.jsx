@@ -78,6 +78,10 @@ const Home = () => {
       });
   };
 
+  useEffect(() => {
+    console.log(searchFormik.values)
+  })
+
   const onBlockUser = (user) => {
     dispatch(editBlockUser(allModals.blockUser));
     dispatch(editConcernUser(user));
@@ -86,9 +90,7 @@ const Home = () => {
   const onUpdateStatus = ({ user_id /*, status */ }) => {
     console.log(user_id, me.id)
     if (user_id != me.id) {
-      console.log('tet')
-      if (Object.keys(searchFormik.values).length){
-      console.log('test')
+      if (searchFormik.values.age_limit != undefined || searchFormik.values.fame_rate_limit != undefined || searchFormik.values.location_limit != undefined || searchFormik.values.tags != undefined) {
       searchFormik.submitForm();}
     }
     return true
