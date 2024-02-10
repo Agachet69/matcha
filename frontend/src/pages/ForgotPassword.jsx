@@ -7,7 +7,7 @@ import { useFormik } from "formik";
 import VerifEmailSchema from "../schemas/VerifEmailSchema";
 import { useState } from "react";
 import { initialiseUser } from "../store/slices/userSlice";
-import { useNavigate, useNavigation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { enqueueSnackbar } from "notistack";
 import ForgotPasswordSchema from "../schemas/ForgotPasswordSchema";
 import axios from "axios";
@@ -17,9 +17,9 @@ import { useSearchParams } from 'react-router-dom'
 const ForgotPassword = () => {
   const [errorMsg, setErrorMsg] = useState('')
   const [searchParams] = useSearchParams();
-  const navigate = useNavigation()
+  const navigate = useNavigate()
   const onChangePassword = (values) => {
-    axios.post('http://localhost:8000/users/forgot_password', { ...values, code: searchParams.get('code'), username: searchParams.get('username') }).then(({ data }) => {
+    axios.post('http://localhost:8000/users/forgot_password', { ...values, code: searchParams.get('code'), username: searchParams.get('username') }).then((res) => {
       navigate('/login')
     })
       .catch((error) => {

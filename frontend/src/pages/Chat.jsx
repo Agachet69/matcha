@@ -47,6 +47,17 @@ const Chat = () => {
       });
   };
 
+  const [forMesages, setForMesages] = useState(false)
+
+  useEffect(() => {
+    if (forMesages) {
+      setForMesages(false)
+      getAllMessages()
+    }
+  }, [forMesages])
+
+
+
   const getAllMessages = () => {
     instance
       .get(`/messages/${id}`)
@@ -88,7 +99,18 @@ const Chat = () => {
   }, [messages]);
 
   const onUpdateStatus = ({ user_id }) => {
-    if (user_id == id) getUser();
+    const fetchData = async () => {
+      try {
+        const usersData = await getAllUsers();
+        setUserList(usersData);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    if (id){
+    if (user_id == id) getUser();}
+    else 
+    fetchData();
   };
 
   useEffect(() => {
@@ -100,8 +122,7 @@ const Chat = () => {
   }, [socket]);
 
   const onUpdateMessages = () => {
-    console.log('On Update messages')
-    getAllMessages();
+    setForMesages(true)
   };
 
   useEffect(() => {
@@ -153,7 +174,7 @@ const Chat = () => {
     }
   }, [socket]);
 
-  if (id == undefined)
+  if (id == undefined){
     return (
       <div className="main">
         {userList && userList.length <= 0 && (
@@ -184,7 +205,7 @@ const Chat = () => {
           </div>
         )}
       </div>
-    );
+    );}
   if (
     me.matches.find(
       (match) => match.user_A_id == id || match.user_B_id == id

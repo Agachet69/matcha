@@ -41,8 +41,6 @@ const OtherProfil = () => {
     instance
       .get(`users/${locationState.id}`)
       .then(({ data }) => {
-        console.log('user set')
-        console.log(data)
         setUserSeen(data)});
   }, [locationState.id]);
 

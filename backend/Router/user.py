@@ -1,5 +1,5 @@
 import datetime
-from typing import List
+from typing import List, Any
 from Utils import get_db
 from Schemas.token import TokenSchema
 from Enum.StatusEnum import StatusEnum
@@ -88,7 +88,7 @@ def resend_code(current_user = Depends(get_current_user), db = Depends(get_db)):
 
     Crud.user.update(db=db, db_obj=current_user, obj_in=user_update)
 
-@router.post("/forgot_password", status_code=status.HTTP_200_OK, response_model=bool)
+@router.post("/forgot_password", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def forgot_password(forgot_password: ForgotPassword, db = Depends(get_db)):
     if not (user := Crud.user.get_from_key(db, 'username', forgot_password.username)):
         raise HTTPException(status_code=404, detail="User not found.")
@@ -96,9 +96,9 @@ def forgot_password(forgot_password: ForgotPassword, db = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Code is not correct.")
     
     update_obj = UserUpdate(password=security.hash_password(forgot_password.password), verification_code=None)
-    Crud.user.update(db, db_obj=user, obj_in=update_obj)
+    
 
-    return True
+    return Crud.user.update(db, db_obj=user, obj_in=update_obj)
 
 @router.post("/forgot_password_send_code", status_code=status.HTTP_200_OK, response_model=bool)
 def forgot_password_send_code(forgot_password_send_code: ForgotPasswordSendCode, db = Depends(get_db)):
@@ -244,9 +244,20 @@ def login(change_password: ChangePassword, current_user = Depends(get_current_us
 def get_me(current_user: UserSchema = Depends(get_current_user)):
     return current_user
 
-@router.put('/', status_code=status.HTTP_200_OK, response_model=UserSchema)
+@router.put('/', status_code=status.HTTP_200_OK, response_model=Any)
 def update_user(user_update: UserUpdate, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
-    return Crud.user.update(db, db_obj=current_user, obj_in=user_update)
+
+    user = Crud.user.update(db, db_obj=current_user, obj_in=user_update)
+    return {
+        'token': {
+
+        "access_token": security.create_jwt_token(
+            {"username": user.username, "password": user.password}
+        ),
+        "token_type": "bearer",
+        },
+        'user': user
+    }
 
 @router.put('/tags', response_model=UserSchema)
 def update_tags(tags: List[TagCreate], current_user= Depends(get_current_user), db= Depends(get_db)):

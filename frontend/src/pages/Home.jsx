@@ -78,22 +78,26 @@ const Home = () => {
       });
   };
 
-  useEffect(() => {
-    console.log(searchFormik.values)
-  })
-
   const onBlockUser = (user) => {
     dispatch(editBlockUser(allModals.blockUser));
     dispatch(editConcernUser(user));
   };
 
-  const onUpdateStatus = ({ user_id /*, status */ }) => {
-    console.log(user_id, me.id)
-    if (user_id != me.id) {
-      if (searchFormik.values.age_limit != undefined || searchFormik.values.fame_rate_limit != undefined || searchFormik.values.location_limit != undefined || searchFormik.values.tags != undefined) {
-      searchFormik.submitForm();}
+  const [userIDToUpdate, setUserIDToUpdate] = useState(null)
+
+  useEffect(() => {
+    if (userIDToUpdate) {
+      if (userIDToUpdate != me.id) {
+        if (allUsers && allUsers.find(user => user.id == userIDToUpdate) != undefined) {
+          searchFormik.submitForm();
+        }
+      }
+      setUserIDToUpdate(null)
     }
-    return true
+  }, [userIDToUpdate])
+
+  const onUpdateStatus = ({ user_id /*, status */ }) => {
+    setUserIDToUpdate(user_id)
   };
 
   useEffect(() => {

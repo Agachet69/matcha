@@ -4,7 +4,7 @@ import { selectUser } from "../../store/slices/userSlice";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "../icons/Icons";
 import { getAuthorizedInstance } from "../../utils/Instance";
-import { getToken } from "../../store/slices/authSlice";
+import { getToken, setToken } from "../../store/slices/authSlice";
 import { useFormik } from "formik";
 import EditUserSchema from "../../schemas/EditUserSchema";
 import { editChangePassword } from "../../store/slices/modalSlice";
@@ -47,7 +47,8 @@ const EditUser = () => {
     try {
       await instance.put("/users/tags", tags);
       const res = await instance.put("/users", value);
-      setFormUser(res.data);
+      setFormUser(res.data.user);
+      dispatch(setToken(res.data.token))
       setEditStatus(initialStatusState);
     } catch (err) {
       console.log(err);

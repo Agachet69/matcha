@@ -19,19 +19,6 @@ export const getActions = (notif_type, data_user_id) => (id) => {
   const navigate = useNavigate();
   return (
     <>
-      {(notif_type == "LIKE" || notif_type == "MATCH") && (
-        <Tooltip title="view profile">
-          <div
-            className="snackbar-icon"
-            onClick={() => {
-              navigate(`/profil/${data_user_id}`);
-            }}
-          >
-            <UserIcon />
-          </div>
-        </Tooltip>
-      )}
-
       {(notif_type == "MESSAGE" || notif_type == "MATCH") && (
         <Tooltip title="Go to chat">
           <div

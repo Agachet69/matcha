@@ -49,10 +49,10 @@ const Register = () => {
       })
       .catch((error) => {
         console.log(error);
-        setOnRegisterErrorMessage(
-        );
+        setOnRegisterErrorMessage(error.response.data.detail);
       });
   };
+
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -205,8 +205,9 @@ const Register = () => {
                 <textarea
                   cols="2"
                   rows="10"
-                  id="rules"
                   placeholder=" "
+                  {...formik.getFieldProps("bio")}
+
                 ></textarea>
                 <label htmlFor="rules">Biography</label>
               </div>
