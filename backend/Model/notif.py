@@ -1,4 +1,3 @@
-# models.py
 from typing import List
 from Enum.NotifTypeEnum import NotifTypeEnum
 from sqlalchemy import Column, Integer, String, Sequence, ForeignKey, Enum

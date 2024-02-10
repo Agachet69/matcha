@@ -5,7 +5,6 @@
   .header {
     position: fixed;
     z-index: 20;
-    // top: 1rem;
     top: 0px;
     margin-inline: auto;
 
@@ -80,7 +79,6 @@
 
         .image {
           display: flex;
-          // align-items: center;
           justify-content: center;
           height: 35px;
           aspect-ratio: 1/1;

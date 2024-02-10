@@ -1,4 +1,3 @@
-# models.py
 from typing import List
 from Enum.GenderEnum import GenderEnum
 from Enum.SexualityEnum import SexualityEnum

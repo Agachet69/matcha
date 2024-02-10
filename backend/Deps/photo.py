@@ -1,4 +1,3 @@
-# from Schemas.photo import PhotoSchema
 from fastapi import Depends, HTTPException, status, Path, UploadFile, File
 from sqlalchemy.orm import Session
 from Utils import get_db

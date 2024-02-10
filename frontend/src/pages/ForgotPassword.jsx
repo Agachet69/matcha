@@ -40,7 +40,6 @@ const ForgotPassword = () => {
       <h3 className="title">New Password</h3>
       <div className="inputContainer">
           <input
-            // type="password"
             placeholder=" "
             name="password"
             onChange={formik.handleChange}
@@ -54,7 +53,6 @@ const ForgotPassword = () => {
       )}
       {!!errorMsg &&
         <div className="error">{errorMsg}</div>}
-      {/* <p onClick={onResendCode}>Re-send code</p> */}
     </form>
   );
 };

@@ -85,9 +85,13 @@ const Home = () => {
 
   const onUpdateStatus = ({ user_id /*, status */ }) => {
     console.log(user_id, me.id)
-    if (user_id != me.id)
-      if (Object.keys(searchFormik.values).length)
-        searchFormik.submitForm();
+    if (user_id != me.id) {
+      console.log('tet')
+      if (Object.keys(searchFormik.values).length){
+      console.log('test')
+      searchFormik.submitForm();}
+    }
+    return true
   };
 
   useEffect(() => {
@@ -209,7 +213,6 @@ const Home = () => {
     <div className="main">
       <form className="search-container" onSubmit={searchFormik.onSubmit}>
         <div className="title-container">
-          {/* <p> {token.access_token} </p> */}
           <div className="title">Search an user</div>
           <div className="icons">
             <div className="container">

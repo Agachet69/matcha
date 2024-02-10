@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from Utils import security
 
-PASSWORD = "azerty"
+PASSWORD = "Qwerty123!"
 
 user_list = [
     {
@@ -20,7 +20,7 @@ user_list = [
         "last_connection_date": "2023-12-18T12:30:00",
         "latitude": 12.34,
         "longitude": 56.78,
-        "password": "admin",
+        "password": "Admin123!",
     },
     {
         "username": "Alice",

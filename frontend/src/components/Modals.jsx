@@ -257,11 +257,6 @@ const Modals = ({ children }) => {
                     );
                   })}
                 </div>
-                {/* <div className="listContainer">
-                  {user.notifs.map((notif, index) => {
-                    return <ListUserModal user={notif.data_user} key={index} />;
-                  })}
-                </div> */}
                 <div className="btnClose">
                   <button
                     onClick={() => dispatch(editViewUser(allModals.notif))}
@@ -433,7 +428,6 @@ const Modals = ({ children }) => {
         <form onSubmit={ChangePasswordFormik.handleSubmit} className="modal">
           <main className="overlayModal">
             <section>
-              {/* <h3> Please enter your username : </h3> */}
               <div className="loginInput">
                 <input
                   type="last_password"

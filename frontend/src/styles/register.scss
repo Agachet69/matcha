@@ -4,11 +4,8 @@
   height: fit-content;
   display: flex;
   flex-direction: column;
-  //   justify-content: center;
-  //   align-items: center;
   font-family: Montserrat;
   padding: 10px 30px;
-  //   background-color: red;
 }
 
 .loginContainer header {
@@ -23,7 +20,6 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  // gap: 40px;
   width: 90%;
 }
 
@@ -39,7 +35,6 @@
 .loginContainer main section {
   display: flex;
   flex-direction: column;
-  // gap: 10px;
   width: 100%;
 }
 
@@ -47,7 +42,6 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  // gap: 30px;
 }
 
 .registerInput {
@@ -55,7 +49,6 @@
   align-items: center;
   position: relative;
   width: 100%;
-  // backdrop-filter: blur(10px);
 }
 
 .registerInput .icon {
@@ -96,7 +89,6 @@
   background-color: #ffffff;
   color: black;
   position: relative;
-  // z-index: 1;
   border-radius: 10px;
   border: 1px solid #ffffff50;
   transition: 0.3s;
@@ -110,7 +102,6 @@
 .registerInput input:focus {
   outline: 0;
   border: 1px solid #ff4ca8;
-  // background-color: transparent;
   transition: 0.3s;
 }
 
@@ -183,10 +174,6 @@
 .selector {
   display: flex;
   flex-direction: column;
-  // position: relative;
-  // margin-top: 1rem;
-  // gap: 30px;
-  // flex-wrap: wrap;
 
   .allButtons {
     display: flex;
@@ -196,7 +183,6 @@
     flex-wrap: wrap;
 
     label {
-      // position: absolute;
       left: 10px;
       top: -50%;
       color: #bbbbbb;
@@ -224,7 +210,6 @@
 
       &:hover {
         border-color: #ff4ca8;
-        // color: #ff4ca8;
       }
     }
   }
@@ -290,7 +275,6 @@
 }
 
 .photoContainer {
-  // background-color: red;
   margin-inline: auto;
   width: 50%;
   aspect-ratio: 1/1;

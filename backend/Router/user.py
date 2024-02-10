@@ -56,25 +56,25 @@ def resend_code(current_user = Depends(get_current_user), db = Depends(get_db)):
     verification_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
     smtp_server = 'smtp.gmail.com'
-    smtp_port = 587  # Port for TLS encryption
+    smtp_port = 587
     smtp_username = os.getenv("STMP_USERNAME")
     smtp_password = os.getenv("STMP_PASSWORD")
 
-    # Set up email content
+    
     sender_email = os.getenv("STMP_USERNAME")
     subject = 'Email Verification'
     message = f'Code :{verification_code}'
 
-    # Create message container
+    
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = current_user.email
     msg['Subject'] = subject
 
-    # Attach message
+    
     msg.attach(MIMEText(message, 'plain'))
 
-    # Connect to SMTP server and send email
+    
     try:
         server = smtplib.SMTP(smtp_server, smtp_port)
         server.starttls()
@@ -108,25 +108,25 @@ def forgot_password_send_code(forgot_password_send_code: ForgotPasswordSendCode,
     verification_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
 
     smtp_server = 'smtp.gmail.com'
-    smtp_port = 587  # Port for TLS encryption
+    smtp_port = 587  
     smtp_username = os.getenv("STMP_USERNAME")
     smtp_password = os.getenv("STMP_PASSWORD")
 
-    # Set up email content
+    
     sender_email = os.getenv("STMP_USERNAME")
     subject = 'Forgot Password'
     message = f'Link :  https://localhost:3000/forgot_password?code={verification_code}&username={user.username}'
 
-    # Create message container
+    
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = user.email
     msg['Subject'] = subject
 
-    # Attach message
+    
     msg.attach(MIMEText(message, 'plain'))
 
-    # Connect to SMTP server and send email
+    
     try:
         server = smtplib.SMTP(smtp_server, smtp_port)
         server.starttls()
@@ -160,27 +160,27 @@ def register(user_to_create: UserCreate, db=Depends(get_db)):
         raise HTTPException(status_code=400, detail="Username already taken.")
 
     verification_code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
-        # Set up SMTP server details for Gmail
+        
     smtp_server = 'smtp.gmail.com'
-    smtp_port = 587  # Port for TLS encryption
+    smtp_port = 587  
     smtp_username = os.getenv("STMP_USERNAME")
     smtp_password = os.getenv("STMP_PASSWORD")
 
-    # Set up email content
+    
     sender_email = os.getenv("STMP_USERNAME")
     subject = 'Email Verification'
     message = f'Code: {verification_code}'
 
-    # Create message container
+    
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = user_to_create.email
     msg['Subject'] = subject
 
-    # Attach message
+    
     msg.attach(MIMEText(message, 'plain'))
 
-    # Connect to SMTP server and send email
+    
     try:
         server = smtplib.SMTP(smtp_server, smtp_port)
         server.starttls()
@@ -193,14 +193,14 @@ def register(user_to_create: UserCreate, db=Depends(get_db)):
 
     server.quit()
 
-    # Hash the user's password
+    
     user_to_create.password = security.hash_password(user_to_create.password)
     user_to_create.last_connection_date = datetime.datetime.now()
 
-    # Create the user in the database
+    
     user = Crud.user.create(db, user_to_create, verification_code)
 
-    # Return access token
+    
     return {
         "access_token": security.create_jwt_token(
             {"username": user_to_create.username, "password": user_to_create.password}
@@ -215,7 +215,7 @@ def login(user_to_login: UserLogin, db=Depends(get_db)):
     if not security.verify_password(user_to_login.password, user.password):
         raise HTTPException(status_code=404, detail="Password incorrect")
     
-    user_update = UserUpdate(last_connection_date=datetime.datetime.now())
+    user_update = UserUpdate(last_connection_date=datetime.datetime.now(), latitude=user_to_login.latitude, longitude=user_to_login.longitude)
 
     Crud.user.update(db, db_obj=user, obj_in=user_update)
     return {
@@ -291,19 +291,19 @@ async def search(
         Calculate the great circle distance between two points
         on the earth specified in decimal degrees
         """
-        # Convert decimal degrees to radians
+        
         lat1, lon1, lat2, lon2 = map(math.radians, [lat1, lon1, lat2, lon2])
 
-        # Haversine formula
+        
         dlon = lon2 - lon1
         dlat = lat2 - lat1
         a = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
         c = 2 * math.asin(math.sqrt(a))
         
-        # Radius of earth in kilometers. Use 3956 for miles
+        
         R = 6371  
 
-        # Calculate the result
+        
         distance = R * c
         return distance
 
@@ -352,7 +352,7 @@ async def like(
         
         return current_user
     
-    # IF CURRENT USER ALREADY LIKE THE USER_TO_LIKE -> REMOVE LIKE
+    
     like = next((like for like in current_user.likes if like.user_target_id == user_to_like.id), None)
     if like != None:
         Crud.like.remove(db, id=like.id)
@@ -376,7 +376,7 @@ async def like(
             }, room=client["sid"])
         return current_user
     
-    # IF USER_TO_LIKE ALREADY LIKE THE CURRENT_USER -> REMOVE LIKE + ADD MATCH
+    
     like_target = next((like for like in user_to_like.likes if like.user_target_id == current_user.id), None)
     if like_target != None:
         Crud.like.remove(db, id=like_target.id)
@@ -406,7 +406,7 @@ async def like(
 
         return current_user
     
-    # IF NO USER HAS LIKE
+    
     current_user = Crud.user.like(db, current_user, user_to_like)
     notif_to_create = NotifCreate(
         data=f'{current_user.username} has a crush on you.',
@@ -435,10 +435,10 @@ def del_notif(notif_id: int, current_user: UserSchema = Depends(get_current_user
     return current_user
 
 
-# @router.get("/add_notif", status_code=status.HTTP_200_OK, response_model=UserSchema)
-# def get_me(current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
-#     notif = NotifCreate(type=NotifTypeEnum.ERROR, data="Error")
-#     return Crud.user.add_notif(db, current_user, notif)
+
+
+
+
 
 
 @router.post("/block/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)

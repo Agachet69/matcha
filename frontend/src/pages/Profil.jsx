@@ -215,7 +215,6 @@ const Profil = () => {
         <Fire />
       </div>
 
-      {/* <p> Modifier sa position </p> */}
       <div className="socialInfosContainer">
         <div
           className="socialInfos borderR"

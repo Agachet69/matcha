@@ -1,5 +1,3 @@
-# socket/socket.py
-
 import datetime
 from fastapi_socketio import SocketManager
 from fastapi import Depends
@@ -43,8 +41,6 @@ async def connect(sid, environ, auth):
     db = SessionLocal()
     if not (user := Crud.user.get(db, auth["user_id"])):
         return
-    # user_update = UserUpdate(longitude=auth["localisation"]["longitude"], latitude=auth["localisation"]["latitude"])
-    # user = Crud.user.update(db, db_obj=user, obj_in=user_update)
     
     connected_clients.append({
         'sid': sid,

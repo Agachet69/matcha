@@ -47,7 +47,6 @@ const Header = ({ children, connected = true, logout = false }) => {
             </div>
 
             <div className="limiter" />
-            {/* <Badge badgeContent={user.notifs.length} color="error"> */}
               <div
                 className="logout"
                 onClick={() => {
@@ -56,7 +55,6 @@ const Header = ({ children, connected = true, logout = false }) => {
               >
                 <ChatIcon />
               </div>
-            {/* </Badge> */}
             <div className="limiter" />
             <Badge badgeContent={user.notifs.length} color="error">
               <div
@@ -86,11 +84,9 @@ const Header = ({ children, connected = true, logout = false }) => {
       </div>
       <div className="content">{children}</div>
       <div className="wave-container">
-        {/* <div className="sticky"> */}
           <div className="wave" />
           <div className="wave" />
           <div className="wave" />
-        {/* </div> */}
       </div>
     </div>
   );

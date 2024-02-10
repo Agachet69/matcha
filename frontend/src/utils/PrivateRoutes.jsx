@@ -20,7 +20,7 @@ export const PrivateRoutes = ({ children }) => {
     longitude: 0,
   });
   const location = useLocation();
-  const authLogin = false; /* some auth state provider */
+  const authLogin = false;
   const token = useSelector(getToken);
   const navigate = useNavigate();
   const [socket, setSocket] = useState(null);

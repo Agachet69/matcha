@@ -1,4 +1,3 @@
-# models.py
 from typing import List
 from sqlalchemy import Column, Integer, String, Sequence, ForeignKey
 from sqlalchemy.orm import relationship

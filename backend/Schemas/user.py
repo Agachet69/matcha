@@ -45,7 +45,7 @@ class UserCreate(UserBase):
     latitude: int
     longitude: int
     
-    # _validate_password = validator("password", allow_reuse=True)(password_validator('CREATE'))
+    _validate_password = validator("password", allow_reuse=True)(password_validator('CREATE'))
 
 class UserLogin(UserBase):
     username: constr(min_length=1)
@@ -53,7 +53,7 @@ class UserLogin(UserBase):
     latitude: int
     longitude: int
     
-    # _validate_password = validator("password", allow_reuse=True)(password_validator('CREATE'))
+    _validate_password = validator("password", allow_reuse=True)(password_validator('CREATE'))
 
 class ValidateEmail(BaseModel):
     code: str
@@ -80,7 +80,7 @@ class UserUpdate(UserBase):
     verification_code: Optional[str]
     email_check: Optional[bool]
     
-    # _validate_password = validator("password", allow_reuse=True)(password_validator('EDIT'))
+    _validate_password = validator("password", allow_reuse=True)(password_validator('EDIT'))
 
 class UserInDBBase(UserBase):
     id: int

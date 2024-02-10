@@ -38,12 +38,12 @@ const RegisterSchema = () =>
       .oneOf(Object.keys(SexualityEnum), "Sexuality is not good.")
       .required("Sexuality is required."),
     bio: string().max(400, "Bio length must be less than 400 long."),
-    password: string().required("Password is required."),
-    // .min(8, "Password must have at least 8 characters.")
-    // .test("onlyASCIIAndUnderScore", "The only characters allowed are [aA-zZ] [0-9] and !@#$%^&*()_\-+=\{\}\[\]|\\:;'\"<>,.?\/", value => /^[a-zA-Z0-9!@#$%^&*()_\-+=\{\}\[\]|\\:;'"<>,.?\/]+$/.test(value))
-    // .test("atLeastOneMaj", "Password must contain at least one upper character.", value => /[A-Z]/.test(value))
-    // .test("atLeastOneNumber", "Password must contain at least one number.", value => /[0-9]/.test(value))
-    // .test("atLeastOneSpecial", "Password must contain at least one special characters.", value => /[!@#$%^&*()_\-+=\{\}\[\]|\\:;'"<>,.?\/]/.test(value))
+    password: string().required("Password is required.")
+    .min(8, "Password must have at least 8 characters.")
+    .test("onlyASCIIAndUnderScore", "The only characters allowed are [aA-zZ] [0-9] and !@#$%^&*()_\-+=\{\}\[\]|\\:;'\"<>,.?\/", value => /^[a-zA-Z0-9!@#$%^&*()_\-+=\{\}\[\]|\\:;'"<>,.?\/]+$/.test(value))
+    .test("atLeastOneMaj", "Password must contain at least one upper character.", value => /[A-Z]/.test(value))
+    .test("atLeastOneNumber", "Password must contain at least one number.", value => /[0-9]/.test(value))
+    .test("atLeastOneSpecial", "Password must contain at least one special characters.", value => /[!@#$%^&*()_\-+=\{\}\[\]|\\:;'"<>,.?\/]/.test(value)),
     age: number()
       .min(18, "Wait for ur majority!")
       .max(122, "Call the Guinness Book, you've broken a record!")

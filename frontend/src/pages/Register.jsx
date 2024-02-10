@@ -50,7 +50,6 @@ const Register = () => {
       .catch((error) => {
         console.log(error);
         setOnRegisterErrorMessage(
-          /*JSON.stringify(*/ error.response.data.detail /*)*/
         );
       });
   };
@@ -262,7 +261,6 @@ const Register = () => {
             </div>
           </form>
           <div className="bottomForm">
-            {/* <p> Forgot password? </p> */}
             <p onClick={() => navigate("/login")}>
               {" "}
               Already have an account ?{" "}

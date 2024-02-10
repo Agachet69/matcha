@@ -18,8 +18,6 @@ class MessageBase(BaseModel):
     data: Optional[str]
 
 class MessageCreate(MessageBase):
-    # user_A_id: int
-    # user_B_id: int
     data: str
 
 class MessageInDBBase(MessageBase):

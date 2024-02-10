@@ -11,6 +11,4 @@ class Tag(Base):
   
   tag = Column(Enum(TagEnum))
   
-  # user_id = Column(Integer, ForeignKey('users.id'))
-  
   users = relationship("User", secondary=user_tag_association, back_populates="tags")

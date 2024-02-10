@@ -40,12 +40,18 @@ const OtherProfil = () => {
   useEffect(() => {
     instance
       .get(`users/${locationState.id}`)
-      .then(({ data }) => setUserSeen(data));
-  }, []);
+      .then(({ data }) => {
+        console.log('user set')
+        console.log(data)
+        setUserSeen(data)});
+  }, [locationState.id]);
+
+  useEffect(() => {
+    console.log('userSeen',userSeen)
+  }, [userSeen])
 
   const onUpdateStatus = ({ user_id /*, status */ }) => {
-    console.log(user_id, userSeen.id)
-    if (user_id == userSeen.id)
+    if (user_id == locationState.id)
       instance
         .get(`users/${locationState.id}`)
         .then(({ data }) => setUserSeen(data));
@@ -103,13 +109,10 @@ const OtherProfil = () => {
   const lastConnexion = () => {
     const date = new Date(userSeen.last_connection_date);
     const options = {
-      // year: 'numeric',
       month: "numeric",
       day: "numeric",
       hour: "numeric",
       minute: "numeric",
-      // second: 'numeric',
-      // timeZoneName: 'short'
     };
     const formatter = new Intl.DateTimeFormat("fr-FR", options);
     const res = formatter.format(date).split("");
