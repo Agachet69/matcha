@@ -84,6 +84,7 @@ const Home = () => {
   };
 
   const onUpdateStatus = ({ user_id /*, status */ }) => {
+    console.log(user_id, me.id)
     if (user_id != me.id)
       if (Object.keys(searchFormik.values).length)
         searchFormik.submitForm();

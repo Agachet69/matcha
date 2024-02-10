@@ -53,9 +53,6 @@ const VerifyEmail = () => {
             onChange={formik.handleChange}
           />
           <label>Code</label>
-          <div className="icon">
-            <KeyIcon />
-          </div>
         </div>
         <button className="icon" type="submit" >
 

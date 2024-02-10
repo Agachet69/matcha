@@ -3,6 +3,7 @@ import "../styles/modal.scss";
 import {
   editBlockUser,
   editBlockedList,
+  editChangePassword,
   editDeleteMainPic,
   editForgotPassword,
   editLikedUser,
@@ -475,7 +476,7 @@ const Modals = ({ children }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    dispatch(editForgotPassword(allModals.forgotPassword))
+                    dispatch(editChangePassword(allModals.changePassword))
                   }
                   }
                 >

@@ -246,10 +246,6 @@ def get_me(current_user: UserSchema = Depends(get_current_user)):
 
 @router.put('/', status_code=status.HTTP_200_OK, response_model=UserSchema)
 def update_user(user_update: UserUpdate, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
-    if user_update.last_password and user_update:
-
-
-
     return Crud.user.update(db, db_obj=current_user, obj_in=user_update)
 
 @router.put('/tags', response_model=UserSchema)

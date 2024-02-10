@@ -44,6 +44,7 @@ const OtherProfil = () => {
   }, []);
 
   const onUpdateStatus = ({ user_id /*, status */ }) => {
+    console.log(user_id, userSeen.id)
     if (user_id == userSeen.id)
       instance
         .get(`users/${locationState.id}`)

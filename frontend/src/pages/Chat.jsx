@@ -100,6 +100,7 @@ const Chat = () => {
   }, [socket]);
 
   const onUpdateMessages = () => {
+    console.log('On Update messages')
     getAllMessages();
   };
 
@@ -141,7 +142,7 @@ const Chat = () => {
 
   const onDeleteNewNotifMessage = ({ notif_id }) =>
     instance
-      .post(`/users/del_notif/${notif_id}`)
+      .delete(`/users/del_notif/${notif_id}`)
       .then(({ data }) => dispatch(initialiseUser({ ...data })));
 
   useEffect(() => {
