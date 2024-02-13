@@ -9,20 +9,38 @@ from pathlib import Path as PathLib
 import Crud
 import Model
 import time
+import os
+from magic import Magic
 
 router = APIRouter(prefix="/photo", tags=["Photos"])
+
+def is_valid_image(file):
+    mime = Magic(mime=True)
+    file_type = mime.from_buffer(file.read(1024))
+    return file_type.startswith('image')
+
+def is_valid_file_size(file):
+    file.seek(0, 2)
+    file_size = file.tell()
+    return  file_size <= (5000 * 1024)
 
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[PhotoSchema])
 def get_all_photos(current_user: UserSchema = Depends(get_current_user)):
   return current_user.photos
 
 @router.patch('/main', response_model=PhotoSchema)  
-def change_main(
+async def change_main(
   current_user: UserSchema = Depends(get_current_user),
   image: UploadFile = File(...),
   db = Depends(get_db)
   ):
-  
+
+  if not is_valid_image(image.file):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Fichier invalide.")
+  if not is_valid_file_size(image.file):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Fichier trop volumineux.")
+  image.file.seek(0)
+
   try:
     if (del_photo := Crud.photo.get_main(db, current_user)):
       delete_with_id(db, current_user, del_photo.id)
@@ -46,7 +64,13 @@ async def upload_image(
   current_user: UserSchema = Depends(get_current_user),
   image: UploadFile = File(...),
   db = Depends(get_db)):
-  
+    
+  if not is_valid_image(image.file):
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Fichier invalide.")
+  if not is_valid_file_size(image.file):
+    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Fichier trop volumineux.")
+  image.file.seek(0)
+
   if (len([photo for photo in current_user.photos if not photo.main]) + 1 > 4):
     raise HTTPException(status_code=400, detail="4 photos d'arrière plan maximum.")
   
