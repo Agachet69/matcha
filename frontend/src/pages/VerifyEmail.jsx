@@ -2,36 +2,47 @@ import { useDispatch, useSelector } from "react-redux";
 import "../styles/verify_email.scss";
 import { getToken } from "../store/slices/authSlice";
 import { getAuthorizedInstance } from "../utils/Instance";
-import { KeyIcon, SendIcon } from "../components/icons/Icons";
+import { SendIcon } from "../components/icons/Icons";
 import { useFormik } from "formik";
 import VerifEmailSchema from "../schemas/VerifEmailSchema";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { initialiseUser } from "../store/slices/userSlice";
 import { useNavigate } from "react-router-dom";
-import { enqueueSnackbar } from "notistack";
-
+import Loader from "../components/utils/Loader";
 
 const VerifyEmail = () => {
-
-  const [errorMsg, setErrorMsg] = useState('')
+  const [errorMsg, setErrorMsg] = useState("");
+  const [disabled, setDisabled] = useState(false);
   const token = useSelector(getToken);
-  const instance = getAuthorizedInstance(token.access_token);
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const instance = token ? getAuthorizedInstance(token.access_token) : null;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!token) navigate("/login");
+  }, [token, navigate]);
 
   const onResendCode = () => {
-    instance.post('/users/resend_code')
-  }
+    if (!disabled) {
+      setDisabled(true);
+      setTimeout(() => {
+        setDisabled(false);
+      }, [2000]);
+      instance.post("/users/resend_code");
+    }
+  };
 
   const onSendCode = (values) => {
-    instance.post('/users/verif_email', values).then(({ data }) => {
-      dispatch(initialiseUser(data))
-      navigate('/home')
-    })
+    instance
+      .post("/users/verif_email", values)
+      .then(({ data }) => {
+        dispatch(initialiseUser(data));
+        navigate("/home");
+      })
       .catch((error) => {
         setErrorMsg(error.response.data.detail);
       });
-  }
+  };
 
   const formik = useFormik({
     validationSchema: VerifEmailSchema(),
@@ -50,21 +61,22 @@ const VerifyEmail = () => {
             type="code"
             placeholder=" "
             name="code"
+            id="code"
             onChange={formik.handleChange}
           />
-          <label>Code</label>
+          <label htmlFor="code">Code</label>
+          <button className="iconSend" type="submit">
+            {disabled ? <Loader /> : <SendIcon />}
+          </button>
         </div>
-        <button className="icon" type="submit" >
-
-          <SendIcon />
-        </button>
       </div>
       {!!formik.errors.code && formik.touched.code && (
         <div className="error">{formik.errors.code}</div>
       )}
-      {!!errorMsg &&
-        <div className="error">{errorMsg}</div>}
-      <p onClick={onResendCode}>Re-send code</p>
+      {!!errorMsg && <div className="error">{errorMsg}</div>}
+      <button className="reSendCode" disabled={disabled} onClick={onResendCode}>
+        Re-send code
+      </button>
     </form>
   );
 };

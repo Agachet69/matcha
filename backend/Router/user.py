@@ -93,7 +93,7 @@ def forgot_password(forgot_password: ForgotPassword, db = Depends(get_db)):
     if not (user := Crud.user.get_from_key(db, 'username', forgot_password.username)):
         raise HTTPException(status_code=404, detail="User not found.")
     if user.verification_code != forgot_password.code:
-        raise HTTPException(status_code=400, detail="Code is not correct.")
+        raise HTTPException(status_code=400, detail="Code is incorrect.")
     
     update_obj = UserUpdate(password=security.hash_password(forgot_password.password), verification_code=None)
     
@@ -147,7 +147,7 @@ def verif_email(validate_email: ValidateEmail, current_user = Depends(get_curren
     if current_user.email_check:
         raise HTTPException(status_code=400, detail="Email already verified.")
     if current_user.verification_code != validate_email.code:
-        raise HTTPException(status_code=400, detail="Code is not correct.")
+        raise HTTPException(status_code=400, detail="Code is incorrect.")
     
 
     update_obj = UserUpdate(email_check=True, verification_code=None)
@@ -180,7 +180,9 @@ def register(user_to_create: UserCreate, db=Depends(get_db)):
     
     msg.attach(MIMEText(message, 'plain'))
 
-    
+    print(sender_email)
+    print(user_to_create.email)
+    print(msg.as_string())
     try:
         server = smtplib.SMTP(smtp_server, smtp_port)
         server.starttls()
