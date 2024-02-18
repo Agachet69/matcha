@@ -12,7 +12,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from Schemas.user import UserLogin, UserSchema, UserCreate, UserUpdate, ValidateEmail, ForgotPasswordSendCode, ForgotPassword, UserSearchSchema, ChangePassword
 from Schemas.tag import TagCreate
 import Crud
-from Deps.user import get_user, get_current_user
+from Deps.user import get_user, get_current_user, user_create_validator, is_valid_position, user_update_validator
 from Utils import security
 import uuid
 from pathlib import Path as PathLib
@@ -47,7 +47,6 @@ def get_all_users(
         user.status = status_dict.get(user.id, "UNKNOWN")
 
     return user_list
-
 
 @router.post("/resend_code", status_code=status.HTTP_200_OK)
 def resend_code(current_user = Depends(get_current_user), db = Depends(get_db)):
@@ -94,7 +93,6 @@ def forgot_password(forgot_password: ForgotPassword, db = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found.")
     if user.verification_code != forgot_password.code:
         raise HTTPException(status_code=400, detail="Code is incorrect.")
-    
     update_obj = UserUpdate(password=security.hash_password(forgot_password.password), verification_code=None)
     
 
@@ -156,6 +154,7 @@ def verif_email(validate_email: ValidateEmail, current_user = Depends(get_curren
 
 @router.post("/register", status_code=status.HTTP_200_OK, response_model=TokenSchema)
 def register(user_to_create: UserCreate, db=Depends(get_db)):
+    user_create_validator(user_to_create)
     if user := Crud.user.get_from_key(db, "username", user_to_create.username):
         raise HTTPException(status_code=400, detail="Username already taken.")
 
@@ -216,7 +215,8 @@ def login(user_to_login: UserLogin, db=Depends(get_db)):
         raise HTTPException(status_code=404, detail="Username incorrect")
     if not security.verify_password(user_to_login.password, user.password):
         raise HTTPException(status_code=404, detail="Password incorrect")
-    
+    is_valid_position(user_to_login.longitude)
+    is_valid_position(user_to_login.latitude)
     user_update = UserUpdate(last_connection_date=datetime.datetime.now(), latitude=user_to_login.latitude, longitude=user_to_login.longitude)
 
     Crud.user.update(db, db_obj=user, obj_in=user_update)
@@ -248,7 +248,8 @@ def get_me(current_user: UserSchema = Depends(get_current_user)):
 
 @router.put('/', status_code=status.HTTP_200_OK, response_model=Any)
 def update_user(user_update: UserUpdate, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
-
+    user_update_validator(user_update)
+    print(user_update)
     user = Crud.user.update(db, db_obj=current_user, obj_in=user_update)
     return {
         'token': {
@@ -447,13 +448,6 @@ def del_notif(notif_id: int, current_user: UserSchema = Depends(get_current_user
     db.refresh(current_user)
     return current_user
 
-
-
-
-
-
-
-
 @router.post("/block/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def block_user(current_user: UserSchema = Depends(get_current_user), target_user = Depends(get_user), db=Depends(get_db)):
     if block := next((block for block in current_user.blocked if block.user_target_id == target_user.id), None):
@@ -470,8 +464,6 @@ async def see(
     
     if not (profile_seen := next((profile_seen for profile_seen in current_user.profile_seen if profile_seen.user_target_id == user_to_see.id), None)):
         Crud.user.add_seen(db, current_user, user_to_see)
-
-
 
 @router.post("/like_photo/{photo_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def like_photo(

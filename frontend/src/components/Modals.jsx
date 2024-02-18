@@ -430,7 +430,7 @@ const Modals = ({ children }) => {
             <section>
               <div className="loginInput">
                 <input
-                  type="last_password"
+                  type="password"
                   placeholder=" "
                   name="last_password"
                   onChange={ChangePasswordFormik.handleChange}
@@ -445,7 +445,7 @@ const Modals = ({ children }) => {
               )}
               <div className="loginInput">
                 <input
-                  type="new_password"
+                  type="password"
                   placeholder=" "
                   name="new_password"
                   onChange={ChangePasswordFormik.handleChange}

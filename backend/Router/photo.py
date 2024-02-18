@@ -93,6 +93,6 @@ async def upload_image(
 @router.delete('/{id}')
 def delete_photo(
   current_user: UserSchema = Depends(get_current_user), 
-  id: int = Path(..., title='id de la photo a supprimer'),
+  id: int = Path(..., title='id to delete'),
   db=Depends(get_db)):
   return delete_with_id(db, current_user, id)
