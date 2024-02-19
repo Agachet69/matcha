@@ -16,7 +16,170 @@ from Enum.GenderEnum import GenderEnum
 from Model import Tag
 
 
-class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
+class CRUDUser():
+    
+    def fetch_related_objects(self, db_connection, user, model):
+        try:
+            with db_connection.connection().connection.cursor() as cursor:
+                # Check if model is Tag and handle the many-to-many relationship
+                if model == Tag:
+                    sql = f"SELECT * FROM `tags` WHERE `id` IN (SELECT `tag_id` FROM `user_tag_association` WHERE `user_id` = %s)"
+                    cursor.execute(sql, (user.id,))
+                else:
+                    # Fetch related objects based on user's id
+                    sql = f"SELECT * FROM `{model.__tablename__}` WHERE `user_id` = %s"
+                    cursor.execute(sql, (user.id,))
+                    
+                results = cursor.fetchall()
+                related_objects = [model(**result) for result in results]
+                return related_objects
+        except Exception as e:
+            print(f"Error while fetching related objects: {e}")
+            return []
+    
+    def get(self, db, id: int, **kwargs):
+        try:
+            with db.connection().connection.cursor() as cursor:
+                sql = "SELECT * FROM `users` WHERE `id` = %s"
+                cursor.execute(sql, (id,))
+                result = cursor.fetchone()
+                user = User(
+                                id=result[0],
+                                username=result[1],
+                                lastName=result[2],
+                                firstName=result[3],
+                                email=result[4],
+                                gender=result[5],
+                                sexuality=result[6],
+                                age=result[7],
+                                bio=result[8],
+                                last_connection_date=result[9],
+                                latitude=result[10],
+                                longitude=result[11],
+                                fame_rate=result[12],
+                                email_check=result[13],
+                                verification_code=result[14],
+                                password=result[15],
+                            )
+                return user
+        except Exception as e:
+            print(f"Error while fetching user: {e}")
+            return None
+
+    def get_from_key(self, db, key: str, key_value):
+        try:
+            with db.connection().connection.cursor() as cursor:
+                # Read a single record based on the key-value pair
+                sql = f"SELECT * FROM `users` WHERE `{key}` = %s"
+                cursor.execute(sql, (key_value,))
+                result = cursor.fetchone()
+                if result:
+                    print(result)
+                    user = User(
+                                id=result[0],
+                                username=result[1],
+                                lastName=result[2],
+                                firstName=result[3],
+                                email=result[4],
+                                gender=result[5],
+                                sexuality=result[6],
+                                age=result[7],
+                                bio=result[8],
+                                last_connection_date=result[9],
+                                latitude=result[10],
+                                longitude=result[11],
+                                fame_rate=result[12],
+                                email_check=result[13],
+                                verification_code=result[14],
+                                password=result[15],
+                            )
+                    
+                    # Fetch related objects
+                    user.tags = self.fetch_related_objects(db, user, Tag)
+                    user.photos = self.fetch_related_objects(db, user, Photo)
+                    user.notifs = self.fetch_related_objects(db, user, Notif)
+                    # Add other related objects similarly
+                    print(user.password)
+                    return user
+                else:
+                    return None
+        except Exception as e:
+            print(f"Error while fetching data: {e}")
+            return None
+
+    def get_all(self, db, **kwargs):
+        # db_connector = next(db)
+        try:
+            with db.cursor() as cursor:
+                sql = "SELECT * FROM `users`"
+                cursor.execute(sql)
+                results = cursor.fetchall()
+                return [User(**result) for result in results]
+        except Exception as e:
+            print(f"Error while fetching users: {e}")
+            return None
+
+    def update(self, db, db_obj, obj_in: UserUpdate):
+        # db_connector = next(db)
+        try:
+            with db.connection().connection.cursor() as cursor:
+                # Construct the UPDATE query
+                sql = "UPDATE `users` SET "
+                print(obj_in.dict())
+                print(len([field for field, value in obj_in.dict().items() if value is not None]))
+                for field, value in obj_in.dict().items():
+                    if value is not None:
+                        sql += f"`{field}` = %s, "
+                sql = sql[:-2]  # Remove the trailing comma and space
+                sql += " WHERE `id` = %s"
+
+                # Extract values from the obj_in object
+                values = [obj_in.dict()[field] for field in obj_in.dict() if obj_in.dict()[field] is not None]
+                print('values', len(values))
+                print('sql', sql)
+                values = [(value if not isinstance(value, GenderEnum) and not isinstance(value, SexualityEnum) else value.value) for value in values]
+                print('values', values)
+                values.append(db_obj.id)
+
+                # Execute the query
+                cursor.execute(sql, tuple(values))
+
+                # Commit the changes
+                db.commit()
+                sql = "SELECT * FROM `users` WHERE `id` = %s"
+                cursor.execute(sql, (db_obj.id,))
+                result = cursor.fetchone()
+                user = User(
+                                id=result[0],
+                                username=result[1],
+                                lastName=result[2],
+                                firstName=result[3],
+                                email=result[4],
+                                gender=result[5],
+                                sexuality=result[6],
+                                age=result[7],
+                                bio=result[8],
+                                last_connection_date=result[9],
+                                latitude=result[10],
+                                longitude=result[11],
+                                fame_rate=result[12],
+                                email_check=result[13],
+                                verification_code=result[14],
+                                password=result[15],
+                            )
+                return user
+        except Exception as e:
+            print(f"Error while updating user: {e}")
+        return False
+
+    def remove(self, db: Session, *, id: int):
+        obj = (
+            db.execute(select(self.model).where(self.model.id == id)).scalars().first()
+        )
+        db.delete(obj)
+        db.commit()
+        return obj
+    
     def create(self, db: Session, obj_in: UserCreate, verification_code: str, **kwargs) -> User:
         obj_in_data = jsonable_encoder(obj_in)
         db_obj = self.model(**obj_in_data, verification_code=verification_code)
@@ -118,4 +281,4 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         db.add(profile_seen)
         db.commit()
 
-user = CRUDUser(User)
+user = CRUDUser()

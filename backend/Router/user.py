@@ -275,8 +275,8 @@ def update_tags(tags: List[TagCreate], current_user= Depends(get_current_user), 
     all_tags.append(tag)
     
   user.tags = all_tags
-  db.commit()
-  db.refresh(user)
+#   db.commit()
+#   db.refresh(user)
   
   return user
 

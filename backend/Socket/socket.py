@@ -2,7 +2,7 @@ import datetime
 from fastapi_socketio import SocketManager
 from fastapi import Depends
 
-from Utils import SessionLocal, logger
+from Utils import get_db, logger
 from Utils.App import app
 import Crud
 from Enum.StatusEnum import StatusEnum
@@ -19,7 +19,7 @@ from Socket import disconnect_clients, connected_clients
 socket_manager = SocketManager(app=app)
 
 async def background_task():
-    db = SessionLocal()
+    db = get_db()
     while True:
         for client in disconnect_clients:
             now = time.time()
@@ -38,8 +38,9 @@ asyncio.create_task(background_task())
 async def connect(sid, environ, auth):
     if not auth["user_id"]:
         return
-    db = SessionLocal()
+    db = get_db()
     if not (user := Crud.user.get(db, auth["user_id"])):
+        print(user)
         return
     
     connected_clients.append({
@@ -55,6 +56,7 @@ async def connect(sid, environ, auth):
         logger.info(f"{user.username} reconnected {sid}")
     else:
         user = Crud.user.get(db, auth["user_id"])
+        print(user)
         user_update = UserUpdate(last_connection_date=datetime.datetime.now())
         user = Crud.user.update(db, db_obj=user, obj_in=user_update)
         await socket_manager.emit('update-status', {"user_id": auth["user_id"], "status": StatusEnum.ONLINE.value})
@@ -64,9 +66,10 @@ async def connect(sid, environ, auth):
 async def disconnect(sid):
     for client in connected_clients:
         if client['sid'] == sid:
-            db = SessionLocal()
+            db = get_db()
             disconnect_clients.append({"user_id": client["auth"]["user_id"], "time": time.time()})
             user = Crud.user.get(db, client["auth"]["user_id"])
+            print(user)
             connected_clients.remove(client)
             logger.info(f"{user.username} disconnected {sid}")
             break

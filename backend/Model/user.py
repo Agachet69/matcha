@@ -30,9 +30,7 @@ class User(Base):
     last_connection_date = Column(DateTime)
     latitude = Column(Integer)
     longitude = Column(Integer)
-    
     fame_rate = Column(Integer, default=0)
-
     email_check = Column(Boolean, default=False)
     verification_code = Column(String(6), nullable=True, default=None)
 

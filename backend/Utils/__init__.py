@@ -1,4 +1,4 @@
 from .base import Base
-from .get_db import get_db, SessionLocal
+from .get_db import get_db
 from .Security import security
 from .Logger import logger

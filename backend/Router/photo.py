@@ -38,7 +38,8 @@ def change_main(
     db.commit()
     return photo
       
-  except:
+  except Exception as e:
+    print(e)
     raise HTTPException(status_code=400, detail="5 photos max.")   
 
 @router.post("/", response_model=PhotoSchema)
