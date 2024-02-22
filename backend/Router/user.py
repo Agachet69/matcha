@@ -151,8 +151,9 @@ def verif_email(validate_email: ValidateEmail, current_user = Depends(get_curren
     
 
     update_obj = UserUpdate(email_check=True, verification_code=None)
-    Crud.user.update(db=db, db_obj=current_user, obj_in=update_obj)
-    return current_user 
+    user = Crud.user.update(db=db, db_obj=current_user, obj_in=update_obj)
+    print('user verify_email', user)
+    return user 
 
 @router.post("/register", status_code=status.HTTP_200_OK, response_model=TokenSchema)
 def register(user_to_create: UserCreate, db=Depends(get_db)):
@@ -229,13 +230,12 @@ def login(user_to_login: UserLogin, db=Depends(get_db)):
 def login(change_password: ChangePassword, current_user = Depends(get_current_user), db=Depends(get_db)):
     if not security.verify_password(change_password.last_password, current_user.password):
         raise HTTPException(status_code=400, detail="Last password incorrect")
-    
     user_update = UserUpdate(password=security.hash_password(change_password.new_password))
-
-    Crud.user.update(db, db_obj=current_user, obj_in=user_update)
+    print('yes')
+    user = Crud.user.update(db, db_obj=current_user, obj_in=user_update)
     return {
         "access_token": security.create_jwt_token(
-            {"username": current_user.username, "password": current_user.password}
+            {"username": user.username, "password": user.password}
         ),
         "token_type": "bearer",
     }
@@ -269,14 +269,22 @@ def update_tags(tags: List[TagCreate], current_user= Depends(get_current_user), 
   if user is None:
     raise HTTPException(status_code=404, detail="User not found")
   
+  tag_list = [tag.tag.value for tag in tags]
+  
+  missing_tag = [tag.tag for tag in current_user.tags if tag.tag not in tag_list]
+  
+  for tag in missing_tag:
+      Crud.tag.remove_user_tags(db=db, tag=tag, user_id=current_user.id)
+  
+  
+  
   all_tags = []
   for exist_tag in tags:
     tag = Crud.tag.get_or_create_tag(db, exist_tag)
+    Crud.tag.create_tag_for_user(db, tag, current_user.id)
     all_tags.append(tag)
     
   user.tags = all_tags
-#   db.commit()
-#   db.refresh(user)
   
   return user
 
@@ -345,8 +353,7 @@ async def like(
 
     user_match = next((user_match for user_match in current_user.matches if user_match.user_A_id == user_to_like.id or user_match.user_B_id == user_to_like.id), None)
     if user_match != None:
-        Crud.match.remove(db, id=user_match.id)
-        db.refresh(current_user)
+        current_user = Crud.user.delete_match(db, current_user, user_match)
         
         notif_to_create = NotifCreate(
             data=f'{current_user.username} has un-match you.',
@@ -356,9 +363,9 @@ async def like(
         user = Crud.user.add_notif(db, user_to_like, notif_to_create)
         if client := next((client for client in connected_clients if client['auth']['user_id'] == user_to_like.id), None):
             await socket_manager.emit('add-notification', {
-                'data': user.notifs[-1].data,
-                'data_user_id': user.notifs[-1].data_user_id,
-                'type': user.notifs[-1].type.value
+                'data': notif_to_create.data,
+                'data_user_id': notif_to_create.data_user_id,
+                'type': notif_to_create.type.value
             }, room=client["sid"])
         
         return current_user
@@ -366,8 +373,7 @@ async def like(
     
     like = next((like for like in current_user.likes if like.user_target_id == user_to_like.id), None)
     if like != None:
-        Crud.like.remove(db, id=like.id)
-        db.refresh(current_user)
+        current_user = Crud.user.del_like(db, current_user, like)
         notif_to_create = NotifCreate(
             data=f'{current_user.username} has no longer a crush on you.',
             data_user_id=current_user.id,
@@ -377,24 +383,23 @@ async def like(
 
         update_obj = UserUpdate(fame_rate=user.fame_rate-1)
         user = Crud.user.update(db, db_obj=user, obj_in=update_obj)
+        
 
 
         if client := next((client for client in connected_clients if client['auth']['user_id'] == user_to_like.id), None):
             await socket_manager.emit('add-notification', {
-                'data': user.notifs[-1].data,
-                'data_user_id': user.notifs[-1].data_user_id,
-                'type': user.notifs[-1].type.value
+                'data': notif_to_create.data,
+                'data_user_id': notif_to_create.data_user_id,
+                'type': notif_to_create.type.value
             }, room=client["sid"])
         return current_user
     
     
     like_target = next((like for like in user_to_like.likes if like.user_target_id == current_user.id), None)
     if like_target != None:
-        Crud.like.remove(db, id=like_target.id)
-        Crud.match.create(db, MatchCreate(**{
-            "user_A_id": current_user.id,
-            "user_B_id": user_to_like.id,
-        }))
+        print('ON DEL LIKE')
+        Crud.user.del_like(db, current_user, like_target)
+        current_user = Crud.user.create_match(db, current_user, user_to_like)
         notif_to_create = NotifCreate(
             data=f"""It's a MATCH !""",
             data_user_id=current_user.id,
@@ -403,11 +408,10 @@ async def like(
         user = Crud.user.add_notif(db, user_to_like, notif_to_create)
         if client := next((client for client in connected_clients if client['auth']['user_id'] == user_to_like.id), None):
             await socket_manager.emit('add-notification', {
-                'data': user.notifs[-1].data,
-                'data_user_id': user.notifs[-1].data_user_id,
-                'type': user.notifs[-1].type.value
+                'data': notif_to_create.data,
+                'data_user_id': notif_to_create.data_user_id,
+                'type': notif_to_create.type.value
             }, room=client["sid"])
-        db.refresh(current_user)
 
         user_update_obj = UserUpdate(fame_rate=user.fame_rate+2)
         user = Crud.user.update(db, db_obj=user, obj_in=user_update_obj)
@@ -425,11 +429,12 @@ async def like(
         type=NotifTypeEnum.LIKE
     )
     user = Crud.user.add_notif(db, user_to_like, notif_to_create)
+    
     if client := next((client for client in connected_clients if client['auth']['user_id'] == user_to_like.id), None):
         await socket_manager.emit('add-notification', {
-            'data': user.notifs[-1].data,
-            'data_user_id': user.notifs[-1].data_user_id,
-            'type': user.notifs[-1].type.value
+            'data': notif_to_create.data,
+            'data_user_id': notif_to_create.data_user_id,
+            'type': notif_to_create.type.value
         }, room=client["sid"])
 
     user_update_obj = UserUpdate(fame_rate=user.fame_rate+1)
@@ -441,24 +446,43 @@ async def like(
 def del_notif(notif_id: int, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
     if not (notif := next(notif for notif in current_user.notifs if notif.id == notif_id)):
         raise HTTPException(status_code=404, detail="Notification not found")
-    Crud.user.delete_notif(db, current_user, notif)
-    db.refresh(current_user)
+    current_user = Crud.user.delete_notif(db, current_user, notif)
+
     return current_user
 
+@router.post("/fake/{user_id}", status_code=status.HTTP_200_OK, response_model=bool)
+def block_user(current_user: UserSchema = Depends(get_current_user), target_user = Depends(get_user), db=Depends(get_db)):
+    return Crud.user.add_fake(db, current_user, target_user)
 
-
-
-
-
-
-
+@router.post("/see/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
+async def see(
+    current_user: UserSchema = Depends(get_current_user), user_to_see: UserSchema = Depends(get_user), db=Depends(get_db)
+):
+    from Socket.socket import socket_manager
+    
+    if not (profile_seen := next((profile_seen for profile_seen in current_user.profile_seen if profile_seen.user_target_id == user_to_see.id), None)):
+        Crud.user.add_seen(db, current_user, user_to_see)
+    
+    notif_to_create = NotifCreate(
+            data=f"{current_user.username} has seen you're profile.",
+            data_user_id=current_user.id,
+            type=NotifTypeEnum.PROFILE_SEEN
+        )
+    Crud.user.add_notif(db, user_to_see, notif_to_create)
+    
+    if client := next((client for client in connected_clients if client['auth']['user_id'] == user_to_see.id), None):
+        await socket_manager.emit('add-notification', {
+            'data': notif_to_create.data,
+            'data_user_id': notif_to_create.data_user_id,
+            'type': notif_to_create.type.value
+        }, room=client["sid"])
+        
 @router.post("/block/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def block_user(current_user: UserSchema = Depends(get_current_user), target_user = Depends(get_user), db=Depends(get_db)):
     if block := next((block for block in current_user.blocked if block.user_target_id == target_user.id), None):
-        Crud.user.remove_block(db, current_user, target_user)
+        current_user = Crud.user.remove_block(db, current_user, block)
     else:
-        Crud.user.add_block(db, current_user, target_user)
-    db.refresh(current_user)
+        current_user = Crud.user.add_block(db, current_user, target_user)
     return current_user
 
 @router.post("/see/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
@@ -468,8 +492,6 @@ async def see(
     
     if not (profile_seen := next((profile_seen for profile_seen in current_user.profile_seen if profile_seen.user_target_id == user_to_see.id), None)):
         Crud.user.add_seen(db, current_user, user_to_see)
-
-
 
 @router.post("/like_photo/{photo_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def like_photo(
@@ -486,5 +508,4 @@ def like_photo(
     else:
         Crud.user.add_like_photo(db, current_user, photo)
         
-    db.refresh(current_user)
     return current_user

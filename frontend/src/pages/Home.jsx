@@ -451,7 +451,7 @@ const Home = () => {
                   onClick={() => mySortResult("position")}
                 >
                   {" "}
-                  position? <ArrowRight />
+                  position <ArrowRight />
                 </button>
                 <button
                   className={

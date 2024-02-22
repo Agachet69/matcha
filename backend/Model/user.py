@@ -52,8 +52,3 @@ class User(Base):
     matches_B = relationship("Match", foreign_keys="[Match.user_B_id]", back_populates="user_B")
 
     like_photos: List[LikePhoto] = relationship("LikePhoto", back_populates="user", foreign_keys="[LikePhoto.user_id]")
-
-    @property
-    def matches(self):
-        return self.matches_A + self.matches_B
-

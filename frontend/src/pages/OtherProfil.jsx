@@ -104,6 +104,11 @@ const OtherProfil = () => {
       .then(({ data }) => dispatch(initialiseUser(data)));
   };
 
+  const onReport = (id) => {
+    instance
+      .post(`/users/fake/${id}`)
+  };
+
   const lastConnexion = () => {
     const date = new Date(userSeen.last_connection_date);
     const options = {
@@ -267,7 +272,7 @@ const OtherProfil = () => {
                     : "ellipsMenuContent inactive"
                 }
               >
-                <p> Report as fake account</p>
+                <p onClick={() => {onReport(userSeen.id)}} > Report as fake account</p>
                 {myUser.blocked.some(
                   (block) => block.user_target_id === userSeen.id
                 ) ? (

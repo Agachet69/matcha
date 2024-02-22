@@ -8,3 +8,4 @@ from .message import Message
 from .block import Block
 from .profile_seen import ProfileSeen
 from .like_photo import LikePhoto
+from .fake import Fake

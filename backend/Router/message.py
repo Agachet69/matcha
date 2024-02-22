@@ -48,7 +48,8 @@ async def send_message(
         type=NotifTypeEnum.MESSAGE
     )
 
-    Crud.user.add_notif(db, user, notif_to_create)
+    user = Crud.user.add_notif(db, user, notif_to_create)
+    print(user.notifs)
     if client := next((client for client in connected_clients if client['auth']['user_id'] == user.id), None):
         await socket_manager.emit('update-messages', room=client["sid"])
         await socket_manager.emit('add-message-notification', {

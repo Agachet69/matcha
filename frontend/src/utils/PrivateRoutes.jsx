@@ -71,6 +71,7 @@ export const PrivateRoutes = ({ children }) => {
   }, [user, pos]);
 
   useEffect(() => {
+    console.log('token', token)
     if (token)
       axios
         .get("http://localhost:8000/users/me", {

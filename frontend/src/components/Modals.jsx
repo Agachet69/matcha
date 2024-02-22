@@ -91,6 +91,7 @@ const Modals = ({ children }) => {
 
   const onChangePassword = (values) => {
     instance.post('/users/change_password', values).then(({data}) => {
+      console.log(data)
       dispatch(setToken(data))
       setForgotPasswordErr('Password changed.')
     }).catch((error) => setForgotPasswordErr(error.response.data.detail)

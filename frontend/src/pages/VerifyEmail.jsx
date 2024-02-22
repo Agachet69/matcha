@@ -27,7 +27,7 @@ const VerifyEmail = () => {
     instance.post('/users/verif_email', values).then(({ data }) => {
       dispatch(initialiseUser(data))
       navigate('/home')
-    })
+  })
       .catch((error) => {
         setErrorMsg(error.response.data.detail);
       });
