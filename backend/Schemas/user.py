@@ -33,15 +33,15 @@ class UserBase(BaseModel):
 
 
 class UserCreate(UserBase):
-    username: constr(min_length=1)
-    lastName: constr(min_length=1)
-    firstName: constr(min_length=1)
-    email: constr(min_length=1)
+    username: str
+    lastName: str
+    firstName: str
+    email: str
     gender: GenderEnum
     sexuality: SexualityEnum
     age: int
     bio: str
-    password: constr(min_length=1)
+    password: constr(min_length=1, max_length=256)
     latitude: int
     longitude: int
     
@@ -71,8 +71,9 @@ class ForgotPassword(BaseModel):
 class ChangePassword(BaseModel):
     last_password: constr(min_length=1)
     new_password: constr(min_length=1)
-    
 
+    _validate_password = validator("new_password", allow_reuse=True)(password_validator('EDIT'))
+    
 class UserUpdate(UserBase):
     password: Optional[constr(min_length=1)]
     latitude: Optional[int]

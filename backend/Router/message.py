@@ -35,9 +35,10 @@ async def send_message(
     current_user: UserSchema = Depends(get_current_user), user: UserSchema = Depends(get_user),
     db = Depends(get_db),
 ):
-
     if not obj_in.data:
         raise HTTPException(status_code=400, detail="Message is required.")
+    if (len(obj_in.data) > 256):
+        raise HTTPException(status_code=400, detail="Message too long.")
 
     from Socket.socket import socket_manager
     
