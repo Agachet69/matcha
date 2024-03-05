@@ -10,7 +10,6 @@ from Model.like import Like
 from Model.like_photo import LikePhoto
 from Model.notif import Notif
 from Model.tag import Tag
-from Model.association import user_tag_association
 from Model.match import Match
 from Model.block import Block
 from Model.profile_seen import ProfileSeen
@@ -35,7 +34,7 @@ class User(Base):
     verification_code = Column(String(6), nullable=True, default=None)
 
     password = Column(String(256))
-    tags= relationship("Tag", secondary=user_tag_association, back_populates="users")
+    tags: List[Tag] = relationship("Tag", back_populates="user")
     photos: List[Photo] = relationship("Photo", back_populates="user")
     notifs: List[Notif] = relationship("Notif", back_populates="user")
     

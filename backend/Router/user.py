@@ -249,7 +249,6 @@ def get_me(current_user: UserSchema = Depends(get_current_user)):
 @router.put('/', status_code=status.HTTP_200_OK, response_model=Any)
 def update_user(user_update: UserUpdate, current_user: UserSchema = Depends(get_current_user), db=Depends(get_db)):
     user_update_validator(user_update)
-    print(user_update)
     user = Crud.user.update(db, db_obj=current_user, obj_in=user_update)
     return {
         'token': {
@@ -262,8 +261,8 @@ def update_user(user_update: UserUpdate, current_user: UserSchema = Depends(get_
         'user': user
     }
 
-@router.put('/tags', response_model=UserSchema)
-def update_tags(tags: List[TagCreate], current_user= Depends(get_current_user), db= Depends(get_db)):
+@router.put('/tags', response_model=bool)
+def update_tags(tags: List[TagCreate], current_user: UserSchema = Depends(get_current_user), db= Depends(get_db)):
   
   if (len(tags) > 5):
     raise HTTPException(status_code=400, detail="You can't have more than 5 tags.")
@@ -274,22 +273,18 @@ def update_tags(tags: List[TagCreate], current_user= Depends(get_current_user), 
   
   tag_list = [tag.tag.value for tag in tags]
   
-  missing_tag = [tag.tag for tag in current_user.tags if tag.tag not in tag_list]
+  missing_tag = [tag for tag in current_user.tags if tag.tag not in tag_list]
   
   for tag in missing_tag:
-      Crud.tag.remove_user_tags(db=db, tag=tag, user_id=current_user.id)
+      Crud.tag.remove_user_tags(db=db, tag=tag)
   
-  
-  
-  all_tags = []
+
   for exist_tag in tags:
-    tag = Crud.tag.get_or_create_tag(db, exist_tag)
-    Crud.tag.create_tag_for_user(db, tag, current_user.id)
-    all_tags.append(tag)
+    if exist_tag.tag.value not in [tag.tag for tag in current_user.tags]:
+        # pass
+        Crud.tag.create_tag_for_user(db, exist_tag.tag.value, current_user.id)
     
-  user.tags = all_tags
-  
-  return user
+  return True
 
 @router.get("/{user_id}", status_code=status.HTTP_200_OK, response_model=UserSchema)
 def get_one_user(

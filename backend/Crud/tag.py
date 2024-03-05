@@ -4,27 +4,14 @@ from .base import CRUDBase
 from sqlalchemy.orm import Session
 
 class CRUDTag(CRUDBase[Tag, TagCreate, TagUpdate]):
-  
-  def get_or_create_tag(self, db: Session, exist_tag: TagCreate):
-    tag = db.query(Tag).filter(Tag.tag == exist_tag.tag).first()
-    if tag:
-        return tag
-    else:
-        new_tag = Tag(tag=exist_tag.tag)
-        db.add(new_tag)
-        db.commit()
-        db.refresh(new_tag)
-        return new_tag
     
-  def create_tag_for_user(self, db, tag: Tag, user_id):
+  def create_tag_for_user(self, db, tag: str, user_id):
     try:
-      print(tag.id, user_id)
       with db.connection().connection.cursor() as cursor:
 
-          sql = f'''INSERT INTO user_tag_association (user_id, tag_id) 
-              VALUES (%s, %s)'''
+          sql = f'''INSERT INTO tags (user_id, tag) VALUES (%s, %s)'''
 
-          cursor.execute(sql, (user_id, tag.id))
+          cursor.execute(sql, (user_id, tag))
 
           db.commit()
 
@@ -33,16 +20,11 @@ class CRUDTag(CRUDBase[Tag, TagCreate, TagUpdate]):
       print(f"Error while creating user_tag_association: {e}")
     return False
   
-  def remove_user_tags(self, db, tag, user_id):
+  def remove_user_tags(self, db, tag):
     try: 
       with db.connection().connection.cursor() as cursor:
-        get_tag_sql = f'''SELECT id FROM tags WHERE tag='{tag}';'''
-
-        cursor.execute(get_tag_sql)
-        id = cursor.fetchone()[0]
         
-        
-        deleted_sql = f'''DELETE FROM user_tag_association WHERE tag_id = '{id}' AND user_id = '{user_id}';'''
+        deleted_sql = f'''DELETE FROM tags WHERE id = '{tag.id}';'''
         cursor.execute(deleted_sql)
 
         db.commit()

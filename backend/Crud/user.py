@@ -16,6 +16,7 @@ from sqlalchemy.orm import Session, noload, selectinload, aliased
 from Enum.SexualityEnum import SexualityEnum
 from Enum.GenderEnum import GenderEnum
 import datetime
+from fastapi import HTTPException
 
 
 class CRUDUser():
@@ -29,12 +30,6 @@ class CRUDUser():
                     results = cursor.fetchall()
 
                     return [Match(id=match[0], user_A_id=match[1], user_B_id=match[2]) for match in results]
-                elif model == Tag:
-                    sql = f"SELECT * FROM `tags` WHERE `id` IN (SELECT `tag_id` FROM `user_tag_association` WHERE `user_id` = %s)"
-                    cursor.execute(sql, (user_id,))
-                    results = cursor.fetchall()
-
-                    return [Tag(id=tag[0], tag=tag[1]) for tag in results]
                 else:
                     sql = f"SELECT * FROM `{model.__tablename__}` WHERE `user_id` = %s"
                     cursor.execute(sql, (user_id,))
@@ -66,7 +61,7 @@ class CRUDUser():
             print(f"Error while fetching related objects: {e}")
             return [] 
     
-    def get(self, db, id: int, no_relation = False, **kwargs):
+    def get(self, db, id: int, no_relation = False, with_tags = False):
         try:
             with db.connection().connection.cursor() as cursor:
                 sql = "SELECT * FROM `users` WHERE `id` = %s"
@@ -76,6 +71,7 @@ class CRUDUser():
                     user = User(**dict(zip(User.__table__.columns.keys(), result)))
                     
                     if not no_relation:
+                        # if with_tags == True:
                         user.tags = self.fetch_related_objects(db, user.id, Tag)
                         user.photos = self.fetch_related_objects(db, user.id, Photo)
                         
@@ -249,8 +245,6 @@ class CRUDUser():
                                 password=result[15],
                             )
                 
-                user = self.get(db, user.id)
-                
                 return user
         except Exception as e:
             print(f"Error while updating user: {e}")
@@ -312,13 +306,13 @@ class CRUDUser():
                                 FROM likes
                                 WHERE likes.user_id = "{current_user.id}"
                             )
-                            AND EXISTS (
-                                SELECT 1
-                                FROM photos
-                                WHERE photos.user_id = users.id
-                                    AND photos.main = true
-                            )
                             '''
+                            # AND EXISTS (
+                            #     SELECT 1
+                            #     FROM photos
+                            #     WHERE photos.user_id = users.id
+                            #         AND photos.main = true
+                            # )
                             
         if age_limit := getattr(search_param, 'age_limit', None):
             if age_limit.min is not None and age_limit.max is not None:
@@ -342,8 +336,7 @@ class CRUDUser():
             tags_conditions = ' OR '.join([f"tags.tag = '{tag.value}'" for tag in tags])
             sql += f''' AND users.id IN (
                         SELECT user_id
-                        FROM user_tag_association
-                        INNER JOIN tags ON user_tag_association.tag_id = tags.id
+                        FROM tags
                         WHERE {tags_conditions}
               )'''
 
@@ -362,7 +355,7 @@ class CRUDUser():
                 results = cursor.fetchall()
                 
                 users = [User(**dict(zip(User.__table__.columns.keys(), result))) for result in results]
-                users = [self.get(db, user.id) for user in users]
+                users = [self.get(db, user.id, with_tags=True) for user in users]
 
                 return users
         except Exception as e:
