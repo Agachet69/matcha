@@ -281,7 +281,6 @@ def update_tags(tags: List[TagCreate], current_user: UserSchema = Depends(get_cu
 
   for exist_tag in tags:
     if exist_tag.tag.value not in [tag.tag for tag in current_user.tags]:
-        # pass
         Crud.tag.create_tag_for_user(db, exist_tag.tag.value, current_user.id)
     
   return True

@@ -71,7 +71,6 @@ class CRUDUser():
                     user = User(**dict(zip(User.__table__.columns.keys(), result)))
                     
                     if not no_relation:
-                        # if with_tags == True:
                         user.tags = self.fetch_related_objects(db, user.id, Tag)
                         user.photos = self.fetch_related_objects(db, user.id, Photo)
                         
@@ -306,13 +305,14 @@ class CRUDUser():
                                 FROM likes
                                 WHERE likes.user_id = "{current_user.id}"
                             )
+                            AND EXISTS (
+                                SELECT 1
+                                FROM photos
+                                WHERE photos.user_id = users.id
+                                    AND photos.main = true
+                            )
                             '''
-                            # AND EXISTS (
-                            #     SELECT 1
-                            #     FROM photos
-                            #     WHERE photos.user_id = users.id
-                            #         AND photos.main = true
-                            # )
+                            
                             
         if age_limit := getattr(search_param, 'age_limit', None):
             if age_limit.min is not None and age_limit.max is not None:
