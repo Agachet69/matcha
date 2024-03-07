@@ -62,7 +62,7 @@ def resend_code(current_user = Depends(get_current_user), db = Depends(get_db)):
     
     sender_email = os.getenv("STMP_USERNAME")
     subject = 'Email Verification'
-    message = f'Code :{verification_code}'
+    message = f'Code: {verification_code}\nOr click on this link : https://localhost:3000/verify_email?code={verification_code}'
 
     
     msg = MIMEMultipart()
@@ -151,7 +151,7 @@ def verif_email(validate_email: ValidateEmail, current_user = Depends(get_curren
     update_obj = UserUpdate(email_check=True, verification_code=None)
     user = Crud.user.update(db=db, db_obj=current_user, obj_in=update_obj)
     print('user verify_email', user)
-    return user 
+    return Crud.user.get(db, user.id)
 
 @router.post("/register", status_code=status.HTTP_200_OK, response_model=TokenSchema)
 def register(user_to_create: UserCreate, db=Depends(get_db)):
@@ -169,7 +169,7 @@ def register(user_to_create: UserCreate, db=Depends(get_db)):
     
     sender_email = os.getenv("STMP_USERNAME")
     subject = 'Email Verification'
-    message = f'Code: {verification_code}'
+    message = f'Code: {verification_code}\nOr click on this link : https://localhost:3000/verify_email?code={verification_code}'
 
     
     msg = MIMEMultipart()
